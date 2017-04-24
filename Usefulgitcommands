@@ -1,0 +1,6 @@
+Useful git commands:
+git status
+git log
+git reset --hard origin/master
+git revert HEAD
+git revert -m 1 HEAD
