@@ -46,13 +46,13 @@ public class DBManager {
 				+ "( `id` INT NOT NULL AUTO_INCREMENT ,"
 				+ " `name` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT 'Name des Schülers' ,"
 				+ " `ratings` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NULL COMMENT 'Wahl der AGs nach Reihenfolge' ,"
-				+ " PRIMARY KEY (`id`)) ENGINE = InnoDB;");
+				+ " PRIMARY KEY (`id`)) ENGINE = InnoDB");
 		db.update("CREATE TABLE IF NOT EXISTS `" + database + "`.`AG" + profile + "`"
 				+ "( `id` INT NOT NULL AUTO_INCREMENT ,"
 				+ " `name` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT 'Name des Schülers' ,"
 				+ " `minAnzahl` INT NULL COMMENT 'Mindest-Anzahl der Schüler' ,"
 				+ " `maxAnzahl` INT NULL COMMENT 'Maximal-Anzahl der Schüler' ,"
-				+ " PRIMARY KEY (`id`)) ENGINE = InnoDB;");
+				+ " PRIMARY KEY (`id`)) ENGINE = InnoDB");
 	}
 	
 	/**
@@ -88,7 +88,7 @@ public class DBManager {
 		String[][] ids = db.query("SELECT `id` FROM `Personen" + profile + "`");
 		boolean first = true;
 		for(String[] id: ids){
-			if(first){
+			if(first || id[0]==null){
 				first = false;
 				continue;
 			}
@@ -97,7 +97,7 @@ public class DBManager {
 		ids = db.query("SELECT `id` FROM `AG" + profile + "`");
 		first = true;
 		for(String[] id: ids){
-			if(first){
+			if(first || id[0]==null){
 				first = false;
 				continue;
 			}
