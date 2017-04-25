@@ -39,6 +39,47 @@ public class DB {
 	}
 	
 	/**
+	 * TEST
+	 */
+	public void test(){
+		try{
+			Class.forName("com.mysql.jdbc.Driver");
+		}
+		catch(ClassNotFoundException e){
+			Logger lgr = Logger.getLogger(DB.class.getName());
+			lgr.log(Level.WARNING, e.getMessage(), e);
+		}
+		try{
+			Connection con = DriverManager.getConnection("jdbc:mysql://agent77326.tk:3306/fabi?useSSL=true", "fabi", "4ma9vJdZUH7J70Wh");
+			Statement st = con.createStatement();
+			ResultSet rs = st.executeQuery("SELECT * FROM `Personen1`");
+			int n = rs.getMetaData().getColumnCount();
+			for(int j = 0; j < n; j++){
+				System.out.println(rs.getMetaData().getColumnName(j + 1));
+			}
+			System.out.println("");
+			while(rs.next()){
+				for(int j = 0; j < n; j++){
+					System.out.println(rs.getString(j + 1));
+				}
+			}
+			try{
+				rs.close();
+			}
+			catch(SQLException e){
+				Logger lgr = Logger.getLogger(DB.class.getName());
+				lgr.log(Level.SEVERE, e.getMessage(), e);
+			}
+			System.out.println("");
+		}
+		catch(SQLException e){
+			Logger lgr = Logger.getLogger(DB.class.getName());
+			lgr.log(Level.WARNING, e.getMessage(), e);
+		}
+		System.out.println("");
+	}
+	
+	/**
 	 * Gibt die Anzahl der Datensätze für die gegebene Tabelle zurück
 	 * @param String table der name der Tabelle
 	 * @return int die Größe
@@ -173,7 +214,6 @@ public class DB {
 			while(rs.next()){
 				for(int j = 0; j < n; j++){
 					data[i][j] = rs.getString(j + 1);
-					System.out.println(rs.getString(j + 1));
 				}
 			}
 		}
