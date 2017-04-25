@@ -25,6 +25,11 @@ public class DBManager {
 	 */
 	public DBManager(int profileNumber){
 		profile = profileNumber;
+		if(profile < 1){
+			Logger lgr = Logger.getLogger(DBManager.class.getName());
+			lgr.log(Level.SEVERE, "Given Profile-ID is invalid, using default");
+			profile = 1;
+		}
 	}
 	
 	/**
@@ -73,13 +78,7 @@ public class DBManager {
 	 * Reads all the data from the database with the given profile into data and returns it
 	 * @param int profile the profile to read the data from
 	 */
-	public static void initializeJavaObjectsFromDB(String server, int port, String user, String password, String database, int profile){
-		if(profile < 1){
-			Logger lgr = Logger.getLogger(DBManager.class.getName());
-			lgr.log(Level.SEVERE, "Given Profile-ID is invalid, using default");
-			profile = 1;
-		}
-		DB db = new DB(server, port, user, password, database);
+	public void initializeJavaObjectsFromDB(){
 		ArrayList<Person> personen = new ArrayList<Person>();
 		String[][] ids = db.query("SELECT `id` FROM `Personen" + profile + "`");
 		for(String[] id: ids){
