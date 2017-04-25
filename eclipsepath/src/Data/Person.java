@@ -6,6 +6,7 @@ public class Person {
 	private String name;
 	private ArrayList<Rating> ratings;
 	private AG besuchtAG;
+	
 	/**
 	 * Objekt zum speichern einer Person
 	 * @param name Der Name der Person
@@ -16,6 +17,7 @@ public class Person {
 		this.ratings=ratings;
 		ratings= new ArrayList<Rating>();
 	}
+	
 	/**
 	 * 
 	 * @return Name
@@ -23,6 +25,7 @@ public class Person {
 	public String getName(){
 		return this.name;
 	}
+	
 	/**
 	 * 
 	 * @return Das Rating
@@ -30,6 +33,7 @@ public class Person {
 	public ArrayList<Rating> getRating(){
 		return this.ratings;
 	}
+	
 	/**
 	 * 
 	 * @param ag Wird der AG zugewiesen
@@ -37,6 +41,7 @@ public class Person {
 	public void teileAGZu(AG ag){
 		this.besuchtAG=ag;
 	}
+	
 	/**
 	 * 
 	 * @return Return die aG, die die Person besucht.

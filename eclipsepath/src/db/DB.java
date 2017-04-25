@@ -36,7 +36,6 @@ public class DB {
 	 * @param String sql the statement with wildcards to fill with the data
 	 * 		e.g: "insert into  database.table values (default, ?, ?, ?, ?, ?, ?)"
 	 * @param String[] data the values here will be inserted into the wildcards at the sql-statement
-	 * @return
 	 */
 	protected void update(String sql, String[] data){
 		PreparedStatement ps = null;
@@ -69,7 +68,7 @@ public class DB {
 	 * @param String query the request as sql-statement
 	 * @return ResultSet the returned data
 	 */
-	protected ResultSet query(String sql){
+	protected String[][] query(String sql){
 		try{
 			Statement st = con.createStatement();
 			ResultSet tmp = st.executeQuery(sql);
@@ -80,7 +79,7 @@ public class DB {
 				Logger lgr = Logger.getLogger(DB.class.getName());
 				lgr.log(Level.SEVERE, e.getMessage(), e);
 			}
-			return tmp;
+			return fetch(tmp);
 		}
 		catch(SQLException e){
 			Logger lgr = Logger.getLogger(DB.class.getName());
@@ -94,7 +93,7 @@ public class DB {
 	 * @param PreparedStatment query the request given as prepared
 	 * @return ResultSet the returned data
 	 */
-	protected ResultSet query(PreparedStatement sql){
+	protected String[][] query(PreparedStatement sql){
 		try{
 			ResultSet tmp = sql.executeQuery();
 			try{
@@ -104,7 +103,7 @@ public class DB {
 				Logger lgr = Logger.getLogger(DB.class.getName());
 				lgr.log(Level.SEVERE, e.getMessage(), e);
 			}
-			return tmp;
+			return fetch(tmp);
 		}
 		catch(SQLException e){
 			Logger lgr = Logger.getLogger(DB.class.getName());
@@ -119,7 +118,7 @@ public class DB {
 	 * @param ResultSet the return of a query to the sql-server
 	 * @return String[][] with all data. 1.dim is each row and 2.dim is each column
 	 */
-	protected String[][] fetch(ResultSet rs){
+	private String[][] fetch(ResultSet rs){
 		String[][] data = null;
 		try {
 			int i = 0;
@@ -155,5 +154,20 @@ public class DB {
 			}
 		}
 		return data;
+	}
+	
+	/**
+	 * This must be run after the DB is not used any more to release the used connection
+	 */
+	public void close(){
+		if(con!=null){
+			try{
+				con.close();
+			}
+			catch(SQLException e){
+				Logger lgr = Logger.getLogger(DB.class.getName());
+				lgr.log(Level.SEVERE, e.getMessage(), e);
+			}
+		}
 	}
 }
