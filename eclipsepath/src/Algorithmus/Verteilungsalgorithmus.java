@@ -34,6 +34,7 @@ public class Verteilungsalgorithmus {
 	 * @return Score der Verteilung
 	 */
 	public static int checkScore(){
+		if(personen.size()==0) return 0;
 		int score =0;
 		int[] agen= new int[ag.size()+1];
 		for(Person p: personen){
