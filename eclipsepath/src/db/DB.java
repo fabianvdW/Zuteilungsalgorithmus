@@ -23,7 +23,14 @@ public class DB {
 	 */
 	protected DB(String server, int port, String user, String password, String database){
 		try{
-			con = DriverManager.getConnection("jdbc:mysql://" + server + ":" + port + "/" + database, user, password);
+			try{
+				Class.forName("com.mysql.jdbc.Driver");
+			}
+			catch(ClassNotFoundException e){
+				Logger lgr = Logger.getLogger(DB.class.getName());
+				lgr.log(Level.WARNING, e.getMessage(), e);
+			}
+			con = DriverManager.getConnection("jdbc:mysql://" + server + ":" + port + "/" + database + "?useSSL=true", user, password);
 		}
 		catch(SQLException e){
 			Logger lgr = Logger.getLogger(DB.class.getName());
@@ -32,11 +39,19 @@ public class DB {
 	}
 	
 	/**
+	 * Gibt die Anzahl der Datensätze für die gegebene Tabelle zurück
+	 * @param String table der name der Tabelle
+	 * @return int die Größe
+	 */
+	protected int getSize(String table){
+		return query("SELECT `id` FROM `" + table + "`")[0].length - 1;
+	}
+	
+	/**
 	 * Use this for updating, inserting and deleting data, if you only want to read use query();
 	 * @param String sql the statement with wildcards to fill with the data
 	 * 		e.g: "insert into  database.table values (default, ?, ?, ?, ?, ?, ?)"
 	 * @param String[] data the values here will be inserted into the wildcards at the sql-statement
-	 * @return
 	 */
 	protected void update(String sql, String[] data){
 		PreparedStatement ps = null;
@@ -69,18 +84,17 @@ public class DB {
 	 * @param String query the request as sql-statement
 	 * @return ResultSet the returned data
 	 */
-	protected ResultSet query(String sql){
+	protected String[][] query(String sql){
 		try{
 			Statement st = con.createStatement();
-			ResultSet tmp = st.executeQuery(sql);
+			String[][] r = fetch(st.executeQuery(sql));
 			try{
 				st.close();
-			}
-			catch(SQLException e){
+			}catch(SQLException e){
 				Logger lgr = Logger.getLogger(DB.class.getName());
 				lgr.log(Level.SEVERE, e.getMessage(), e);
 			}
-			return tmp;
+			return r;
 		}
 		catch(SQLException e){
 			Logger lgr = Logger.getLogger(DB.class.getName());
@@ -90,11 +104,33 @@ public class DB {
 	}
 	
 	/**
+	 * Changes Data from the DB
+	 * @param String query the request as sql-statement
+	 */
+	protected void update(String sql){
+		try{
+			Statement st = con.createStatement();
+			st.executeUpdate(sql);
+			try{
+				st.close();
+			}
+			catch(SQLException e){
+				Logger lgr = Logger.getLogger(DB.class.getName());
+				lgr.log(Level.SEVERE, e.getMessage(), e);
+			}
+		}
+		catch(SQLException e){
+			Logger lgr = Logger.getLogger(DB.class.getName());
+			lgr.log(Level.WARNING, e.getMessage(), e);
+		}
+	}
+	
+	/**
 	 * Generates a request to the server by executing the given query
 	 * @param PreparedStatment query the request given as prepared
 	 * @return ResultSet the returned data
 	 */
-	protected ResultSet query(PreparedStatement sql){
+	protected String[][] query(PreparedStatement sql){
 		try{
 			ResultSet tmp = sql.executeQuery();
 			try{
@@ -104,7 +140,7 @@ public class DB {
 				Logger lgr = Logger.getLogger(DB.class.getName());
 				lgr.log(Level.SEVERE, e.getMessage(), e);
 			}
-			return tmp;
+			return fetch(tmp);
 		}
 		catch(SQLException e){
 			Logger lgr = Logger.getLogger(DB.class.getName());
@@ -119,14 +155,13 @@ public class DB {
 	 * @param ResultSet the return of a query to the sql-server
 	 * @return String[][] with all data. 1.dim is each row and 2.dim is each column
 	 */
-	protected String[][] fetch(ResultSet rs){
+	private String[][] fetch(ResultSet rs){
 		String[][] data = null;
 		try {
 			int i = 0;
-			do{
+			while(rs.next()){
 				i++;
 			}
-			while(rs.next());
 			rs.first();
 			int n = rs.getMetaData().getColumnCount();
 			data = new String[i + 1][n];
@@ -138,8 +173,8 @@ public class DB {
 				for(int j = 0; j < n; j++){
 					data[i][j] = rs.getString(j + 1);
 				}
-			}
-			while(rs.next());
+				i++;
+			}while(rs.next());
 		}
 		catch (SQLException e){
 			Logger lgr = Logger.getLogger(DB.class.getName());
@@ -155,5 +190,20 @@ public class DB {
 			}
 		}
 		return data;
+	}
+	
+	/**
+	 * This must be run after the DB is not used any more to release the used connection
+	 */
+	public void close(){
+		if(con!=null){
+			try{
+				con.close();
+			}
+			catch(SQLException e){
+				Logger lgr = Logger.getLogger(DB.class.getName());
+				lgr.log(Level.SEVERE, e.getMessage(), e);
+			}
+		}
 	}
 }
