@@ -1,8 +1,5 @@
 package db;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -89,15 +86,7 @@ public class DBManager {
 	 * @param int profile the profile to read the data from
 	 */
 	public void initializeJavaObjectsFromDB(){
-		db.test();
 		String[][] ids = db.query("SELECT `id` FROM `Personen" + profile + "`");
-		
-		for(String[] b: ids){
-			for(String a: b){
-				System.out.println(a);
-			}
-			System.out.println("");
-		}
 		boolean first = true;
 		for(String[] id: ids){
 			if(first || id[0]==null || id[0].equals("")){
@@ -125,12 +114,6 @@ public class DBManager {
 	public Person getPerson(int id){
 		String[][] p = db.query("SELECT * FROM `Personen" + profile + "` WHERE `id`='" + id + "'");
 		System.out.println("Person");
-		for(String[] a: p){
-			for(String b: a){
-				System.out.println(b);
-			}
-			System.out.println("");
-		}
 		int pRating = -1;
 		for(int i = 0; i < p[1].length; i++){
 			if(p[0][i].equals("ratings")){

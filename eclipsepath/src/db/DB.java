@@ -39,47 +39,6 @@ public class DB {
 	}
 	
 	/**
-	 * TEST
-	 */
-	public void test(){
-		try{
-			Class.forName("com.mysql.jdbc.Driver");
-		}
-		catch(ClassNotFoundException e){
-			Logger lgr = Logger.getLogger(DB.class.getName());
-			lgr.log(Level.WARNING, e.getMessage(), e);
-		}
-		try{
-			Connection con = DriverManager.getConnection("jdbc:mysql://agent77326.tk:3306/fabi?useSSL=true", "fabi", "4ma9vJdZUH7J70Wh");
-			Statement st = con.createStatement();
-			ResultSet rs = st.executeQuery("SELECT * FROM `Personen1`");
-			int n = rs.getMetaData().getColumnCount();
-			for(int j = 0; j < n; j++){
-				System.out.println(rs.getMetaData().getColumnName(j + 1));
-			}
-			System.out.println("");
-			while(rs.next()){
-				for(int j = 0; j < n; j++){
-					System.out.println(rs.getString(j + 1));
-				}
-			}
-			try{
-				rs.close();
-			}
-			catch(SQLException e){
-				Logger lgr = Logger.getLogger(DB.class.getName());
-				lgr.log(Level.SEVERE, e.getMessage(), e);
-			}
-			System.out.println("");
-		}
-		catch(SQLException e){
-			Logger lgr = Logger.getLogger(DB.class.getName());
-			lgr.log(Level.WARNING, e.getMessage(), e);
-		}
-		System.out.println("");
-	}
-	
-	/**
 	 * Gibt die Anzahl der Datensätze für die gegebene Tabelle zurück
 	 * @param String table der name der Tabelle
 	 * @return int die Größe
@@ -127,23 +86,13 @@ public class DB {
 	 */
 	protected String[][] query(String sql){
 		try{
-			
-			
 			Statement st = con.createStatement();
-			
 			String[][] r = fetch(st.executeQuery(sql));
 			try{
 				st.close();
 			}catch(SQLException e){
 				Logger lgr = Logger.getLogger(DB.class.getName());
 				lgr.log(Level.SEVERE, e.getMessage(), e);
-			}
-			System.out.println("R:");
-			for(String[] s: r){
-				for(String s1:s){
-					System.out.print(s1+",");
-				}
-				System.out.println("N");
 			}
 			return r;
 		}
@@ -214,9 +163,7 @@ public class DB {
 				i++;
 			}
 			rs.first();
-			System.out.println("I: "+i);
 			int n = rs.getMetaData().getColumnCount();
-			System.out.println("N: "+n);
 			data = new String[i + 1][n];
 			for(int j = 0; j < n; j++){
 				data[0][j] = rs.getMetaData().getColumnName(j + 1);
