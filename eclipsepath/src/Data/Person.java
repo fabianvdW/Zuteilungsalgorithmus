@@ -16,7 +16,6 @@ public class Person {
 	public Person(String name, ArrayList<Rating> ratings){
 		this.name=name;
 		this.ratings=ratings;
-		ratings= new ArrayList<Rating>();
 	}
 
 	/**
@@ -26,10 +25,9 @@ public class Person {
 	 * @param ratings Seine AGs bewertet, 0.Element die beste AG, 1.Element die zweit beste usw.
 	 */
 	public Person(int id, String name, ArrayList<Rating> ratings){
+		this(name,ratings);
 		this.id=id;
-		this.name=name;
-		this.ratings=ratings;
-		ratings= new ArrayList<Rating>();
+		
 	}
 	
 	/**

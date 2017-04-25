@@ -31,10 +31,8 @@ public class AG {
 	 * @param hoechstanzahl Hoechste Anzahl an Personen, die die AG besuchen dürfen
 	 */
 	public AG(int id, String name, int mindestanzahl, int hoechstanzahl){
-		this.name=name;
-		this.mindestanzahl=mindestanzahl;
-		teilnehmer= new ArrayList<Person>();
-		this.hoechstanzahl=hoechstanzahl;
+		this(name,mindestanzahl,hoechstanzahl);
+		this.id=id;
 	}
 	
 	/**
@@ -46,11 +44,8 @@ public class AG {
 	 * @param teilnehmer falls personen von beginn an dabei sind
 	 */
 	public AG(int id, String name, int mindestanzahl, int hoechstanzahl, ArrayList<Person> teilnehmer){
-    this.id=id;
-		this.name=name;
-		this.mindestanzahl=mindestanzahl;
+		this(id,name,mindestanzahl,hoechstanzahl);
 		this.teilnehmer= teilnehmer;
-		this.hoechstanzahl=hoechstanzahl;
 	}
 	
 	/**
