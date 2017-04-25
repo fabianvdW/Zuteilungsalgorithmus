@@ -1,7 +1,10 @@
 package db;
 
-import Data.Person;
+import java.util.ArrayList;
+
 import Data.AG;
+import Data.Person;
+import Data.Rating;
 
 public class DBManager {
 	private DB db;
@@ -11,7 +14,7 @@ public class DBManager {
 	 * @author Agent77326
 	 */
 	public DBManager(){
-		
+		profile = 1;
 	}
 	
 	/**
@@ -55,8 +58,62 @@ public class DBManager {
 		
 	}
 	
-	public Person getPerson(int id){
-		String[][] p = db.query("SELECT * FROM `Personen" + profile + "` WHERE `id`='" + id + "'");
-		return null;
+	/**
+	 * Gibt ein Person-Objekt zurück mit allen Daten die es in der DB gibt
+	 * @param String name des schülers
+	 * @return Person das Objekt
+	 */
+	public Person getPerson(String name){
+		String[][] p = db.query("SELECT * FROM `Personen" + profile + "` WHERE `name`='" + name + "'");
+		//int i = p[1].length;
+		/*
+		ArrayList<Rating> rating = new ArrayList<Rating>();
+		int pRating = -1;
+		for(int i = 0; i < p[1].length; i++){
+			if(p[0][i].equals("rating")){
+				pRating = i;
+				break;
+			}
+		}
+		int posSubStr = 0;
+		while(posSubStr != -1){
+			posSubStr = p[1][pRating].indexOf(";;", 0);
+			rating.add(new Rating(new AG(),1));
+		}*/
+		int pCurAG = -1;
+		for(int i = 0; i < p[1].length; i++){
+			if(p[0][i].equals("curAG")){
+				pCurAG = i;
+				break;
+			}
+		}
+		if(pCurAG != -1){
+			return new Person(name, null, getAG(p[1][pCurAG]));
+		}
+		return new Person(name, null);
+	}
+	
+	/**
+	 * Gibt ein AG-Objekt zurück mit allen Daten die es in der DB gibt
+	 * @param String name der AG
+	 * @return AG das Objekt
+	 */
+	public AG getAG(String name){
+		String[][] p = db.query("SELECT * FROM `AG" + profile + "` WHERE `name`='" + name + "'");
+		int pMinAnzahl = -1;
+		for(int i = 0; i < p[1].length; i++){
+			if(p[0][i].equals("minAnzahl")){
+				pMinAnzahl = i;
+				break;
+			}
+		}
+		int pMaxAnzahl = -1;
+		for(int i = 0; i < p[1].length; i++){
+			if(p[0][i].equals("maxAnzahl")){
+				pMaxAnzahl = i;
+				break;
+			}
+		}
+		return new AG(name, Integer.parseInt(p[1][pMinAnzahl]), Integer.parseInt(p[1][pMaxAnzahl]));
 	}
 }
