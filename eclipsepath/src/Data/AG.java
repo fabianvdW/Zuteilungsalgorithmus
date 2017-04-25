@@ -8,14 +8,16 @@ public class AG {
 	private boolean istVoll;
 	private boolean kannStattFinden;
 	private ArrayList<Person> teilnehmer;
+	private int id;
 
 	/**
 	 * Klasse AG, Verwaltet die Daten einer AG
+	 * @param id ID der AG
 	 * @param name Name der AG
 	 * @param mindestanzahl Mindestanzahl, damit die AG stattfinden kann
 	 * @param hoechstanzahl Hoechste Anzahl an Personen, die die AG besuchen dürfen
 	 */
-	public AG(String name, int mindestanzahl, int hoechstanzahl){
+	public AG(int id, String name, int mindestanzahl, int hoechstanzahl){
 		this.name=name;
 		this.mindestanzahl=mindestanzahl;
 		teilnehmer= new ArrayList<Person>();
@@ -24,16 +26,25 @@ public class AG {
 	
 	/**
 	 * Klasse AG, Verwaltet die Daten einer AG
+	 * @param id ID der AG
 	 * @param name Name der AG
 	 * @param mindestanzahl Mindestanzahl, damit die AG stattfinden kann
 	 * @param hoechstanzahl Hoechste Anzahl an Personen, die die AG besuchen dürfen
 	 * @param teilnehmer falls personen von beginn an dabei sind
 	 */
-	public AG(String name, int mindestanzahl, int hoechstanzahl, ArrayList<Person> teilnehmer){
+	public AG(int id, String name, int mindestanzahl, int hoechstanzahl, ArrayList<Person> teilnehmer){
 		this.name=name;
 		this.mindestanzahl=mindestanzahl;
 		this.teilnehmer= teilnehmer;
 		this.hoechstanzahl=hoechstanzahl;
+	}
+	
+	/**
+	 * Gibt die ID der AG zurück
+	 * @return ID
+	 */
+	public int getId(){
+		return id;
 	}
 	
 	/**

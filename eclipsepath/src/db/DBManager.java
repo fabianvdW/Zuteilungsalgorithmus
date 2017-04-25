@@ -79,10 +79,13 @@ public class DBManager {
 	 * @param int profile the profile to read the data from
 	 */
 	public void initializeJavaObjectsFromDB(){
-		ArrayList<Person> personen = new ArrayList<Person>();
 		String[][] ids = db.query("SELECT `id` FROM `Personen" + profile + "`");
 		for(String[] id: ids){
-			personen.add(getPerson(Integer.parseInt(id[0])));
+			Algorithmus.Verteilungsalgorithmus.personen.add(getPerson(Integer.parseInt(id[0])));
+		}
+		ids = db.query("SELECT `id` FROM `AG" + profile + "`");
+		for(String[] id: ids){
+			Algorithmus.Verteilungsalgorithmus.ag.add(getAG(Integer.parseInt(id[0])));
 		}
 	}
 	
@@ -149,8 +152,15 @@ public class DBManager {
 	 * @param String name der AG
 	 * @return AG das Objekt
 	 */
-	public AG getAG(String name){
-		String[][] p = db.query("SELECT * FROM `AG" + profile + "` WHERE `name`='" + name + "'");
+	public AG getAG(int id){
+		String[][] p = db.query("SELECT * FROM `AG" + profile + "` WHERE `id`='" + id + "'");
+		int pName = -1;
+		for(int i = 0; i < p[1].length; i++){
+			if(p[0][i].equals("name")){
+				pName = i;
+				break;
+			}
+		}
 		int pMinAnzahl = -1;
 		for(int i = 0; i < p[1].length; i++){
 			if(p[0][i].equals("minAnzahl")){
@@ -165,6 +175,6 @@ public class DBManager {
 				break;
 			}
 		}
-		return new AG(name, Integer.parseInt(p[1][pMinAnzahl]), Integer.parseInt(p[1][pMaxAnzahl]));
+		return new AG(id, p[1][pName], Integer.parseInt(p[1][pMinAnzahl]), Integer.parseInt(p[1][pMaxAnzahl]));
 	}
 }
