@@ -44,7 +44,7 @@ public class DBManager {
 		db = new DB(server, port, user, password, database);
 		db.update("CREATE TABLE IF NOT EXISTS `" + database + "`.`Personen" + profile + "`"
 				+ "( `id` INT NOT NULL AUTO_INCREMENT ,"
-				+ " `name` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT 'Name des Schülers' ,"
+				+ " `name` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT 'Name des Schï¿½lers' ,"
 				+ " `ratings` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NULL COMMENT 'Wahl der AGs nach Reihenfolge' ,"
 				+ " PRIMARY KEY (`id`)) ENGINE = InnoDB");
 		db.update("CREATE TABLE IF NOT EXISTS`" + database + "`.`AG" + profile + "` "
@@ -52,7 +52,7 @@ public class DBManager {
 				+ "`name` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT 'Name der AG' , "
 				+ "`minAnzahl` INT NOT NULL COMMENT 'Mindest-Anzahl der Teilnehmer' , "
 				+ "`maxAnzahl` INT NOT NULL COMMENT 'Maximale-Anzahl der Teilnehmer' , "
-				+ "`member` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT 'Schüler die an dieser AG teilnehmen' , "
+				+ "`member` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT 'Schï¿½ler die an dieser AG teilnehmen' , "
 				+ "PRIMARY KEY (`id`)) ENGINE = InnoDB");
 	}
 	
@@ -107,8 +107,8 @@ public class DBManager {
 	}
 	
 	/**
-	 * Gibt ein Person-Objekt zurück mit allen Daten die es in der DB gibt
-	 * @param String name des schülers
+	 * Gibt ein Person-Objekt zurï¿½ck mit allen Daten die es in der DB gibt
+	 * @param String name des schï¿½lers
 	 * @return Person das Objekt
 	 */
 	public Person getPerson(int id){
@@ -140,7 +140,7 @@ public class DBManager {
 	
 	/**
 	 * Adds a person to the db
-	 * @param Person p die Person die hinzuzufügen ist
+	 * @param Person p die Person die hinzuzufï¿½gen ist
 	 */
 	public void addPerson(Person p){
 		String tmp = "";
@@ -155,7 +155,7 @@ public class DBManager {
 	}
 	
 	/**
-	 * Gibt ein AG-Objekt zurück mit allen Daten die es in der DB gibt
+	 * Gibt ein AG-Objekt zurï¿½ck mit allen Daten die es in der DB gibt
 	 * @param String name der AG
 	 * @return AG das Objekt
 	 */

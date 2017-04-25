@@ -14,7 +14,7 @@ public class AG {
 	 * Klasse AG, Verwaltet die Daten einer AG
 	 * @param name Name der AG
 	 * @param mindestanzahl Mindestanzahl, damit die AG stattfinden kann
-	 * @param hoechstanzahl Hoechste Anzahl an Personen, die die AG besuchen dürfen
+	 * @param hoechstanzahl Hoechste Anzahl an Personen, die die AG besuchen dÃ¼rfen
 	 */
 	public AG(String name, int mindestanzahl, int hoechstanzahl){
 		this.name=name;
@@ -28,7 +28,7 @@ public class AG {
 	 * @param id ID der AG
 	 * @param name Name der AG
 	 * @param mindestanzahl Mindestanzahl, damit die AG stattfinden kann
-	 * @param hoechstanzahl Hoechste Anzahl an Personen, die die AG besuchen dürfen
+	 * @param hoechstanzahl Hoechste Anzahl an Personen, die die AG besuchen dÃ¼rfen
 	 */
 	public AG(int id, String name, int mindestanzahl, int hoechstanzahl){
 		this.name=name;
@@ -42,10 +42,11 @@ public class AG {
 	 * @param id ID der AG
 	 * @param name Name der AG
 	 * @param mindestanzahl Mindestanzahl, damit die AG stattfinden kann
-	 * @param hoechstanzahl Hoechste Anzahl an Personen, die die AG besuchen dürfen
+	 * @param hoechstanzahl Hoechste Anzahl an Personen, die die AG besuchen dÃ¼rfen
 	 * @param teilnehmer falls personen von beginn an dabei sind
 	 */
 	public AG(int id, String name, int mindestanzahl, int hoechstanzahl, ArrayList<Person> teilnehmer){
+    this.id=id;
 		this.name=name;
 		this.mindestanzahl=mindestanzahl;
 		this.teilnehmer= teilnehmer;
@@ -53,7 +54,7 @@ public class AG {
 	}
 	
 	/**
-	 * Gibt die ID der AG zurück
+	 * Gibt die ID der AG zurÃ¼ck
 	 * @return ID
 	 */
 	public int getId(){
@@ -61,7 +62,7 @@ public class AG {
 	}
 	
 	/**
-	 * Ein Teilnehmer wird einer AG zugewiesen. Dabei wird auch die Referenz in Person geändert, welche AG der Teilnehmer besucht.
+	 * Ein Teilnehmer wird einer AG zugewiesen. Dabei wird auch die Referenz in Person geÃ¤ndert, welche AG der Teilnehmer besucht.
 	 * @param perso Die Person die die AG besuchen soll
 	 * @throws Exception Throws Exception wenn die AG bereits voll ist.
 	 */
@@ -126,7 +127,7 @@ public class AG {
 	
 	/**
 	 * Return hoechste Anzahl an Teilnehmern
-	 * @return Höchstanzahl
+	 * @return HÃ¶chstanzahl
 	 */
 	public int getHoechstanzahl(){
 		return this.hoechstanzahl;
