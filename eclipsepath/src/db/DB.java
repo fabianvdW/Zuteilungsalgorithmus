@@ -87,8 +87,7 @@ public class DB {
 	protected String[][] query(String sql){
 		try{
 			Statement st = con.createStatement();
-			ResultSet tmp = st.executeQuery(sql);
-			String[][] r = fetch(tmp);
+			String[][] r = fetch(st.executeQuery(sql));
 			try{
 				st.close();
 			}
@@ -159,6 +158,7 @@ public class DB {
 	 */
 	private String[][] fetch(ResultSet rs){
 		String[][] data = null;
+		System.out.println("fetch() called");
 		try {
 			int i = 0;
 			do{
@@ -174,6 +174,7 @@ public class DB {
 			i = 1;
 			do{
 				for(int j = 0; j < n; j++){
+					System.out.println("i: " + i + " j: " + j);
 					data[i][j] = rs.getString(j + 1);
 				}
 			}

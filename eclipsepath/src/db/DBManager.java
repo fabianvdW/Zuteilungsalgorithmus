@@ -1,9 +1,7 @@
 package db;
 
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import Data.AG;
 import Data.Person;
 import Data.Rating;
@@ -197,7 +195,7 @@ public class DBManager {
 	
 	public void addAG(){
 		db.query("INSERT INTO `AG" + profile + "` "
-				+ "(`id`, `name`, `minAnzahl`, `maxAnzahl`) "
-				+ "VALUES (NULL, 'Blumenpflückerei', '4', '12')");
+				+ "(`id`, `name`, `minAnzahl`, `maxAnzahl`, `member`) "
+				+ "VALUES (NULL, 'Blumenpflückerei', '4', '12', '')");
 	}
 }
