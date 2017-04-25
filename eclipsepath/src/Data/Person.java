@@ -69,4 +69,22 @@ public class Person {
 	public AG getBesuchteAG(){
 		return this.besuchtAG;
 	}
+	
+	/**
+	 * Gibt das Objekt mit allen Attributen als String zurück
+	 * @return Objekt als String
+	 */
+	public String toString(){
+		Rating[] r = null;
+		r = ratings.toArray(r);
+		String ret = "{Class:Person, "
+				+ "id:" + id + ", "
+				+ "name:" + name + ", "
+				+ "ag:" + besuchtAG + ", "
+				+ "gewählt:[";
+		for(Rating a: r){
+			ret += a.toString();
+		}
+		return ret + "]}";
+	}
 }

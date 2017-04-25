@@ -13,4 +13,12 @@ public class Rating {
 	public int getRating(){
 		return this.rating;
 	}
+	
+	/**
+	 * Gibt das Objekt mit allen Attributen als String zurück
+	 * @return Objekt als String
+	 */
+	public String toString(){
+		return "{Class:Rating, [" + bewerteteAG.getName() + "]}";
+	}
 }
