@@ -117,40 +117,6 @@ public class DBManager {
 		}
 	}
 	
-	/*private String[][] query(String sql){
-		String[][] tmp = null;
-		try{
-			Statement st = db.con.createStatement();
-			ResultSet rs = st.executeQuery(sql);
-			int i = 0;
-			while(rs.next()){
-				i++;
-			}
-			rs.first();
-			tmp = new String[i][rs.getMetaData().getColumnCount()];
-			i = 0;
-			while(rs.next()){
-				for(int n = 0; n < rs.getMetaData().getColumnCount(); n++){
-					tmp[i][n] = rs.getString(n + 1);
-					System.out.println(tmp[i][n]);
-				}
-				i++;
-			}
-			try{
-				st.close();
-			}
-			catch(SQLException e){
-				Logger lgr = Logger.getLogger(DB.class.getName());
-				lgr.log(Level.SEVERE, e.getMessage(), e);
-			}
-		}
-		catch(SQLException e){
-			Logger lgr = Logger.getLogger(DB.class.getName());
-			lgr.log(Level.WARNING, e.getMessage(), e);
-		}
-		return tmp;
-	}*/
-	
 	/**
 	 * Gibt ein Person-Objekt zurück mit allen Daten die es in der DB gibt
 	 * @param String name des schülers

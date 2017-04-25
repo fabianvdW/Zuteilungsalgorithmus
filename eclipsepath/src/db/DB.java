@@ -222,12 +222,12 @@ public class DB {
 				data[0][j] = rs.getMetaData().getColumnName(j + 1);
 			}
 			i = 1;
-			while(rs.next()){
+			do{
 				for(int j = 0; j < n; j++){
 					data[i][j] = rs.getString(j + 1);
 				}
 				i++;
-			}
+			}while(rs.next());
 		}
 		catch (SQLException e){
 			Logger lgr = Logger.getLogger(DB.class.getName());
