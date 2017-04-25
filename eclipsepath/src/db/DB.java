@@ -23,7 +23,7 @@ public class DB {
 	 */
 	public DB(String server, int port, String user, String password, String database){
 		try{
-			con = DriverManager.getConnection("jdbc:mysql://localhost/" + database, user, password);
+			con = DriverManager.getConnection("jdbc:mysql://" + server + ":" + port + "/" + database, user, password);
 		}
 		catch(SQLException e){
 			Logger lgr = Logger.getLogger(DB.class.getName());
