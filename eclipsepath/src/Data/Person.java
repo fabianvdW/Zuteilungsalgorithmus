@@ -19,19 +19,6 @@ public class Person {
 	}
 	
 	/**
-	 * Objekt zum speichern einer Person
-	 * @param name Der Name der Person
-	 * @param ratings Seine AGs bewertet, 0.Element die beste AG, 1.Element die zweit beste usw.
-	 * @param besuchtAG Die AG, welche er evtl. schon besucht
-	 */
-	public Person(String name, ArrayList<Rating> ratings, AG besuchtAG){
-		this.name=name;
-		this.ratings=ratings;
-		ratings= new ArrayList<Rating>();
-		this.besuchtAG=besuchtAG;
-	}
-	
-	/**
 	 * 
 	 * @return Name
 	 */

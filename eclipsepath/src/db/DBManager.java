@@ -18,7 +18,15 @@ public class DBManager {
 	}
 	
 	/**
-	 * Get a DB-handle to edit the tables in the db
+	 * @author Agent77326
+	 * @param int profileNumber the ID of the profile when there are multiple tables on the same database
+	 */
+	public DBManager(int profileNumber){
+		profile = profileNumber;
+	}
+	
+	/**
+	 * Connect to a server with a database
 	 * @param String server
 	 * @param int port
 	 * @param String user
@@ -27,6 +35,11 @@ public class DBManager {
 	 */
 	public void connect(String server, int port, String user, String password, String database){
 		db = new DB(server, port, user, password, database);
+		db.query("CREATE TABLE IF NOT EXISTS `" + database + "`.`Personen" + profile + "`"
+				+ "( `id` INT NOT NULL AUTO_INCREMENT ,"
+				+ " `name` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT 'Name des Schülers' ,"
+				+ " `ratings` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NULL COMMENT 'Wahl der AGs nach Reihenfolge' ,"
+				+ " PRIMARY KEY (`id`)) ENGINE = InnoDB;");
 	}
 	
 	/**
@@ -79,7 +92,7 @@ public class DBManager {
 		while(posSubStr != -1){
 			posSubStr = p[1][pRating].indexOf(";;", 0);
 			rating.add(new Rating(new AG(),1));
-		}*/
+		}
 		int pCurAG = -1;
 		for(int i = 0; i < p[1].length; i++){
 			if(p[0][i].equals("curAG")){
@@ -89,8 +102,16 @@ public class DBManager {
 		}
 		if(pCurAG != -1){
 			return new Person(name, null, getAG(p[1][pCurAG]));
-		}
+		}*/
 		return new Person(name, null);
+	}
+	
+	/**
+	 * Adds a person to the db
+	 * @param name
+	 */
+	public void addPerson(String name){
+		db.query("INSERT INTO `Personen" + profile + "` (`id`, `name`, `ratings`) VALUES (NULL, 'Hans Wurst', 'JoJo;;Schwimmen;;Fahren')");
 	}
 	
 	/**
