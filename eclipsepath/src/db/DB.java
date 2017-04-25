@@ -225,10 +225,7 @@ public class DB {
 			while(rs.next()){
 				for(int j = 0; j < n; j++){
 					data[i][j] = rs.getString(j + 1);
-<<<<<<< HEAD
-					
-=======
->>>>>>> origin/DB
+
 				}
 				i++;
 			}
