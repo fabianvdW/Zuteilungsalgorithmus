@@ -105,6 +105,28 @@ public class DB {
 	}
 	
 	/**
+	 * Changes Data from the DB
+	 * @param String query the request as sql-statement
+	 */
+	protected void update(String sql){
+		try{
+			Statement st = con.createStatement();
+			st.executeUpdate(sql);
+			try{
+				st.close();
+			}
+			catch(SQLException e){
+				Logger lgr = Logger.getLogger(DB.class.getName());
+				lgr.log(Level.SEVERE, e.getMessage(), e);
+			}
+		}
+		catch(SQLException e){
+			Logger lgr = Logger.getLogger(DB.class.getName());
+			lgr.log(Level.WARNING, e.getMessage(), e);
+		}
+	}
+	
+	/**
 	 * Generates a request to the server by executing the given query
 	 * @param PreparedStatment query the request given as prepared
 	 * @return ResultSet the returned data
