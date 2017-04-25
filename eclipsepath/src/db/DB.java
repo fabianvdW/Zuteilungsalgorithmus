@@ -30,7 +30,7 @@ public class DB {
 				Logger lgr = Logger.getLogger(DB.class.getName());
 				lgr.log(Level.WARNING, e.getMessage(), e);
 			}
-			con = DriverManager.getConnection("jdbc:mysql://" + server + ":" + port + "/" + database, user, password);
+			con = DriverManager.getConnection("jdbc:mysql://" + server + ":" + port + "/" + database + "?useSSL=true", user, password);
 		}
 		catch(SQLException e){
 			Logger lgr = Logger.getLogger(DB.class.getName());
