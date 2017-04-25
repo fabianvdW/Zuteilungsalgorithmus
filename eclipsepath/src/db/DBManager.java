@@ -1,5 +1,8 @@
 package db;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -86,6 +89,7 @@ public class DBManager {
 	 * @param int profile the profile to read the data from
 	 */
 	public void initializeJavaObjectsFromDB(){
+		db.test();
 		String[][] ids = db.query("SELECT `id` FROM `Personen" + profile + "`");
 		
 		for(String[] b: ids){
@@ -113,18 +117,38 @@ public class DBManager {
 		}
 	}
 	
-	/**
-	 * 
-	 */
-	private ArrayList<Person> extractArray(String str){
-		ArrayList<Person> arr = new ArrayList<Person>();
-		for(String n: str.split(";;")){
-			if(n==null || n.equals("")){
-				continue;
+	private String[][] query(String sql){
+		String[][] tmp = null;
+		try{
+			Statement st = db.con.createStatement();
+			ResultSet rs = st.executeQuery(sql);
+			int i = 0;
+			while(rs.next()){
+				i++;
 			}
-			arr.add(getPerson(Integer.parseInt(n)));
+			rs.first();
+			tmp = new String[i][rs.getMetaData().getColumnCount()];
+			i = 0;
+			while(rs.next()){
+				for(int n = 0; n < rs.getMetaData().getColumnCount(); n++){
+					tmp[i][n] = rs.getString(n + 1);
+					System.out.println(tmp[i][n]);
+				}
+				i++;
+			}
+			try{
+				st.close();
+			}
+			catch(SQLException e){
+				Logger lgr = Logger.getLogger(DB.class.getName());
+				lgr.log(Level.SEVERE, e.getMessage(), e);
+			}
 		}
-		return null;
+		catch(SQLException e){
+			Logger lgr = Logger.getLogger(DB.class.getName());
+			lgr.log(Level.WARNING, e.getMessage(), e);
+		}
+		return tmp;
 	}
 	
 	/**
@@ -150,7 +174,7 @@ public class DBManager {
 		}
 		ArrayList<Rating> rating = new ArrayList<Rating>();
 		int j = 1;
-		for(String n: p[1][pRating].split(";;")){
+		for(String n: p[1][pRating].split(",")){
 			if(n==null || n.equals("")){
 				continue;
 			}
@@ -211,23 +235,13 @@ public class DBManager {
 				break;
 			}
 		}
-		int pMember = -1;
-		for(int i = 0; i < p[1].length; i++){
-			if(p[0][i].equals("member")){
-				pMember = i;
-				break;
-			}
-		}
 		for(String[] b: p){
 			for(String a: b){
 				System.out.println(a);
 			}
 			System.out.println("");
 		}
-		if(p[1][pMember]==null || p[1][pMember].equals("")){
-			return new AG(id, p[1][pName], Integer.parseInt(p[1][pMinAnzahl]), Integer.parseInt(p[1][pMaxAnzahl]));
-		}
-		return new AG(id, p[1][pName], Integer.parseInt(p[1][pMinAnzahl]), Integer.parseInt(p[1][pMaxAnzahl]), extractArray(p[1][pMember]));
+		return new AG(id, p[1][pName], Integer.parseInt(p[1][pMinAnzahl]), Integer.parseInt(p[1][pMaxAnzahl]));
 	}
 	
 	public void addAG(AG ag){
