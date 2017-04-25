@@ -1,6 +1,8 @@
 package db;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import Data.AG;
 import Data.Person;
@@ -67,8 +69,22 @@ public class DBManager {
 		return profile;
 	}
 	
-	public static void initializeJavaObjectsFromDb(){
-		
+	/**
+	 * Reads all the data from the database with the given profile into data and returns it
+	 * @param int profile the profile to read the data from
+	 */
+	public static void initializeJavaObjectsFromDB(String server, int port, String user, String password, String database, int profile){
+		if(profile < 1){
+			Logger lgr = Logger.getLogger(DBManager.class.getName());
+			lgr.log(Level.SEVERE, "Given Profile-ID is invalid, using default");
+			profile = 1;
+		}
+		DB db = new DB(server, port, user, password, database);
+		ArrayList<Person> personen = new ArrayList<Person>();
+		String[][] ids = db.query("SELECT `id` FROM `Personen" + profile + "`");
+		for(String[] id: ids){
+			personen.add(getPerson(Integer.parseInt(id[0])));
+		}
 	}
 	
 	/**
@@ -76,8 +92,8 @@ public class DBManager {
 	 * @param String name des schülers
 	 * @return Person das Objekt
 	 */
-	public Person getPerson(String name){
-		String[][] p = db.query("SELECT * FROM `Personen" + profile + "` WHERE `name`='" + name + "'");
+	public Person getPerson(int id){
+		String[][] p = db.query("SELECT * FROM `Personen" + profile + "` WHERE `id`='" + id + "'");
 		//int i = p[1].length;
 		/*
 		ArrayList<Rating> rating = new ArrayList<Rating>();
@@ -103,15 +119,30 @@ public class DBManager {
 		if(pCurAG != -1){
 			return new Person(name, null, getAG(p[1][pCurAG]));
 		}*/
-		return new Person(name, null);
+		int pName = -1;
+		for(int i = 0; i < p[1].length; i++){
+			if(p[0][i].equals("name")){
+				pName = i;
+				break;
+			}
+		}
+		return new Person(id, p[1][pName], null);
 	}
 	
 	/**
 	 * Adds a person to the db
-	 * @param name
+	 * @param Person p die Person die hinzuzufügen ist
 	 */
-	public void addPerson(String name){
-		db.query("INSERT INTO `Personen" + profile + "` (`id`, `name`, `ratings`) VALUES (NULL, 'Hans Wurst', 'JoJo;;Schwimmen;;Fahren')");
+	public void addPerson(Person p){
+		String tmp = "";
+		Rating[] t = new Rating[p.getRating().size()];
+		t = p.getRating().toArray(t);
+		for(Rating n: t){
+			tmp += n.getAG() + ";;";
+		}
+		db.query("INSERT INTO `Personen" + profile + "` "
+				+ "(`id`, `name`, `ratings`) "
+				+ "VALUES (NULL, '" + p.getName() + "', '" + tmp + "')");
 	}
 	
 	/**

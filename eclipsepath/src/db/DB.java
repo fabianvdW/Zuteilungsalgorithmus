@@ -32,6 +32,15 @@ public class DB {
 	}
 	
 	/**
+	 * Gibt die Anzahl der Datensätze für die gegebene Tabelle zurück
+	 * @param String table der name der Tabelle
+	 * @return int die Größe
+	 */
+	protected int getSize(String table){
+		return query("SELECT `id` FROM `" + table + "`")[0].length - 1;
+	}
+	
+	/**
 	 * Use this for updating, inserting and deleting data, if you only want to read use query();
 	 * @param String sql the statement with wildcards to fill with the data
 	 * 		e.g: "insert into  database.table values (default, ?, ?, ?, ?, ?, ?)"

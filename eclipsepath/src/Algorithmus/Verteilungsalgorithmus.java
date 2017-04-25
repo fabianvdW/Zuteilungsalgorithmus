@@ -19,7 +19,7 @@ public class Verteilungsalgorithmus {
 	public static void main(String[] args){
 		ag = new ArrayList<AG>();
 		personen= new ArrayList<Person>();
-		DBManager.initializeJavaObjectsFromDb();
+		DBManager.initializeJavaObjectsFromDB("agent77326.tk", 3306, "fabi", "4ma9vJdZUH7J70Wh", "fabi", 1);
 		verteile();
 		macheAusgabe();
 	}
