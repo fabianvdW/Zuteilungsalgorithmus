@@ -113,7 +113,6 @@ public class DBManager {
 	 */
 	public Person getPerson(int id){
 		String[][] p = db.query("SELECT * FROM `Personen" + profile + "` WHERE `id`='" + id + "'");
-		System.out.println("Person");
 		int pRating = -1;
 		for(int i = 0; i < p[1].length; i++){
 			if(p[0][i].equals("ratings")){
@@ -161,7 +160,6 @@ public class DBManager {
 	 * @return AG das Objekt
 	 */
 	public AG getAG(int id){
-		System.out.println("Requested ID: " + id);
 		String[][] p = db.query("SELECT * FROM `AG" + profile + "` WHERE `id`='" + id + "'");
 		int pName = -1;
 		for(int i = 0; i < p[1].length; i++){
@@ -183,12 +181,6 @@ public class DBManager {
 				pMaxAnzahl = i;
 				break;
 			}
-		}
-		for(String[] b: p){
-			for(String a: b){
-				System.out.println(a);
-			}
-			System.out.println("");
 		}
 		return new AG(id, p[1][pName], Integer.parseInt(p[1][pMinAnzahl]), Integer.parseInt(p[1][pMaxAnzahl]));
 	}
