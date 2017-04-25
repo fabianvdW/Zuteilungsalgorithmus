@@ -1,5 +1,6 @@
 package Data;
 import java.util.ArrayList;
+
 public class AG {
 	private String name;
 	private int mindestanzahl;
@@ -7,6 +8,7 @@ public class AG {
 	private boolean istVoll;
 	private boolean kannStattFinden;
 	private ArrayList<Person> teilnehmer;
+
 	/**
 	 * Klasse AG, Verwaltet die Daten einer AG
 	 * @param name Name der AG
@@ -19,16 +21,30 @@ public class AG {
 		teilnehmer= new ArrayList<Person>();
 		this.hoechstanzahl=hoechstanzahl;
 	}
+	
+	/**
+	 * Klasse AG, Verwaltet die Daten einer AG
+	 * @param name Name der AG
+	 * @param mindestanzahl Mindestanzahl, damit die AG stattfinden kann
+	 * @param hoechstanzahl Hoechste Anzahl an Personen, die die AG besuchen dürfen
+	 * @param teilnehmer falls personen von beginn an dabei sind
+	 */
+	public AG(String name, int mindestanzahl, int hoechstanzahl, ArrayList<Person> teilnehmer){
+		this.name=name;
+		this.mindestanzahl=mindestanzahl;
+		this.teilnehmer= teilnehmer;
+		this.hoechstanzahl=hoechstanzahl;
+	}
+	
 	/**
 	 * Ein Teilnehmer wird einer AG zugewiesen. Dabei wird auch die Referenz in Person geändert, welche AG der Teilnehmer besucht.
 	 * @param perso Die Person die die AG besuchen soll
 	 * @throws Exception Throws Exception wenn die AG bereits voll ist.
 	 */
 	public void addTeilnehmer(Person perso) throws Exception{
-		
 		if(!istVoll){
-		teilnehmer.add(perso);
-		perso.teileAGZu(this);
+			teilnehmer.add(perso);
+			perso.teileAGZu(this);
 		}else{
 			throw new Exception("Diese Ag ist bereits voll!");
 		}
@@ -39,6 +55,7 @@ public class AG {
 			kannStattFinden=true;
 		}
 	}
+	
 	/**
 	 * Removet ein Teilnehmer von einer AG.
 	 * @param perso Die Person, die die AG nicht mehr besuchen soll
@@ -54,11 +71,11 @@ public class AG {
 			if(teilnehmer.size()<mindestanzahl){
 				kannStattFinden=false;
 			}
-			
 		}else{
 			throw new Exception("Dieser Teilnehmer ist nicht in der AG!");
 		}
 	}
+	
 	/**
 	 * Returnt Teilnehmer
 	 * @return Teilnehmer
@@ -66,6 +83,7 @@ public class AG {
 	public ArrayList<Person> getTeilnehmer(){
 		return this.teilnehmer;
 	}
+	
 	/**
 	 * Return Name
 	 * @return Name
@@ -73,6 +91,7 @@ public class AG {
 	public String getName(){
 		return this.name;
 	}
+	
 	/**
 	 * Return Mindestanzahl an Teilnehmern, damit die AG stattfinden kann.
 	 * @return Mindestanzahl an Teilnehmern
@@ -80,6 +99,7 @@ public class AG {
 	public int getMindestanzahl(){
 		return this.mindestanzahl;
 	}
+	
 	/**
 	 * Return hoechste Anzahl an Teilnehmern
 	 * @return Höchstanzahl
@@ -87,6 +107,7 @@ public class AG {
 	public int getHoechstanzahl(){
 		return this.hoechstanzahl;
 	}
+	
 	/**
 	 * 
 	 * @return Return ob die AG bereits voll ist.
@@ -94,6 +115,7 @@ public class AG {
 	public boolean istVoll(){
 		return this.istVoll;
 	}
+	
 	/**
 	 * 
 	 * @return Ob die AG statt finden kann.
@@ -102,6 +124,7 @@ public class AG {
 		return this.kannStattFinden;
 		
 	}
+	
 	/**
 	 * Beendet die Eintragung. Wenn die AG nicht stattfinden kann, werden alle Teilnehmer removet.
 	 * @return alle Teilnehmer die von der AG removt werden.
