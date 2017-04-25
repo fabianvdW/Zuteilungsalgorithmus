@@ -47,6 +47,12 @@ public class DBManager {
 				+ " `name` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT 'Name des Schülers' ,"
 				+ " `ratings` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NULL COMMENT 'Wahl der AGs nach Reihenfolge' ,"
 				+ " PRIMARY KEY (`id`)) ENGINE = InnoDB;");
+		db.query("CREATE TABLE IF NOT EXISTS `" + database + "`.`AG" + profile + "`"
+				+ "( `id` INT NOT NULL AUTO_INCREMENT ,"
+				+ " `name` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT 'Name des Schülers' ,"
+				+ " `minAnzahl` NULL COMMENT 'Mindest-Anzahl der Schüler' ,"
+				+ " `maxAnzahl` NULL COMMENT 'Maximal-Anzahl der Schüler' ,"
+				+ " PRIMARY KEY (`id`)) ENGINE = InnoDB;");
 	}
 	
 	/**
@@ -80,11 +86,21 @@ public class DBManager {
 	 */
 	public void initializeJavaObjectsFromDB(){
 		String[][] ids = db.query("SELECT `id` FROM `Personen" + profile + "`");
+		boolean first = true;
 		for(String[] id: ids){
+			if(first){
+				first = false;
+				continue;
+			}
 			Algorithmus.Verteilungsalgorithmus.personen.add(getPerson(Integer.parseInt(id[0])));
 		}
 		ids = db.query("SELECT `id` FROM `AG" + profile + "`");
+		first = true;
 		for(String[] id: ids){
+			if(first){
+				first = false;
+				continue;
+			}
 			Algorithmus.Verteilungsalgorithmus.ag.add(getAG(Integer.parseInt(id[0])));
 		}
 	}

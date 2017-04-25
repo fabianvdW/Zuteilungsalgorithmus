@@ -23,6 +23,13 @@ public class DB {
 	 */
 	protected DB(String server, int port, String user, String password, String database){
 		try{
+			try{
+				Class.forName("com.mysql.jdbc.Driver");
+			}
+			catch(ClassNotFoundException e){
+				Logger lgr = Logger.getLogger(DB.class.getName());
+				lgr.log(Level.WARNING, e.getMessage(), e);
+			}
 			con = DriverManager.getConnection("jdbc:mysql://" + server + ":" + port + "/" + database, user, password);
 		}
 		catch(SQLException e){
