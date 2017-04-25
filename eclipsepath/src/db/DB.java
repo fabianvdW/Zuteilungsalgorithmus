@@ -158,13 +158,11 @@ public class DB {
 	 */
 	private String[][] fetch(ResultSet rs){
 		String[][] data = null;
-		System.out.println("fetch() called");
 		try {
 			int i = 0;
-			do{
+			while(rs.next()){
 				i++;
 			}
-			while(rs.next());
 			rs.first();
 			int n = rs.getMetaData().getColumnCount();
 			data = new String[i + 1][n];
@@ -172,13 +170,12 @@ public class DB {
 				data[0][j] = rs.getMetaData().getColumnName(j + 1);
 			}
 			i = 1;
-			do{
+			while(rs.next()){
 				for(int j = 0; j < n; j++){
-					System.out.println("i: " + i + " j: " + j);
 					data[i][j] = rs.getString(j + 1);
+					System.out.println(rs.getString(j + 1));
 				}
 			}
-			while(rs.next());
 		}
 		catch (SQLException e){
 			Logger lgr = Logger.getLogger(DB.class.getName());

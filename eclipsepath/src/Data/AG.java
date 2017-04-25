@@ -12,6 +12,19 @@ public class AG {
 
 	/**
 	 * Klasse AG, Verwaltet die Daten einer AG
+	 * @param name Name der AG
+	 * @param mindestanzahl Mindestanzahl, damit die AG stattfinden kann
+	 * @param hoechstanzahl Hoechste Anzahl an Personen, die die AG besuchen dürfen
+	 */
+	public AG(String name, int mindestanzahl, int hoechstanzahl){
+		this.name=name;
+		this.mindestanzahl=mindestanzahl;
+		teilnehmer= new ArrayList<Person>();
+		this.hoechstanzahl=hoechstanzahl;
+	}
+	
+	/**
+	 * Klasse AG, Verwaltet die Daten einer AG
 	 * @param id ID der AG
 	 * @param name Name der AG
 	 * @param mindestanzahl Mindestanzahl, damit die AG stattfinden kann

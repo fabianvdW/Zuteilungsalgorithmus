@@ -1,7 +1,9 @@
 package db;
 
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import Data.AG;
 import Data.Person;
 import Data.Rating;
@@ -85,9 +87,16 @@ public class DBManager {
 	 */
 	public void initializeJavaObjectsFromDB(){
 		String[][] ids = db.query("SELECT `id` FROM `Personen" + profile + "`");
+		System.out.println("IDs");
+		for(String[] b: ids){
+			for(String a: b){
+				System.out.println(a);
+			}
+			System.out.println("");
+		}
 		boolean first = true;
 		for(String[] id: ids){
-			if(first || id[0]==null){
+			if(first || id[0]==null || id[0].equals("")){
 				first = false;
 				continue;
 			}
@@ -96,12 +105,26 @@ public class DBManager {
 		ids = db.query("SELECT `id` FROM `AG" + profile + "`");
 		first = true;
 		for(String[] id: ids){
-			if(first || id[0]==null){
+			if(first || id[0]==null || id[0].equals("")){
 				first = false;
 				continue;
 			}
 			Algorithmus.Verteilungsalgorithmus.ag.add(getAG(Integer.parseInt(id[0])));
 		}
+	}
+	
+	/**
+	 * 
+	 */
+	private ArrayList<Person> extractArray(String str){
+		ArrayList<Person> arr = new ArrayList<Person>();
+		for(String n: str.split(";;")){
+			if(n==null || n.equals("")){
+				continue;
+			}
+			arr.add(getPerson(Integer.parseInt(n)));
+		}
+		return null;
 	}
 	
 	/**
@@ -111,31 +134,28 @@ public class DBManager {
 	 */
 	public Person getPerson(int id){
 		String[][] p = db.query("SELECT * FROM `Personen" + profile + "` WHERE `id`='" + id + "'");
-		//int i = p[1].length;
-		/*
-		ArrayList<Rating> rating = new ArrayList<Rating>();
+		System.out.println("Person");
+		for(String[] a: p){
+			for(String b: a){
+				System.out.println(b);
+			}
+			System.out.println("");
+		}
 		int pRating = -1;
 		for(int i = 0; i < p[1].length; i++){
-			if(p[0][i].equals("rating")){
+			if(p[0][i].equals("ratings")){
 				pRating = i;
 				break;
 			}
 		}
-		int posSubStr = 0;
-		while(posSubStr != -1){
-			posSubStr = p[1][pRating].indexOf(";;", 0);
-			rating.add(new Rating(new AG(),1));
-		}
-		int pCurAG = -1;
-		for(int i = 0; i < p[1].length; i++){
-			if(p[0][i].equals("curAG")){
-				pCurAG = i;
-				break;
+		ArrayList<Rating> rating = new ArrayList<Rating>();
+		int j = 1;
+		for(String n: p[1][pRating].split(";;")){
+			if(n==null || n.equals("")){
+				continue;
 			}
+			rating.add(new Rating(getAG(Integer.parseInt(n)),j++));
 		}
-		if(pCurAG != -1){
-			return new Person(name, null, getAG(p[1][pCurAG]));
-		}*/
 		int pName = -1;
 		for(int i = 0; i < p[1].length; i++){
 			if(p[0][i].equals("name")){
@@ -168,6 +188,7 @@ public class DBManager {
 	 * @return AG das Objekt
 	 */
 	public AG getAG(int id){
+		System.out.println("Requested ID: " + id);
 		String[][] p = db.query("SELECT * FROM `AG" + profile + "` WHERE `id`='" + id + "'");
 		int pName = -1;
 		for(int i = 0; i < p[1].length; i++){
@@ -190,12 +211,28 @@ public class DBManager {
 				break;
 			}
 		}
-		return new AG(id, p[1][pName], Integer.parseInt(p[1][pMinAnzahl]), Integer.parseInt(p[1][pMaxAnzahl]));
+		int pMember = -1;
+		for(int i = 0; i < p[1].length; i++){
+			if(p[0][i].equals("member")){
+				pMember = i;
+				break;
+			}
+		}
+		for(String[] b: p){
+			for(String a: b){
+				System.out.println(a);
+			}
+			System.out.println("");
+		}
+		if(p[1][pMember]==null || p[1][pMember].equals("")){
+			return new AG(id, p[1][pName], Integer.parseInt(p[1][pMinAnzahl]), Integer.parseInt(p[1][pMaxAnzahl]));
+		}
+		return new AG(id, p[1][pName], Integer.parseInt(p[1][pMinAnzahl]), Integer.parseInt(p[1][pMaxAnzahl]), extractArray(p[1][pMember]));
 	}
 	
-	public void addAG(){
+	public void addAG(AG ag){
 		db.query("INSERT INTO `AG" + profile + "` "
 				+ "(`id`, `name`, `minAnzahl`, `maxAnzahl`, `member`) "
-				+ "VALUES (NULL, 'Blumenpflückerei', '4', '12', '')");
+				+ "VALUES (NULL, '" + ag.getName() + "', '" + ag.getMindestanzahl() + "', '" + ag.getHoechstanzahl() + "', '')");
 	}
 }
