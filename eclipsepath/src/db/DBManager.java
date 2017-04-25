@@ -1,6 +1,6 @@
 package db;
 public class DBManager {
-	public void initializeJavaObjectsFromDb(){
+	public static void initializeJavaObjectsFromDb(){
 		
 	}
 	
