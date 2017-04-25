@@ -23,7 +23,7 @@ public class DB {
 	 */
 	public DB(String server, int port, String user, String password, String database){
 		try{
-			con = DriverManager.getConnection("jdbc:mysql://localhost/" + database, user, password);
+			con = DriverManager.getConnection("jdbc:mysql://" + server + ":" + port + "/" + database, user, password);
 		}
 		catch(SQLException e){
 			Logger lgr = Logger.getLogger(DB.class.getName());
@@ -69,7 +69,7 @@ public class DB {
 	 * @param String query the request as sql-statement
 	 * @return ResultSet the returned data
 	 */
-	public ResultSet query(String sql){
+	private ResultSet query(String sql){
 		try{
 			Statement st = con.createStatement();
 			ResultSet tmp = st.executeQuery(sql);
@@ -94,7 +94,7 @@ public class DB {
 	 * @param PreparedStatment query the request given as prepared
 	 * @return ResultSet the returned data
 	 */
-	public ResultSet query(PreparedStatement sql){
+	private ResultSet query(PreparedStatement sql){
 		try{
 			ResultSet tmp = sql.executeQuery();
 			try{
