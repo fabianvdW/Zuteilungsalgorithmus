@@ -87,7 +87,7 @@ public class DBManager {
 	 */
 	public void initializeJavaObjectsFromDB(){
 		String[][] ids = db.query("SELECT `id` FROM `Personen" + profile + "`");
-		System.out.println("IDs");
+		
 		for(String[] b: ids){
 			for(String a: b){
 				System.out.println(a);

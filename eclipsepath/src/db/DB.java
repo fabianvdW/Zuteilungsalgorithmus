@@ -86,14 +86,23 @@ public class DB {
 	 */
 	protected String[][] query(String sql){
 		try{
+			
+			
 			Statement st = con.createStatement();
+			
 			String[][] r = fetch(st.executeQuery(sql));
 			try{
 				st.close();
-			}
-			catch(SQLException e){
+			}catch(SQLException e){
 				Logger lgr = Logger.getLogger(DB.class.getName());
 				lgr.log(Level.SEVERE, e.getMessage(), e);
+			}
+			System.out.println("R:");
+			for(String[] s: r){
+				for(String s1:s){
+					System.out.print(s1+",");
+				}
+				System.out.println("N");
 			}
 			return r;
 		}
@@ -164,7 +173,9 @@ public class DB {
 				i++;
 			}
 			rs.first();
+			System.out.println("I: "+i);
 			int n = rs.getMetaData().getColumnCount();
+			System.out.println("N: "+n);
 			data = new String[i + 1][n];
 			for(int j = 0; j < n; j++){
 				data[0][j] = rs.getMetaData().getColumnName(j + 1);
@@ -173,8 +184,9 @@ public class DB {
 			while(rs.next()){
 				for(int j = 0; j < n; j++){
 					data[i][j] = rs.getString(j + 1);
-					System.out.println(rs.getString(j + 1));
+					
 				}
+				i++;
 			}
 		}
 		catch (SQLException e){
