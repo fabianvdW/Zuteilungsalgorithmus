@@ -9,8 +9,8 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class DB {
-	private Connection con;
+protected class DB {
+	protected Connection con;
 
 	/**
 	 * Class for managed connections and interactions with a given server
@@ -21,7 +21,7 @@ public class DB {
 	 * @param String the password to authenticate
 	 * @param String the database to connect to
 	 */
-	public DB(String server, int port, String user, String password, String database){
+	protected DB(String server, int port, String user, String password, String database){
 		try{
 			con = DriverManager.getConnection("jdbc:mysql://" + server + ":" + port + "/" + database, user, password);
 		}
@@ -38,7 +38,7 @@ public class DB {
 	 * @param String[] data the values here will be inserted into the wildcards at the sql-statement
 	 * @return
 	 */
-	private void update(String sql, String[] data){
+	protected void update(String sql, String[] data){
 		PreparedStatement ps = null;
 		try{
 			ps = con.prepareStatement(sql);
@@ -69,7 +69,7 @@ public class DB {
 	 * @param String query the request as sql-statement
 	 * @return ResultSet the returned data
 	 */
-	private ResultSet query(String sql){
+	protected ResultSet query(String sql){
 		try{
 			Statement st = con.createStatement();
 			ResultSet tmp = st.executeQuery(sql);
@@ -94,7 +94,7 @@ public class DB {
 	 * @param PreparedStatment query the request given as prepared
 	 * @return ResultSet the returned data
 	 */
-	private ResultSet query(PreparedStatement sql){
+	protected ResultSet query(PreparedStatement sql){
 		try{
 			ResultSet tmp = sql.executeQuery();
 			try{
@@ -119,7 +119,7 @@ public class DB {
 	 * @param ResultSet the return of a query to the sql-server
 	 * @return String[][] with all data. 1.dim is each row and 2.dim is each column
 	 */
-	private String[][] fetch(ResultSet rs){
+	protected String[][] fetch(ResultSet rs){
 		String[][] data = null;
 		try {
 			int i = 0;
