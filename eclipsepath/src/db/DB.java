@@ -88,6 +88,7 @@ public class DB {
 		try{
 			Statement st = con.createStatement();
 			ResultSet tmp = st.executeQuery(sql);
+			String[][] r = fetch(tmp);
 			try{
 				st.close();
 			}
@@ -95,7 +96,7 @@ public class DB {
 				Logger lgr = Logger.getLogger(DB.class.getName());
 				lgr.log(Level.SEVERE, e.getMessage(), e);
 			}
-			return fetch(tmp);
+			return r;
 		}
 		catch(SQLException e){
 			Logger lgr = Logger.getLogger(DB.class.getName());
