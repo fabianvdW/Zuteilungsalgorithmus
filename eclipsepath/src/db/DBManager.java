@@ -50,8 +50,8 @@ public class DBManager {
 		db.update("CREATE TABLE IF NOT EXISTS `" + database + "`.`AG" + profile + "`"
 				+ "( `id` INT NOT NULL AUTO_INCREMENT ,"
 				+ " `name` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT 'Name des Schülers' ,"
-				+ " `minAnzahl` NULL COMMENT 'Mindest-Anzahl der Schüler' ,"
-				+ " `maxAnzahl` NULL COMMENT 'Maximal-Anzahl der Schüler' ,"
+				+ " `minAnzahl` INT NULL COMMENT 'Mindest-Anzahl der Schüler' ,"
+				+ " `maxAnzahl` INT NULL COMMENT 'Maximal-Anzahl der Schüler' ,"
 				+ " PRIMARY KEY (`id`)) ENGINE = InnoDB;");
 	}
 	
