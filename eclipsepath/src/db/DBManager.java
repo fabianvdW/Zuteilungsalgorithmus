@@ -117,7 +117,7 @@ public class DBManager {
 		}
 	}
 	
-	private String[][] query(String sql){
+	/*private String[][] query(String sql){
 		String[][] tmp = null;
 		try{
 			Statement st = db.con.createStatement();
@@ -149,7 +149,7 @@ public class DBManager {
 			lgr.log(Level.WARNING, e.getMessage(), e);
 		}
 		return tmp;
-	}
+	}*/
 	
 	/**
 	 * Gibt ein Person-Objekt zurück mit allen Daten die es in der DB gibt
