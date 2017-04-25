@@ -47,12 +47,13 @@ public class DBManager {
 				+ " `name` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT 'Name des Schülers' ,"
 				+ " `ratings` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NULL COMMENT 'Wahl der AGs nach Reihenfolge' ,"
 				+ " PRIMARY KEY (`id`)) ENGINE = InnoDB");
-		db.update("CREATE TABLE IF NOT EXISTS `" + database + "`.`AG" + profile + "`"
-				+ "( `id` INT NOT NULL AUTO_INCREMENT ,"
-				+ " `name` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT 'Name des Schülers' ,"
-				+ " `minAnzahl` INT NULL COMMENT 'Mindest-Anzahl der Schüler' ,"
-				+ " `maxAnzahl` INT NULL COMMENT 'Maximal-Anzahl der Schüler' ,"
-				+ " PRIMARY KEY (`id`)) ENGINE = InnoDB");
+		db.update("CREATE TABLE IF NOT EXISTS`" + database + "`.`AG" + profile + "` "
+				+ "( `id` INT NOT NULL AUTO_INCREMENT , "
+				+ "`name` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT 'Name der AG' , "
+				+ "`minAnzahl` INT NOT NULL COMMENT 'Mindest-Anzahl der Teilnehmer' , "
+				+ "`maxAnzahl` INT NOT NULL COMMENT 'Maximale-Anzahl der Teilnehmer' , "
+				+ "`member` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT 'Schüler die an dieser AG teilnehmen' , "
+				+ "PRIMARY KEY (`id`)) ENGINE = InnoDB");
 	}
 	
 	/**
@@ -192,5 +193,11 @@ public class DBManager {
 			}
 		}
 		return new AG(id, p[1][pName], Integer.parseInt(p[1][pMinAnzahl]), Integer.parseInt(p[1][pMaxAnzahl]));
+	}
+	
+	public void addAG(){
+		db.query("INSERT INTO `AG" + profile + "` "
+				+ "(`id`, `name`, `minAnzahl`, `maxAnzahl`) "
+				+ "VALUES (NULL, 'Blumenpflückerei', '4', '12')");
 	}
 }
