@@ -63,12 +63,12 @@ public class Verteilungsalgorithmus {
 		System.out.println("Folgende Personen sind in folgenden AGen:");
 		System.out.println("----------------------------------------------------------");
 		ArrayList<AG> findenNichtStatt = new ArrayList<AG>();
-		ArrayList<Person> habenKeineAg= new ArrayList<Person>();
+		
 		for(AG ags: ag){
-			ArrayList<Person> ausgetragene=ags.finishEintragung();
+			ags.finishEintragung();
 			if(!ags.kannStattFinden()){
 				findenNichtStatt.add(ags);
-				habenKeineAg.addAll(ausgetragene);
+				
 				continue;
 			}
 			System.out.println("In der AG "+ ags.getName()+" sind folgende Personen: " +"("+ags.getTeilnehmer().size()+"/"+ags.getHoechstanzahl()+")Teilnehmer~"+((double) ags.getTeilnehmer().size())/ ags.getHoechstanzahl()+"%");
@@ -88,7 +88,8 @@ public class Verteilungsalgorithmus {
 		}
 		System.out.println("----------------------------------------------------------");
 		System.out.println("Folgende Personen haben keine AG:");
-		for(Person p: habenKeineAg){
+		for(Person p: personen){
+			if(p.getBesuchteAG()==null)
 			System.out.println(p.getName());
 		}
 		System.out.println("----------------------------------------------------------");
