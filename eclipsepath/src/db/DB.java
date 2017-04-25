@@ -69,7 +69,7 @@ public class DB {
 	 * @param String query the request as sql-statement
 	 * @return ResultSet the returned data
 	 */
-	private ResultSet query(String sql){
+	public ResultSet query(String sql){
 		try{
 			Statement st = con.createStatement();
 			ResultSet tmp = st.executeQuery(sql);
@@ -94,7 +94,7 @@ public class DB {
 	 * @param PreparedStatment query the request given as prepared
 	 * @return ResultSet the returned data
 	 */
-	private ResultSet query(PreparedStatement sql){
+	public ResultSet query(PreparedStatement sql){
 		try{
 			ResultSet tmp = sql.executeQuery();
 			try{
