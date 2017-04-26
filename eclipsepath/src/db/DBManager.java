@@ -136,7 +136,7 @@ public class DBManager {
 				break;
 			}
 		}
-		return new Person(id, p[1][pName], null);
+		return new Person(id, p[1][pName], rating);
 	}
 	
 	/**
