@@ -243,6 +243,6 @@ public class DBManager {
 	 * Gibt zurück, ob die Datenbank verbunden ist
 	 */
 	public boolean isConnected(){
-		return db.isConnected();
+		return (db==null ? false: db.isConnected());
 	}
 }

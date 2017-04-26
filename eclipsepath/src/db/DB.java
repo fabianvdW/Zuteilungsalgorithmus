@@ -10,8 +10,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DB {
-	protected Connection con;
-	protected boolean isConnected;
+	private Connection con;
+	private boolean isConnected;
 
 	/**
 	 * Class for managed connections and interactions with a given server
