@@ -71,7 +71,7 @@ public class Person {
 	}
 	
 	/**
-	 * Gibt das Objekt mit allen Attributen als String zurück
+	 * Gibt das Objekt mit allen Attributen als String zurï¿½ck
 	 * @return Objekt als String
 	 */
 	public String toString(){
@@ -81,7 +81,7 @@ public class Person {
 				+ "id:" + id + ", "
 				+ "name:" + name + ", "
 				+ "ag:" + besuchtAG + ", "
-				+ "gewählt:[";
+				+ "gewÃ¤hlt:[";
 		for(Rating a: r){
 			ret += a.toString();
 		}

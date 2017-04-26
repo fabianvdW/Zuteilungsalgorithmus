@@ -39,9 +39,9 @@ public class DB {
 	}
 	
 	/**
-	 * Gibt die Anzahl der Datensätze für die gegebene Tabelle zurück
+	 * Gibt die Anzahl der DatensÃ¤tze fÃ¼r die gegebene Tabelle zurÃ¼ck
 	 * @param String table der name der Tabelle
-	 * @return int die Größe
+	 * @return int die GrÃ¶ÃŸe
 	 */
 	protected int getSize(String table){
 		return query("SELECT `id` FROM `" + table + "`")[0].length - 1;
