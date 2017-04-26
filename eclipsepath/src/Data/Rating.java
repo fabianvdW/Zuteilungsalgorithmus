@@ -10,7 +10,7 @@ public class Rating {
 	public AG getAG(){
 		return this.bewerteteAG;
 	}
-	public int getRating(){
+	public int getRatingValue(){
 		return this.rating;
 	}
 	

@@ -167,7 +167,7 @@ public class DBManager {
 		}
 		int score=0;
 		for(int i=0;i<rating.size();i++){
-			score+=rating.get(i).getRating();
+			score+=rating.get(i).getRatingValue();
 		}
 		try{
 			if(score!=0){
@@ -186,8 +186,8 @@ public class DBManager {
 	 */
 	public void addPerson(Person p){
 		String tmp = "";
-		Rating[] t = new Rating[p.getRating().size()];
-		t = p.getRating().toArray(t);
+		Rating[] t = new Rating[p.getRatingAL().size()];
+		t = p.getRatingAL().toArray(t);
 		int i = 0;
 		for(Rating n: t){
 			tmp += n.getAG().getId() + (i++ < t.length ? "," : "");

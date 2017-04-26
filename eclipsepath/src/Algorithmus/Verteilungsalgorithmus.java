@@ -34,15 +34,24 @@ public class Verteilungsalgorithmus {
 	 * Der eigentliche Verteilungsalgorithmus
 	 */
 	public static void verteile() {
-		for(Person p: personen){
-			try{
-			p.getRating().get(1).getAG().addTeilnehmer(p);
-			}catch(Exception e){
-				e.printStackTrace();
-				System.exit(0);
+
+	}
+
+	/**
+	 *	Beliebtheit	 
+	 */
+	public static void berechneBeliebtheit(){
+		int i = 0;
+		for(AG ags: ag){
+			ags.setBeliebtheit(0);
+			for(Person p: personen){
+				ags.setBeliebtheit(ags.getBeliebtheit()+p.getRatingAL().get(i).getRatingValue());
 			}
+			i++;
+			System.out.println(ags.getBeliebtheit());
 		}
 	}
+
 	/**
 	 * Kurze Ausgabe aller Objekte
 	 */
@@ -67,9 +76,9 @@ public class Verteilungsalgorithmus {
 				score+=Math.pow(7, 2);
 			}else{
 				int currRating=0;
-				for(Rating r: p.getRating()){
+				for(Rating r: p.getRatingAL()){
 					if( r.getAG().equals(p.getBesuchteAG())){
-						currRating=r.getRating();
+						currRating=r.getRatingValue();
 					}
 				}
 				score+=Math.pow(3-currRating, 2);
