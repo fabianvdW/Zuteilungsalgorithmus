@@ -95,6 +95,7 @@ public class DBManager {
 				first = false;
 				continue;
 			}
+			System.out.println(getAG(Integer.parseInt(id[0])).toString());
 			Algorithmus.Verteilungsalgorithmus.ag.add(getAG(Integer.parseInt(id[0])));
 		}
 		ids = db.query("SELECT `id` FROM `Personen" + profile + "`");
@@ -228,9 +229,20 @@ public class DBManager {
 		return new AG(id, p[1][pName], Integer.parseInt(p[1][pMinAnzahl]), Integer.parseInt(p[1][pMaxAnzahl]));
 	}
 	
+	/**
+	 * Fügt eine AG hinzu
+	 * @param ag
+	 */
 	public void addAG(AG ag){
 		db.query("INSERT INTO `AG" + profile + "` "
 				+ "(`id`, `name`, `minAnzahl`, `maxAnzahl`, `member`) "
 				+ "VALUES (NULL, '" + ag.getName() + "', '" + ag.getMindestanzahl() + "', '" + ag.getHoechstanzahl() + "', '')");
+	}
+	
+	/**
+	 * Gibt zurück, ob die Datenbank verbunden ist
+	 */
+	public boolean isConnected(){
+		return db.isConnected();
 	}
 }

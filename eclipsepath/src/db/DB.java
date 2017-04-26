@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 
 public class DB {
 	protected Connection con;
+	protected boolean isConnected;
 
 	/**
 	 * Class for managed connections and interactions with a given server
@@ -31,8 +32,10 @@ public class DB {
 				lgr.log(Level.WARNING, e.getMessage(), e);
 			}
 			con = DriverManager.getConnection("jdbc:mysql://" + server + ":" + port + "/" + database + "?useSSL=true", user, password);
+			isConnected = true;
 		}
 		catch(SQLException e){
+			isConnected = false;
 			Logger lgr = Logger.getLogger(DB.class.getName());
 			lgr.log(Level.WARNING, e.getMessage(), e);
 		}
@@ -193,9 +196,16 @@ public class DB {
 	}
 	
 	/**
+	 * Returns if the db is connected
+	 */
+	protected boolean isConnected(){
+		return isConnected;
+	}
+	
+	/**
 	 * This must be run after the DB is not used any more to release the used connection
 	 */
-	public void close(){
+	protected void close(){
 		if(con!=null){
 			try{
 				con.close();

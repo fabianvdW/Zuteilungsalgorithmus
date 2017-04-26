@@ -177,6 +177,13 @@ public class GUI extends JFrame{
 						loginUserField.getText(),
 						String.valueOf(loginPasswordField.getPassword()),
 						loginDatabaseField.getText());
+				if(dbm.isConnected()){
+					dbm.initializeJavaObjectsFromDB();
+					login.dispose();
+				}
+				else{
+					showError("Es konnte keine Verbindung zur Datenbank hergestellt werden");
+				}
 			}
 		}
 	}
