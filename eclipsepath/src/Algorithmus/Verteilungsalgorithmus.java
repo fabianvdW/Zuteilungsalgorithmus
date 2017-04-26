@@ -45,7 +45,7 @@ public class Verteilungsalgorithmus {
 		for(AG ags: ag){
 			ags.setBeliebtheit(0);
 			for(Person p: personen){
-				ags.setBeliebtheit(ags.getBeliebtheit()+p.getRating().get(i).getRating());
+				ags.setBeliebtheit(ags.getBeliebtheit()+p.getRatingAL().get(i).getRatingValue());
 			}
 			i++;
 			System.out.println(ags.getBeliebtheit());
@@ -76,9 +76,9 @@ public class Verteilungsalgorithmus {
 				score+=Math.pow(7, 2);
 			}else{
 				int currRating=0;
-				for(Rating r: p.getRating()){
+				for(Rating r: p.getRatingAL()){
 					if( r.getAG().equals(p.getBesuchteAG())){
-						currRating=r.getRating();
+						currRating=r.getRatingValue();
 					}
 				}
 				score+=Math.pow(3-currRating, 2);
