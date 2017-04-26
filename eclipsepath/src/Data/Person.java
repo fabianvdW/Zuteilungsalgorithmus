@@ -82,7 +82,7 @@ public class Person {
 		String ret = "{Class:Person, "
 				+ "id:" + id + ", "
 				+ "name:" + name + ", "
-				+ "ag:" + besuchtAG + ", "
+				+ "ag:" + (besuchtAG==null? null:besuchtAG.getName()) + ", "
 				+ "gewählt:[";
 		if(r!=null){
 		for(Object a: r){

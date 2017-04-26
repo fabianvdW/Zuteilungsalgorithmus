@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import Data.AG;
 import Data.Person;
+import Data.Rating;
 import db.DBManager;
 
 public class Verteilungsalgorithmus {
@@ -31,7 +32,14 @@ public class Verteilungsalgorithmus {
 	 * Der eigentliche Verteilungsalgorithmus
 	 */
 	public static void verteile() {
-
+		for(Person p: personen){
+			try{
+			p.getRating().get(1).getAG().addTeilnehmer(p);
+			}catch(Exception e){
+				e.printStackTrace();
+				System.exit(0);
+			}
+		}
 	}
 
 	/**
@@ -40,26 +48,20 @@ public class Verteilungsalgorithmus {
 	 */
 	public static double checkScore() throws Exception{
 		double score=0;
-
-		int[] ratings = new int[ag.size()];
-		for(Person p:personen){
+		for(Person p: personen){
 			if(p.getBesuchteAG()==null){
-				//throw new Exception("Der Schüler " + p.toString() + " hat keine AG");
-				score+=ag.size()+1;
-				continue;
-			}
-			for(int i=0;i<ag.size();i++){
-				if(p.getBesuchteAG().equals(p.getRating().get(i))){
-					ratings[i]+=1;
+				score+=Math.pow(7, 2);
+			}else{
+				int currRating=0;
+				for(Rating r: p.getRating()){
+					if( r.getAG().equals(p.getBesuchteAG())){
+						currRating=r.getRating();
+					}
 				}
+				score+=Math.pow(3-currRating, 2);
 			}
-			
 		}
-		for(int i=1;i<ag.size()+1;i++){
-			score+=ratings[i-1]*i;
-		}
-		score/=(double)personen.size();
-		return score;
+		return score/personen.size();
 	}
 
 	/**
@@ -104,20 +106,20 @@ public class Verteilungsalgorithmus {
 		System.out.println("----------------------------------------------------------");
 		try{
 		System.out.println("Damit hat der Algorithmus einen Score von:" + checkScore());
-		System.out.println("Bester Score: 1 " + "\n"
+		System.out.println("Bester Score: 0 " + "\n"
 				+ "Schlechtester Score "
-				+(ag.size()+1)+"");
+				+("49"));
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 		
-		/*for(AG ags: ag){
+		for(AG ags: ag){
 			System.out.println(ags.toString());
 		}
 		for(Person p: personen){
 			System.out.println(p.toString());
 			
-		}*/
+		}
 		
 	}
 
