@@ -111,7 +111,7 @@ public class DBManager {
 	
 	/**
 	 * Gibt ein Person-Objekt zurück mit allen Daten die es in der DB gibt
-	 * @param int ID des Schülers
+	 * @param id des Schülers
 	 * @return Person das Objekt
 	 */
 	public Person getPerson(int id){
