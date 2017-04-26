@@ -101,6 +101,15 @@ public class Verteilungsalgorithmus {
 		}
 		System.out.println("----------------------------------------------------------");
 		System.out.println("Damit hat der Algorithmus einen Score von:" + checkScore());
+		
+		for(AG ags: ag){
+			System.out.println(ags.toString());
+		}
+		for(Person p: personen){
+			System.out.println(p.toString());
+			
+		}
+		
 	}
 
 }
