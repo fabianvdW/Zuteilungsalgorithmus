@@ -9,7 +9,10 @@ import Data.Rating;
 public class Test {
 
 	public static void laufeTestsAufVerteilung(int anzTests) {
+		double score=0;
 		for(int i=1;i<=anzTests;i++){
+			Verteilungsalgorithmus.ag.clear();
+			Verteilungsalgorithmus.personen.clear();
 			String uuid= "";
 			int random=(int)(Math.random()*150+50);
 			uuid=UUID.randomUUID().toString();
@@ -60,7 +63,12 @@ public class Test {
 			}
 			Verteilungsalgorithmus.verteile();
 			Verteilungsalgorithmus.macheAusgabe();
+			try{
+			score+=Verteilungsalgorithmus.checkScore();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
 		}
-		
+		System.out.println("Nach "+anzTests+" Versuchen erhält der Algorithmus eine durschnittliche Punktzahl von " +score/anzTests);
 	}
 }
