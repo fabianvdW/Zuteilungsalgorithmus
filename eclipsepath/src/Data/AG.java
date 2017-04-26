@@ -163,12 +163,12 @@ public class AG {
 	}
 	
 	/**
-	 * Gibt das Objekt mit allen Attributen als String zurück
+	 * Gibt das Objekt mit allen Attributen als String zurï¿½ck
 	 * @return Objekt als String
 	 */
 	public String toString(){
-		Person[] p = null;
-		p = teilnehmer.toArray(p);
+		Object[] p = null;
+		p =  teilnehmer.toArray();
 		String ret = "{Class:AG, "
 				+ "id:" + id + ", "
 				+ "name:" + name + ", "
@@ -177,7 +177,7 @@ public class AG {
 				+ "istVoll:" + istVoll + ", "
 				+ "findetStatt:" + kannStattFinden + ", "
 				+ "Teilnehmer:[";
-		for(Person a: p){
+		for(Object a: p){
 			ret += a.toString();
 		}
 		return ret + "]}";

@@ -74,17 +74,23 @@ public class Person {
 	 * Gibt das Objekt mit allen Attributen als String zur�ck
 	 * @return Objekt als String
 	 */
+	@Override
 	public String toString(){
-		Rating[] r = null;
-		r = ratings.toArray(r);
+		Object[] r = null;
+		if(ratings!=null){
+		r= ratings.toArray();
+		}
 		String ret = "{Class:Person, "
 				+ "id:" + id + ", "
 				+ "name:" + name + ", "
 				+ "ag:" + besuchtAG + ", "
 				+ "gewählt:[";
-		for(Rating a: r){
+		if(r!=null){
+		for(Object a: r){
 			ret += a.toString();
 		}
-		return ret + "]}";
+		}
+		return ret +"]}";
+		
 	}
 }
