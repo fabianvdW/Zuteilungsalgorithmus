@@ -50,7 +50,7 @@ public class Person {
 	 * 
 	 * @return Das Rating
 	 */
-	public ArrayList<Rating> getRating(){
+	public ArrayList<Rating> getRatingAL(){
 		return this.ratings;
 	}
 	
