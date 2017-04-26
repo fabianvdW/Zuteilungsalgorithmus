@@ -34,15 +34,24 @@ public class Verteilungsalgorithmus {
 	 * Der eigentliche Verteilungsalgorithmus
 	 */
 	public static void verteile() {
-		for(Person p: personen){
-			try{
-			p.getRating().get(1).getAG().addTeilnehmer(p);
-			}catch(Exception e){
-				e.printStackTrace();
-				System.exit(0);
+
+	}
+
+	/**
+	 *	Beliebtheit	 
+	 */
+	public static void berechneBeliebtheit(){
+		int i = 0;
+		for(AG ags: ag){
+			ags.setBeliebtheit(0);
+			for(Person p: personen){
+				ags.setBeliebtheit(ags.getBeliebtheit()+p.getRating().get(i).getRating());
 			}
+			i++;
+			System.out.println(ags.getBeliebtheit());
 		}
 	}
+
 	/**
 	 * Kurze Ausgabe aller Objekte
 	 */
