@@ -161,4 +161,25 @@ public class AG {
 		}
 		return austragung;
 	}
+	
+	/**
+	 * Gibt das Objekt mit allen Attributen als String zurück
+	 * @return Objekt als String
+	 */
+	public String toString(){
+		Person[] p = null;
+		p = teilnehmer.toArray(p);
+		String ret = "{Class:AG, "
+				+ "id:" + id + ", "
+				+ "name:" + name + ", "
+				+ "min:" + mindestanzahl + ", "
+				+ "max:" + hoechstanzahl + ", "
+				+ "istVoll:" + istVoll + ", "
+				+ "findetStatt:" + kannStattFinden + ", "
+				+ "Teilnehmer:[";
+		for(Person a: p){
+			ret += a.toString();
+		}
+		return ret + "]}";
+	}
 }
