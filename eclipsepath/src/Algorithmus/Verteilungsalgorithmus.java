@@ -105,11 +105,11 @@ public class Verteilungsalgorithmus {
 		for(AG ags: ag){
 			System.out.println(ags.toString());
 		}
-		System.out.println(personen.size());
 		for(Person p: personen){
-			p.toString();
+			System.out.println(p.toString());
 			
 		}
+		
 	}
 
 }

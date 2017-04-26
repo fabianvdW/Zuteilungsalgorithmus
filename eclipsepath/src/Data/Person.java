@@ -71,10 +71,9 @@ public class Person {
 	}
 	
 	/**
-	 * Gibt das Objekt mit allen Attributen als String zur�ck
+	 * Gibt das Objekt mit allen Attributen als String zurueck
 	 * @return Objekt als String
 	 */
-	@Override
 	public String toString(){
 		Object[] r = null;
 		if(ratings!=null){
