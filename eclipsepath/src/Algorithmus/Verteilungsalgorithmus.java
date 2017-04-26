@@ -40,6 +40,7 @@ public class Verteilungsalgorithmus {
 	 */
 	public static double checkScore() throws Exception{
 		double score=0;
+
 		int[] ratings = new int[ag.size()];
 		for(Person p:personen){
 			if(p.getBesuchteAG()==null){
