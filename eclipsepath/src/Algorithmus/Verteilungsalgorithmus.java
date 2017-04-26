@@ -64,18 +64,7 @@ public class Verteilungsalgorithmus {
 			
 		}
 	}
-	/**
-	 * Kurze Ausgabe aller Objekte
-	 */
-	public static void statusCheck(){
-		for(AG ags: ag){
-			System.out.println(ags.toString());
-		}
-		for(Person p: personen){
-			System.out.println(p.toString());
-			
-		}
-	}
+
 
 	/**
 	 * 
