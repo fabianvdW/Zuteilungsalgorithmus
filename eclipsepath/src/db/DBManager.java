@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import Algorithmus.Verteilungsalgorithmus;
 import Data.AG;
 import Data.Person;
 import Data.Rating;
@@ -87,17 +88,8 @@ public class DBManager {
 	 *
 	 */
 	public void initializeJavaObjectsFromDB(){
-		String[][] ids = db.query("SELECT `id` FROM `Personen" + profile + "`");
+		String[][]ids = db.query("SELECT `id` FROM `AG" + profile + "`");
 		boolean first = true;
-		for(String[] id: ids){
-			if(first || id[0]==null || id[0].equals("")){
-				first = false;
-				continue;
-			}
-			Algorithmus.Verteilungsalgorithmus.personen.add(getPerson(Integer.parseInt(id[0])));
-		}
-		ids = db.query("SELECT `id` FROM `AG" + profile + "`");
-		first = true;
 		for(String[] id: ids){
 			if(first || id[0]==null || id[0].equals("")){
 				first = false;
@@ -105,6 +97,16 @@ public class DBManager {
 			}
 			Algorithmus.Verteilungsalgorithmus.ag.add(getAG(Integer.parseInt(id[0])));
 		}
+		ids = db.query("SELECT `id` FROM `Personen" + profile + "`");
+		first = true;
+		for(String[] id: ids){
+			if(first || id[0]==null || id[0].equals("")){
+				first = false;
+				continue;
+			}
+			Algorithmus.Verteilungsalgorithmus.personen.add(getPerson(Integer.parseInt(id[0])));
+		}
+		
 	}
 	
 	/**
@@ -122,12 +124,28 @@ public class DBManager {
 			}
 		}
 		ArrayList<Rating> rating = new ArrayList<Rating>();
-		int j = 1;
+		
 		for(String n: p[1][pRating].split(",")){
 			if(n==null || n.equals("")){
 				continue;
 			}
-			rating.add(new Rating(getAG(Integer.parseInt(n)),j++));
+			AG ag = null;
+			for(AG agi: Verteilungsalgorithmus.ag){
+				if(agi.getId()==Integer.parseInt(n.substring(0,1))){
+					ag=agi;
+				}
+			}
+			int ratings= Integer.parseInt(n.substring(2));
+			try{
+				if(ratings>3 || ratings<-3){
+					throw new Exception("Rating liegt nicht im Rahmen!");
+				}
+				rating.add(new Rating(ag,  ratings));
+			}catch(Exception e){
+				Logger lgr = Logger.getLogger(DB.class.getName());
+				lgr.log(Level.WARNING, e.getMessage(),e);
+			}
+			
 		}
 		int pName = -1;
 		for(int i = 0; i < p[1].length; i++){
@@ -135,6 +153,18 @@ public class DBManager {
 				pName = i;
 				break;
 			}
+		}
+		int score=0;
+		for(int i=0;i<rating.size();i++){
+			score+=rating.get(i).getRating();
+		}
+		try{
+			if(score!=0){
+				throw new Exception("Der Schüler "+p[1][pName]+" hat kein ingesamtes Rating von 0, sondern " +score+".");
+			}
+		}catch(Exception e){
+			Logger lgr = Logger.getLogger(DB.class.getName());
+			lgr.log(Level.WARNING, e.getMessage(),e);
 		}
 		return new Person(id, p[1][pName], rating);
 	}

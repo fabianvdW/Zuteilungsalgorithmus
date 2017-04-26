@@ -59,18 +59,24 @@ public class AG {
 	/**
 	 * Ein Teilnehmer wird einer AG zugewiesen. Dabei wird auch die Referenz in Person geändert, welche AG der Teilnehmer besucht.
 	 * @param perso Die Person die die AG besuchen soll
-	 * @throws Exception Throws Exception wenn die AG bereits voll ist.
+	 * @throws Exception Throws Exception wenn die AG bereits voll ist, oder wenn die Person bereits in der AG ist.
+	 * 
 	 */
 	public void addTeilnehmer(Person perso) throws Exception{
 		if(!istVoll){
-			teilnehmer.add(perso);
-			perso.teileAGZu(this);
+			if(!teilnehmer.contains(perso)){
+				teilnehmer.add(perso);
+				perso.teileAGZu(this);
+			}else{
+				throw new Exception("Diese Person ist bereits in der AG!");
+			}
 		}else{
 			throw new Exception("Diese Ag ist bereits voll!");
 		}
 		if(this.teilnehmer.size()==hoechstanzahl){
 			istVoll=true;
 		}
+		
 		if(this.teilnehmer.size()>=mindestanzahl){
 			kannStattFinden=true;
 		}
@@ -178,7 +184,11 @@ public class AG {
 				+ "findetStatt:" + kannStattFinden + ", "
 				+ "Teilnehmer:[";
 		for(Object a: p){
-			ret += a.toString();
+			Person b=null;
+			if(a instanceof Person){
+				b=(Person) a;
+			}
+			ret += b.getName()+", ";
 		}
 		return ret + "]}";
 	}

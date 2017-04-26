@@ -15,10 +15,10 @@ public class Rating {
 	}
 	
 	/**
-	 * Gibt das Objekt mit allen Attributen als String zurück
+	 * Gibt das Objekt mit allen Attributen als String zurï¿½ck
 	 * @return Objekt als String
 	 */
 	public String toString(){
-		return "{Class:Rating, [" + bewerteteAG.getName() + "]}";
+		return "{Class:Rating, [" + bewerteteAG.getName() + "]" +", Rating: "+this.rating+"}";
 	}
 }
