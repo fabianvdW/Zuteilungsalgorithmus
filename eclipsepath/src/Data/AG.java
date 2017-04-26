@@ -5,6 +5,7 @@ public class AG {
 	private String name;
 	private int mindestanzahl;
 	private int hoechstanzahl;
+	private int beliebtheit;
 	private boolean istVoll;
 	private boolean kannStattFinden;
 	private ArrayList<Person> teilnehmer;
@@ -132,6 +133,21 @@ public class AG {
 	 */
 	public int getHoechstanzahl(){
 		return this.hoechstanzahl;
+	}
+	
+	/**
+	 *Return beliebtheit (Quotient der bewertungen aller personen in dieser AG)
+	 *@return BeliebtheitsQuotient
+	 */
+	public int getBeliebtheit(){
+		return this.beliebtheit;
+	}
+	
+	/**
+	 * 
+	 */
+	public void setBeliebtheit(int b){
+		beliebtheit = b;
 	}
 	
 	/**
