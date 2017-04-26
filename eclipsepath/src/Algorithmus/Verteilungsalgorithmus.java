@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import Data.AG;
 import Data.Person;
 import Data.Rating;
+import Tests.Test;
 import db.DBManager;
 
 public class Verteilungsalgorithmus {
@@ -21,11 +22,12 @@ public class Verteilungsalgorithmus {
 	public static void main(String[] args) {
 		ag = new ArrayList<AG>();
 		personen = new ArrayList<Person>();
-		DBManager dbm = new DBManager();
-		dbm.connect("agent77326.tk", 3306, "fabi", "4ma9vJdZUH7J70Wh", "fabi");
-		dbm.initializeJavaObjectsFromDB();
-		verteile();
-		macheAusgabe();
+		Test.laufeTestsAufVerteilung(1);
+		//DBManager dbm = new DBManager();
+		//dbm.connect("agent77326.tk", 3306, "fabi", "4ma9vJdZUH7J70Wh", "fabi");
+		//dbm.initializeJavaObjectsFromDB();
+		//verteile();
+		//macheAusgabe();
 	}
 
 	/**
