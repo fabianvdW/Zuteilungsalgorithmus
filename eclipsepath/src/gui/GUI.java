@@ -129,7 +129,7 @@ public class GUI extends JFrame{
 	
 	protected void showError(String msg){
 	    error = new JDialog(this, "Error", true);
-	    error.setSize(400, 160);
+	    error.setSize(300, 120);
 	    error.setLocationRelativeTo(null);
 	    error.getContentPane().setLayout(new GridLayout(2, 1));
 	    error.add(new JLabel(msg), BorderLayout.CENTER);
@@ -160,7 +160,7 @@ public class GUI extends JFrame{
 				}
 				else{
 					for(char s: loginPasswordField.getPassword()){
-						if(s == ' '){
+						if(s==' '){
 							error = "Es wurden nicht alle Felder ausgefüllt";
 						}
 					}
