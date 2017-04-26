@@ -38,8 +38,9 @@ public class Verteilungsalgorithmus {
 	 * 
 	 * @return Score der Verteilung
 	 */
-	public static int checkScore() throws Exception{
-		int score=0;
+	public static double checkScore() throws Exception{
+		double score=0;
+
 		int[] ratings = new int[ag.size()];
 		for(Person p:personen){
 			if(p.getBesuchteAG()==null){
@@ -57,7 +58,7 @@ public class Verteilungsalgorithmus {
 		for(int i=1;i<ag.size()+1;i++){
 			score+=ratings[i-1]*i;
 		}
-		score/=personen.size();
+		score/=(double)personen.size();
 		return score;
 	}
 
