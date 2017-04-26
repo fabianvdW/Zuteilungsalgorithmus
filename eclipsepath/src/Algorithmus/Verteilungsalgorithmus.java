@@ -38,25 +38,26 @@ public class Verteilungsalgorithmus {
 	 * 
 	 * @return Score der Verteilung
 	 */
-	public static int checkScore() {
-		if (personen.size() == 0)
-			return 0;
-		int score = 0;
-		int[] agen = new int[ag.size() + 1];
-		for (Person p : personen) {
-			if (p.getBesuchteAG() == null) {
-				agen[ag.size()] += 1;
-			} else {
-				for (int i = 0; i < p.getRating().size(); i++) {
-					if (p.getRating().get(i).equals(p.getBesuchteAG())) {
-						agen[i] += 1;
-					}
+	public static int checkScore() throws Exception{
+		int score=0;
+		int[] ratings = new int[ag.size()];
+		for(Person p:personen){
+			if(p.getBesuchteAG()==null){
+				//throw new Exception("Der Schüler " + p.toString() + " hat keine AG");
+				score+=ag.size()+1;
+				continue;
+			}
+			for(int i=0;i<ag.size();i++){
+				if(p.getBesuchteAG().equals(p.getRating().get(i))){
+					ratings[i]+=1;
 				}
 			}
+			
 		}
-		for (int i = 0; i < agen.length; i++) {
-			score += ((i + 1) * agen[i]) / personen.size();
+		for(int i=1;i<ag.size()+1;i++){
+			score+=ratings[i-1]*i;
 		}
+		score/=personen.size();
 		return score;
 	}
 
@@ -100,15 +101,22 @@ public class Verteilungsalgorithmus {
 				System.out.println(p.getName());
 		}
 		System.out.println("----------------------------------------------------------");
+		try{
 		System.out.println("Damit hat der Algorithmus einen Score von:" + checkScore());
+		System.out.println("Bester Score: 1 " + "\n"
+				+ "Schlechtester Score "
+				+(ag.size()+1)+"");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 		
-		for(AG ags: ag){
+		/*for(AG ags: ag){
 			System.out.println(ags.toString());
 		}
 		for(Person p: personen){
 			System.out.println(p.toString());
 			
-		}
+		}*/
 		
 	}
 
