@@ -10,6 +10,7 @@ import Data.Rating;
 
 public class DBManager {
 	private DB db;
+
 	private int profile;
 	
 	/**
@@ -21,7 +22,7 @@ public class DBManager {
 	
 	/**
 	 * @author Agent77326
-	 * @param int profileNumber the ID of the profile when there are multiple tables on the same database
+	 * @param profileNumber the ID of the profile when there are multiple tables on the same database
 	 */
 	public DBManager(int profileNumber){
 		profile = profileNumber;
@@ -33,12 +34,12 @@ public class DBManager {
 	}
 	
 	/**
-	 * Connect to a server with a database
-	 * @param String server
-	 * @param int port
-	 * @param String user
-	 * @param String password
-	 * @param String database
+	 * 
+	 * @param server Server URL
+	 * @param port PORT
+	 * @param user USER
+	 * @param password PASSWORD
+	 * @param database Database that should be connected to.
 	 */
 	public void connect(String server, int port, String user, String password, String database){
 		db = new DB(server, port, user, password, database);
@@ -67,7 +68,7 @@ public class DBManager {
 	
 	/**
 	 * Set the current profile
-	 * @param int Profile-ID
+	 * @param profile ProfileID
 	 */
 	public void setProfile(int profile){
 		this.profile = profile;
@@ -83,7 +84,7 @@ public class DBManager {
 	
 	/**
 	 * Reads all the data from the database with the given profile into data and returns it
-	 * @param int profile the profile to read the data from
+	 *
 	 */
 	public void initializeJavaObjectsFromDB(){
 		String[][] ids = db.query("SELECT `id` FROM `Personen" + profile + "`");
