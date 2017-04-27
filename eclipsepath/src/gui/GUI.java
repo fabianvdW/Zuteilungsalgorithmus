@@ -40,7 +40,7 @@ public class GUI extends JFrame{
 	protected JMenuBar up;
 	protected JMenu men1, men2, men3;
 	protected JMenuItem fileExportAG, fileExportPerson, fileReload, fileExit, showAG, showPerson;
-	JTextField agField, pField;
+	protected JTextField agField, pField;
 	
 	// Other Modals
 	protected JDialog login, error, ags;
@@ -52,7 +52,7 @@ public class GUI extends JFrame{
 	
 	// Error-Frame
 	protected JButton errorCloseButton;
-	
+  
 	// Database
 	protected DBManager dbm;
 	
