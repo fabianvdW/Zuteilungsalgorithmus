@@ -171,6 +171,9 @@ public class DB {
 			for(int j = 0; j < n; j++){
 				data[0][j] = rs.getMetaData().getColumnName(j + 1);
 			}
+			if(i < 2){
+				return data;
+			}
 			i = 1;
 			do{
 				for(int j = 0; j < n; j++){

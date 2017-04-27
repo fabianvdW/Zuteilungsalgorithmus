@@ -47,7 +47,7 @@ public class DBManager {
 		db.update("CREATE TABLE IF NOT EXISTS `" + database + "`.`Personen" + profile + "`"
 				+ "( `id` INT NOT NULL AUTO_INCREMENT ,"
 				+ " `name` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT 'Name des Schülers' ,"
-				+ " `ratings` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NULL COMMENT 'Wahl der AGs nach Reihenfolge' ,"
+				+ " `ratings` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NULL COMMENT 'Wahl der AGs mit Wertung' ,"
 				+ " PRIMARY KEY (`id`)) ENGINE = InnoDB");
 		db.update("CREATE TABLE IF NOT EXISTS`" + database + "`.`AG" + profile + "` "
 				+ "( `id` INT NOT NULL AUTO_INCREMENT , "
