@@ -6,7 +6,6 @@ import Data.AG;
 import Data.Person;
 import Data.Rating;
 import Tests.Test;
-import db.DBManager;
 
 public class Verteilungsalgorithmus {
 	public static ArrayList<AG> ag;
@@ -23,9 +22,6 @@ public class Verteilungsalgorithmus {
 		ag = new ArrayList<AG>();
 		personen = new ArrayList<Person>();
 		Test.laufeTestsAufVerteilung(1);
-		//DBManager dbm = new DBManager();
-		//dbm.connect("agent77326.tk", 3306, "fabi", "4ma9vJdZUH7J70Wh", "fabi");
-		//dbm.initializeJavaObjectsFromDB();
 		//verteile();
 		//macheAusgabe();
 	}
