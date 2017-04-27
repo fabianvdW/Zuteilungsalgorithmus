@@ -218,15 +218,18 @@ public class GUI extends JFrame{
 	    errorCloseButton = new JButton("OK");
 	    errorCloseButton.addActionListener(new ErrorCloseButtonHandler());
 	    error.add(errorCloseButton, BorderLayout.CENTER);
-	    int condition = JPanel.WHEN_IN_FOCUSED_WINDOW;
-	    InputMap inputMap = ((JPanel) error.getContentPane()).getInputMap(condition);
-	    ActionMap actionMap = ((JPanel) error.getContentPane()).getActionMap();
-		String enter = "enter";
-		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), enter);
-		actionMap.put(enter, new AbstractAction(){
+	    ((JPanel) error.getContentPane()).getInputMap(JPanel.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "enter");
+	    ((JPanel) error.getContentPane()).getActionMap().put("enter", new AbstractAction(){
 			private static final long serialVersionUID = 1L;
-			public void actionPerformed(ActionEvent e) {
-				error.dispose();
+			public void actionPerformed(ActionEvent e){
+				error.dispatchEvent(new WindowEvent(error, WindowEvent.WINDOW_CLOSING)); 
+			}
+		});
+	    ((JPanel) error.getContentPane()).getInputMap(JPanel.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "ESCAPE_KEY");
+	    ((JPanel) error.getContentPane()).getActionMap().put("ESCAPE_KEY", new AbstractAction(){
+			private static final long serialVersionUID = 1L;
+			public void actionPerformed(ActionEvent e){
+				error.dispatchEvent(new WindowEvent(error, WindowEvent.WINDOW_CLOSING)); 
 			}
 		});
 	    error.setVisible(true);
