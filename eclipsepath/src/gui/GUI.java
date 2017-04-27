@@ -4,12 +4,16 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -18,10 +22,12 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 
 import Data.AG;
 import Data.Person;
@@ -113,10 +119,15 @@ public class GUI extends JFrame{
 		login.setSize(400, 160);
 		login.setLocationRelativeTo(null);
 		loginServerField = new JTextField();
+		loginServerField.addActionListener(new LoginButtonHandler());
 		loginServerPortField = new JTextField();
+		loginServerPortField.addActionListener(new LoginButtonHandler());
 		loginUserField = new JTextField();
+		loginUserField.addActionListener(new LoginButtonHandler());
 		loginPasswordField = new JPasswordField();
+		loginPasswordField.addActionListener(new LoginButtonHandler());
 		loginDatabaseField = new JTextField();
+		loginDatabaseField.addActionListener(new LoginButtonHandler());
 		loginButton = new JButton("Login");
 		loginButton.addActionListener(new LoginButtonHandler());
 		exitButton = new JButton("Exit");
@@ -207,6 +218,17 @@ public class GUI extends JFrame{
 	    errorCloseButton = new JButton("OK");
 	    errorCloseButton.addActionListener(new ErrorCloseButtonHandler());
 	    error.add(errorCloseButton, BorderLayout.CENTER);
+	    int condition = JPanel.WHEN_IN_FOCUSED_WINDOW;
+	    InputMap inputMap = ((JPanel) error.getContentPane()).getInputMap(condition);
+	    ActionMap actionMap = ((JPanel) error.getContentPane()).getActionMap();
+		String enter = "enter";
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), enter);
+		actionMap.put(enter, new AbstractAction(){
+			private static final long serialVersionUID = 1L;
+			public void actionPerformed(ActionEvent e) {
+				error.dispose();
+			}
+		});
 	    error.setVisible(true);
 	}
 	
