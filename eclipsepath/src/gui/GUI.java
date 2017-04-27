@@ -1,12 +1,12 @@
 package gui;
 
 import java.awt.BorderLayout;
-import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -20,6 +20,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
+import Data.AG;
+import Data.Person;
+import Data.Rating;
 import db.DBManager;
 
 public class GUI extends JFrame{
@@ -28,7 +31,8 @@ public class GUI extends JFrame{
 	
 	// Main-Frame
 	protected JMenuBar up;
-	protected JMenu men1;
+	protected JMenu men1, men2;
+	protected JMenuItem fileNew, fileOpen, fileExit, showAG, showPerson;
 	
 	// Other Modals
 	protected JDialog login, error, ags;
@@ -40,6 +44,7 @@ public class GUI extends JFrame{
 	
 	// Error-Frame
 	protected JButton errorCloseButton;
+	
 	
 	
 	// --------------------------------------------------
@@ -61,26 +66,31 @@ public class GUI extends JFrame{
 		setSize(500, 400);
 		setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-		Container pane = getContentPane();
-		pane.setLayout(new GridLayout(4, 2));
 		up = new JMenuBar();
 		men1 = new JMenu("File");
+		fileNew = new JMenuItem("Neu");
+		fileOpen = new JMenuItem("Open File...");
+		fileExit = new JMenuItem("Exit");
+		fileExit.addActionListener(new ExitButtonHandler());
+		men1.add(fileNew);
+		men1.add(fileOpen);
+		men1.add(fileExit);
 		up.add(men1);
-		men1.add(new JMenuItem("New"));
-		men1.add(new JMenuItem("Open File..."));
+		men2 = new JMenu("Zeige");
+		showAG = new JMenuItem("AGs");
+		showAG.addActionListener(new ShowAGHandler());
+		showPerson = new JMenuItem("Schüler");
+		showPerson.addActionListener(new ShowPersonHandler());
+		men2.add(showAG);
+		men2.add(showPerson);
+		up.add(men2);
 		setJMenuBar(up);
 		login = new JDialog(this, "Server Login", true);
-		setVisible(true);
-		/*String[][] table = new String[100][2];
-		for(int i = 0; i < 100; i++){
-			table[i] = new String[]{"Kochen","Peter"};
-		}
-		showTable(new String[]{"AG", "Teilnehmer"}, table);*/
 		showLogin();
 	}
 	
 	protected void showTable(String[] colName, String[][] data){
-	    JDialog table = new JDialog(this, "Datatable", true);
+	    JDialog table = new JDialog(this, "Datatable", false);
 	    table.setSize(1280, 720);
 	    table.setLocationRelativeTo(null);
 	    JTable t = new JTable(data, colName){
@@ -125,6 +135,62 @@ public class GUI extends JFrame{
 			}
 		});
 		login.setVisible(true);
+	}
+	
+	protected void showAGList(){
+		String[][] agList = new String[Algorithmus.Verteilungsalgorithmus.ag.size()][5];
+		int i = 0;
+		String teilnehmer = null;
+		for(AG ag: Algorithmus.Verteilungsalgorithmus.ag){
+			agList[i][0] = "" + ag.getId();
+			agList[i][1] = ag.getName();
+			agList[i][2] = "" + ag.getMindestanzahl();
+			agList[i][3] = "" + ag.getHoechstanzahl();
+			if(ag.getTeilnehmer()==null){
+				agList[i][4] = "";
+			}
+			else{
+				teilnehmer = "";
+				int j = 0;
+				for(Person p: ag.getTeilnehmer()){
+					teilnehmer += p.getName() + (j++<ag.getTeilnehmer().size() ? ", " : "");
+				}
+				agList[i][4] = teilnehmer;
+			}
+			i++;
+		}
+		String[] agListHead = new String[]{"ID", "Name", "Mindestanzahl", "Höchstanzahl", "Teilnehmer"};
+		showTable(agListHead, agList);
+	}
+	
+	protected void showPersonenList(){
+		String[][] persList = new String[Algorithmus.Verteilungsalgorithmus.personen.size()][5];
+		int i = 0;
+		String ags = null;
+		for(Person p: Algorithmus.Verteilungsalgorithmus.personen){
+			persList[i][0] = "" + p.getId();
+			persList[i][1] = p.getName();
+			if(p.getBesuchteAG()==null){
+				persList[i][2] = "";
+			}
+			else{
+				persList[i][2] = "" + p.getBesuchteAG().getName();
+			}
+			if(p.getRatingAL()==null){
+				persList[i][3] = "";
+			}
+			else{
+				ags = "";
+				int j = 0;
+				for(Rating r: p.getRatingAL()){
+					ags += r.getAG().getName() + ": " + r.getRatingValue() + (j++<p.getRatingAL().size() ? ", " : "");
+				}
+				persList[i][3] = ags;
+			}
+			i++;
+		}
+		String[] persListHead = new String[]{"ID", "Name", "Aktuelle AG", "Gewählte AGs"};
+		showTable(persListHead, persList);
 	}
 	
 	protected void showError(String msg){
@@ -178,13 +244,29 @@ public class GUI extends JFrame{
 						String.valueOf(loginPasswordField.getPassword()),
 						loginDatabaseField.getText());
 				if(dbm.isConnected()){
+					Algorithmus.Verteilungsalgorithmus.ag = new ArrayList<AG>();
+					Algorithmus.Verteilungsalgorithmus.personen = new ArrayList<Person>();
 					dbm.initializeJavaObjectsFromDB();
 					login.dispose();
+					getContentPane().setLayout(new GridLayout(4, 2));
+					setVisible(true);
 				}
 				else{
 					showError("Es konnte keine Verbindung zur Datenbank hergestellt werden");
 				}
 			}
+		}
+	}
+	
+	protected class ShowAGHandler implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			showAGList();
+		}
+	}
+	
+	protected class ShowPersonHandler implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			showPersonenList();
 		}
 	}
 	

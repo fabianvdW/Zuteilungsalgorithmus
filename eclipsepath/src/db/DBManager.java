@@ -95,7 +95,6 @@ public class DBManager {
 				first = false;
 				continue;
 			}
-			System.out.println(getAG(Integer.parseInt(id[0])).toString());
 			Algorithmus.Verteilungsalgorithmus.ag.add(getAG(Integer.parseInt(id[0])));
 		}
 		ids = db.query("SELECT `id` FROM `Personen" + profile + "`");
