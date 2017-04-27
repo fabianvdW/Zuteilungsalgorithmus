@@ -6,10 +6,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -32,7 +34,7 @@ public class GUI extends JFrame{
 	// Main-Frame
 	protected JMenuBar up;
 	protected JMenu men1, men2;
-	protected JMenuItem fileNew, fileOpen, fileExit, showAG, showPerson;
+	protected JMenuItem fileExportAG, fileExportPerson, fileExit, showAG, showPerson;
 	
 	// Other Modals
 	protected JDialog login, error, ags;
@@ -68,12 +70,14 @@ public class GUI extends JFrame{
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 		up = new JMenuBar();
 		men1 = new JMenu("File");
-		fileNew = new JMenuItem("Neu");
-		fileOpen = new JMenuItem("Open File...");
+		fileExportAG = new JMenuItem("Export AGs");
+		fileExportAG.addActionListener(new ExportAGHandler());
+		fileExportPerson = new JMenuItem("Export Schüler");
+		fileExportPerson.addActionListener(new ExportPersonenHandler());
 		fileExit = new JMenuItem("Exit");
 		fileExit.addActionListener(new ExitButtonHandler());
-		men1.add(fileNew);
-		men1.add(fileOpen);
+		men1.add(fileExportAG);
+		men1.add(fileExportPerson);
 		men1.add(fileExit);
 		up.add(men1);
 		men2 = new JMenu("Zeige");
@@ -254,6 +258,36 @@ public class GUI extends JFrame{
 				else{
 					showError("Es konnte keine Verbindung zur Datenbank hergestellt werden");
 				}
+			}
+		}
+	}
+	
+	protected class ExportAGHandler implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			JFileChooser fileChooser = new JFileChooser();
+			fileChooser.setAcceptAllFileFilterUsed(false);
+			fileChooser.setDialogTitle("Tabellen-Export: AG");
+			fileChooser.setFileFilter(new CSVFileFilter());
+			int userSelection = fileChooser.showSaveDialog(GUI.this);
+			 
+			if(userSelection==JFileChooser.APPROVE_OPTION){
+			    File fh = fileChooser.getSelectedFile();
+			    System.out.println("Save as file: " + fh.getAbsolutePath());
+			}
+		}
+	}
+	
+	protected class ExportPersonenHandler implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			JFileChooser fileChooser = new JFileChooser();
+			fileChooser.setAcceptAllFileFilterUsed(false);
+			fileChooser.setDialogTitle("Tabellen-Export: Personen");
+			fileChooser.setFileFilter(new CSVFileFilter());
+			int userSelection = fileChooser.showSaveDialog(GUI.this);
+			 
+			if(userSelection==JFileChooser.APPROVE_OPTION){
+			    File fh = fileChooser.getSelectedFile();
+			    System.out.println("Save as file: " + fh.getAbsolutePath());
 			}
 		}
 	}
