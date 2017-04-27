@@ -24,6 +24,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 
 import Data.AG;
 import Data.Person;
@@ -36,7 +38,7 @@ public class GUI extends JFrame{
 	
 	// Main-Frame
 	protected JMenuBar up;
-	protected JMenu men1, men2;
+	protected JMenu men1, men2, men3;
 	protected JMenuItem fileExportAG, fileExportPerson, fileReload, fileExit, showAG, showPerson;
 	JTextField agField, pField;
 	
@@ -51,13 +53,8 @@ public class GUI extends JFrame{
 	// Error-Frame
 	protected JButton errorCloseButton;
 	
-	
-	
-	// --------------------------------------------------
 	// Database
 	protected DBManager dbm;
-	
-	
 	
 	
 	public static void main(String[] args){
@@ -95,6 +92,9 @@ public class GUI extends JFrame{
 		men2.add(showAG);
 		men2.add(showPerson);
 		up.add(men2);
+		men3 = new JMenu("Auswerten");
+		men3.addMenuListener(new RunVerteilungsalgorithmus());
+		up.add(men3);
 		setJMenuBar(up);
 		login = new JDialog(this, "Server Login", true);
 		showLogin();
@@ -116,7 +116,7 @@ public class GUI extends JFrame{
 	
 	protected void showLogin(){
 		login.getContentPane().setLayout(new GridLayout(6, 2));
-		login.setSize(400, 160);
+		login.setSize(400, 200);
 		login.setLocationRelativeTo(null);
 		loginServerField = new JTextField();
 		loginServerField.addActionListener(new LoginButtonHandler());
@@ -134,7 +134,7 @@ public class GUI extends JFrame{
 		exitButton.addActionListener(new ExitButtonHandler());
 		login.add(new JLabel("SQL-Server IP"), BorderLayout.CENTER);
 		login.add(loginServerField, BorderLayout.CENTER);
-		login.add(new JLabel("Server-Port"), BorderLayout.CENTER);
+		login.add(new JLabel("Server-Port (Standard: 3306)"), BorderLayout.CENTER);
 		login.add(loginServerPortField, BorderLayout.CENTER);
 		login.add(new JLabel("Benutzername"), BorderLayout.CENTER);
 		login.add(loginUserField, BorderLayout.CENTER);
@@ -414,6 +414,17 @@ public class GUI extends JFrame{
 	protected class ExitButtonHandler implements ActionListener{
 		public void actionPerformed(ActionEvent e){
 			System.exit(0);
+		}
+	}
+	
+	protected class RunVerteilungsalgorithmus implements MenuListener{
+		public void menuCanceled(MenuEvent e){}
+
+		public void menuDeselected(MenuEvent e){}
+
+		public void menuSelected(MenuEvent e){
+			Algorithmus.Verteilungsalgorithmus.verteile();
+			showAGList();
 		}
 	}
 }
