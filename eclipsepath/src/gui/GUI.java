@@ -4,12 +4,12 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-
+import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -18,10 +18,14 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 
 import Data.AG;
 import Data.Person;
@@ -34,8 +38,9 @@ public class GUI extends JFrame{
 	
 	// Main-Frame
 	protected JMenuBar up;
-	protected JMenu men1, men2;
-	protected JMenuItem fileExportAG, fileExportPerson, fileExit, showAG, showPerson;
+	protected JMenu men1, men2, men3;
+	protected JMenuItem fileExportAG, fileExportPerson, fileReload, fileExit, showAG, showPerson;
+	protected JTextField agField, pField;
 	
 	// Other Modals
 	protected JDialog login, error, ags;
@@ -47,14 +52,9 @@ public class GUI extends JFrame{
 	
 	// Error-Frame
 	protected JButton errorCloseButton;
-	
-	
-	
-	// --------------------------------------------------
+  
 	// Database
 	protected DBManager dbm;
-	
-	
 	
 	
 	public static void main(String[] args){
@@ -75,10 +75,13 @@ public class GUI extends JFrame{
 		fileExportAG.addActionListener(new ExportAGHandler());
 		fileExportPerson = new JMenuItem("Export Schüler");
 		fileExportPerson.addActionListener(new ExportPersonenHandler());
+		fileReload = new JMenuItem("Reload Database");
+		fileReload.addActionListener(new ReloadDatabaseHandler());
 		fileExit = new JMenuItem("Exit");
 		fileExit.addActionListener(new ExitButtonHandler());
 		men1.add(fileExportAG);
 		men1.add(fileExportPerson);
+		men1.add(fileReload);
 		men1.add(fileExit);
 		up.add(men1);
 		men2 = new JMenu("Zeige");
@@ -89,6 +92,9 @@ public class GUI extends JFrame{
 		men2.add(showAG);
 		men2.add(showPerson);
 		up.add(men2);
+		men3 = new JMenu("Auswerten");
+		men3.addMenuListener(new RunVerteilungsalgorithmus());
+		up.add(men3);
 		setJMenuBar(up);
 		login = new JDialog(this, "Server Login", true);
 		showLogin();
@@ -110,20 +116,25 @@ public class GUI extends JFrame{
 	
 	protected void showLogin(){
 		login.getContentPane().setLayout(new GridLayout(6, 2));
-		login.setSize(400, 160);
+		login.setSize(400, 200);
 		login.setLocationRelativeTo(null);
 		loginServerField = new JTextField();
+		loginServerField.addActionListener(new LoginButtonHandler());
 		loginServerPortField = new JTextField();
+		loginServerPortField.addActionListener(new LoginButtonHandler());
 		loginUserField = new JTextField();
+		loginUserField.addActionListener(new LoginButtonHandler());
 		loginPasswordField = new JPasswordField();
+		loginPasswordField.addActionListener(new LoginButtonHandler());
 		loginDatabaseField = new JTextField();
+		loginDatabaseField.addActionListener(new LoginButtonHandler());
 		loginButton = new JButton("Login");
 		loginButton.addActionListener(new LoginButtonHandler());
 		exitButton = new JButton("Exit");
 		exitButton.addActionListener(new ExitButtonHandler());
 		login.add(new JLabel("SQL-Server IP"), BorderLayout.CENTER);
 		login.add(loginServerField, BorderLayout.CENTER);
-		login.add(new JLabel("Server-Port"), BorderLayout.CENTER);
+		login.add(new JLabel("Server-Port (Standard: 3306)"), BorderLayout.CENTER);
 		login.add(loginServerPortField, BorderLayout.CENTER);
 		login.add(new JLabel("Benutzername"), BorderLayout.CENTER);
 		login.add(loginUserField, BorderLayout.CENTER);
@@ -207,6 +218,20 @@ public class GUI extends JFrame{
 	    errorCloseButton = new JButton("OK");
 	    errorCloseButton.addActionListener(new ErrorCloseButtonHandler());
 	    error.add(errorCloseButton, BorderLayout.CENTER);
+	    ((JPanel) error.getContentPane()).getInputMap(JPanel.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "enter");
+	    ((JPanel) error.getContentPane()).getActionMap().put("enter", new AbstractAction(){
+			private static final long serialVersionUID = 1L;
+			public void actionPerformed(ActionEvent e){
+				error.dispatchEvent(new WindowEvent(error, WindowEvent.WINDOW_CLOSING)); 
+			}
+		});
+	    ((JPanel) error.getContentPane()).getInputMap(JPanel.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "ESCAPE_KEY");
+	    ((JPanel) error.getContentPane()).getActionMap().put("ESCAPE_KEY", new AbstractAction(){
+			private static final long serialVersionUID = 1L;
+			public void actionPerformed(ActionEvent e){
+				error.dispatchEvent(new WindowEvent(error, WindowEvent.WINDOW_CLOSING)); 
+			}
+		});
 	    error.setVisible(true);
 	}
 	
@@ -249,11 +274,21 @@ public class GUI extends JFrame{
 						String.valueOf(loginPasswordField.getPassword()),
 						loginDatabaseField.getText());
 				if(dbm.isConnected()){
-					Algorithmus.Verteilungsalgorithmus.ag = new ArrayList<AG>();
-					Algorithmus.Verteilungsalgorithmus.personen = new ArrayList<Person>();
 					dbm.initializeJavaObjectsFromDB();
 					login.dispose();
-					getContentPane().setLayout(new GridLayout(4, 2));
+					getContentPane().setLayout(new GridLayout(5, 2));
+					add(new JLabel("In der Datenbank gefunden"));
+					add(new JLabel(""));
+					add(new JLabel("AGs:"));
+					agField = new JTextField();
+					agField.setEditable(false);
+					agField.setText("" + Algorithmus.Verteilungsalgorithmus.ag.size());
+					add(agField);
+					add(new JLabel("Personen:"));
+					pField = new JTextField();
+					pField.setEditable(false);
+					pField.setText("" + Algorithmus.Verteilungsalgorithmus.personen.size());
+					add(pField);
 					setVisible(true);
 				}
 				else{
@@ -349,6 +384,15 @@ public class GUI extends JFrame{
 		}
 	}
 	
+	protected class ReloadDatabaseHandler implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			dbm.initializeJavaObjectsFromDB();
+			agField.setText("" + Algorithmus.Verteilungsalgorithmus.ag.size());
+			pField.setText("" + Algorithmus.Verteilungsalgorithmus.personen.size());
+			repaint();
+		}
+	}
+	
 	protected class ShowAGHandler implements ActionListener{
 		public void actionPerformed(ActionEvent e){
 			showAGList();
@@ -370,6 +414,17 @@ public class GUI extends JFrame{
 	protected class ExitButtonHandler implements ActionListener{
 		public void actionPerformed(ActionEvent e){
 			System.exit(0);
+		}
+	}
+	
+	protected class RunVerteilungsalgorithmus implements MenuListener{
+		public void menuCanceled(MenuEvent e){}
+
+		public void menuDeselected(MenuEvent e){}
+
+		public void menuSelected(MenuEvent e){
+			Algorithmus.Verteilungsalgorithmus.verteile();
+			showAGList();
 		}
 	}
 }

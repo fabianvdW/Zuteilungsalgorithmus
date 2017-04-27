@@ -10,7 +10,15 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class RWFile {
+/**
+ * @author Agent77326
+ */
+public class RWFile{
+	/**
+	 * Writes to the String on the given file
+	 * @param fh Filehandle
+	 * @param txt the String to write
+	 */
 	public static void write(File fh, String txt){
 		Writer w = null;
         try{
@@ -33,6 +41,11 @@ public class RWFile {
         }
 	}
 	
+	/**
+	 * Reads the content of the given File
+	 * @param fh the Filehandle
+	 * @return the file-content as String
+	 */
 	public static String read(File fh){
 		try{
 			byte[] encoded = Files.readAllBytes(Paths.get(fh.getAbsolutePath()));
