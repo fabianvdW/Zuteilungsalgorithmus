@@ -37,24 +37,24 @@ public class GUI extends JFrame{
 	private static final long serialVersionUID = 1L;
 	
 	// Main-Frame
-	protected JMenuBar up;
-	protected JMenu men1, men2, men3;
-	protected JMenuItem fileExportAG, fileExportPerson, fileReload, fileExit, showAG, showPerson;
-	protected JTextField agField, pField;
+	private JMenuBar up;
+	private JMenu men1, men2, men3;
+	private JMenuItem fileExportAG, fileExportPerson, fileReload, fileExit, showAG, showPerson;
+	private JTextField agField, pField;
 	
 	// Other Modals
-	protected JDialog login, error, ags;
+	private JDialog login, error;
 	
 	// Login-Frame
-	protected JTextField loginServerField, loginServerPortField, loginUserField, loginDatabaseField;
-	protected JPasswordField loginPasswordField;
-	protected JButton loginButton, exitButton;
+	private JTextField loginServerField, loginServerPortField, loginUserField, loginDatabaseField;
+	private JPasswordField loginPasswordField;
+	private JButton loginButton, exitButton;
 	
 	// Error-Frame
-	protected JButton errorCloseButton;
+	private JButton errorCloseButton;
   
 	// Database
-	protected DBManager dbm;
+	private DBManager dbm;
 	
 	
 	public static void main(String[] args){
@@ -222,7 +222,7 @@ public class GUI extends JFrame{
 	    ((JPanel) error.getContentPane()).getActionMap().put("enter", new AbstractAction(){
 			private static final long serialVersionUID = 1L;
 			public void actionPerformed(ActionEvent e){
-				error.dispatchEvent(new WindowEvent(error, WindowEvent.WINDOW_CLOSING)); 
+				error.dispatchEvent(new WindowEvent(error, WindowEvent.WINDOW_CLOSING));
 			}
 		});
 	    ((JPanel) error.getContentPane()).getInputMap(JPanel.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "ESCAPE_KEY");
@@ -407,7 +407,7 @@ public class GUI extends JFrame{
 	
 	protected class ErrorCloseButtonHandler implements ActionListener{
 		public void actionPerformed(ActionEvent e){
-			error.dispose();
+			error.dispatchEvent(new WindowEvent(error, WindowEvent.WINDOW_CLOSING));
 		}
 	}
 	
