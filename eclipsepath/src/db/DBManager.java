@@ -88,6 +88,8 @@ public class DBManager {
 	 *
 	 */
 	public void initializeJavaObjectsFromDB(){
+		Algorithmus.Verteilungsalgorithmus.ag = new ArrayList<AG>();
+		Algorithmus.Verteilungsalgorithmus.personen = new ArrayList<Person>();
 		String[][]ids = db.query("SELECT `id` FROM `AG" + profile + "`");
 		boolean first = true;
 		for(String[] id: ids){

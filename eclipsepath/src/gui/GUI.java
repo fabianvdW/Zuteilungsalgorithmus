@@ -9,8 +9,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -39,7 +37,8 @@ public class GUI extends JFrame{
 	// Main-Frame
 	protected JMenuBar up;
 	protected JMenu men1, men2;
-	protected JMenuItem fileExportAG, fileExportPerson, fileExit, showAG, showPerson;
+	protected JMenuItem fileExportAG, fileExportPerson, fileReload, fileExit, showAG, showPerson;
+	JTextField agField, pField;
 	
 	// Other Modals
 	protected JDialog login, error, ags;
@@ -79,10 +78,13 @@ public class GUI extends JFrame{
 		fileExportAG.addActionListener(new ExportAGHandler());
 		fileExportPerson = new JMenuItem("Export Schüler");
 		fileExportPerson.addActionListener(new ExportPersonenHandler());
+		fileReload = new JMenuItem("Reload Database");
+		fileReload.addActionListener(new ReloadDatabaseHandler());
 		fileExit = new JMenuItem("Exit");
 		fileExit.addActionListener(new ExitButtonHandler());
 		men1.add(fileExportAG);
 		men1.add(fileExportPerson);
+		men1.add(fileReload);
 		men1.add(fileExit);
 		up.add(men1);
 		men2 = new JMenu("Zeige");
@@ -272,11 +274,21 @@ public class GUI extends JFrame{
 						String.valueOf(loginPasswordField.getPassword()),
 						loginDatabaseField.getText());
 				if(dbm.isConnected()){
-					Algorithmus.Verteilungsalgorithmus.ag = new ArrayList<AG>();
-					Algorithmus.Verteilungsalgorithmus.personen = new ArrayList<Person>();
 					dbm.initializeJavaObjectsFromDB();
 					login.dispose();
-					getContentPane().setLayout(new GridLayout(4, 2));
+					getContentPane().setLayout(new GridLayout(5, 2));
+					add(new JLabel("In der Datenbank gefunden"));
+					add(new JLabel(""));
+					add(new JLabel("AGs:"));
+					agField = new JTextField();
+					agField.setEditable(false);
+					agField.setText("" + Algorithmus.Verteilungsalgorithmus.ag.size());
+					add(agField);
+					add(new JLabel("Personen:"));
+					pField = new JTextField();
+					pField.setEditable(false);
+					pField.setText("" + Algorithmus.Verteilungsalgorithmus.personen.size());
+					add(pField);
 					setVisible(true);
 				}
 				else{
@@ -369,6 +381,15 @@ public class GUI extends JFrame{
 			    	RWFile.write(fh, txt);
 			    }
 			}
+		}
+	}
+	
+	protected class ReloadDatabaseHandler implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			dbm.initializeJavaObjectsFromDB();
+			agField.setText("" + Algorithmus.Verteilungsalgorithmus.ag.size());
+			pField.setText("" + Algorithmus.Verteilungsalgorithmus.personen.size());
+			repaint();
 		}
 	}
 	
