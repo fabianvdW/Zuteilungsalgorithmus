@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -287,7 +288,33 @@ public class GUI extends JFrame{
 			 
 			if(userSelection==JFileChooser.APPROVE_OPTION){
 			    File fh = fileChooser.getSelectedFile();
+			    if(CSVFileFilter.getExtension(fh)==null || !CSVFileFilter.getExtension(fh).equals("csv")){
+			    	fh = new File(fh.toString() + ".csv");
+			    }
 			    System.out.println("Save as file: " + fh.getAbsolutePath());
+			    try{
+					fh.createNewFile();
+				}
+			    catch(IOException e1){
+			    	showError("Fehlende Berechtigung zum schreiben auf die ausgewählte Datei");
+					e1.printStackTrace();
+				}
+			    if(!fh.canWrite()){
+			    	showError("Fehlende Berechtigung zum schreiben auf die ausgewählte Datei");
+			    }
+			    else{
+			    	String txt = "ID,Name,Aktuelle AG,Gewählte AGs" + System.lineSeparator();
+		    		int j = 0;
+			    	for(Person p: Algorithmus.Verteilungsalgorithmus.personen){
+			    		txt += p.getId() + "," + p.getName() + "," + p.getBesuchteAG() + ",";
+			    		j = 0;
+			    		for(Rating r: p.getRatingAL()){
+			    			txt += r.getAG().getName() + ":" + r.getRatingValue() + (j++ < p.getRatingAL().size() ? ";" : "");
+			    		}
+			    		txt += System.lineSeparator();
+			    	}
+			    	RWFile.write(fh, txt);
+			    }
 			}
 		}
 	}
