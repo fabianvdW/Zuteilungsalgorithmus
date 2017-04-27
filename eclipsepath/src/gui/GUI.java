@@ -158,7 +158,7 @@ public class GUI extends JFrame{
 				teilnehmer = "";
 				int j = 0;
 				for(Person p: ag.getTeilnehmer()){
-					teilnehmer += p.getName() + (j++<ag.getTeilnehmer().size() ? ", " : "");
+					teilnehmer += p.getName() + (j++ < ag.getTeilnehmer().size() ? ", " : "");
 				}
 				agList[i][4] = teilnehmer;
 			}
@@ -188,7 +188,7 @@ public class GUI extends JFrame{
 				ags = "";
 				int j = 0;
 				for(Rating r: p.getRatingAL()){
-					ags += r.getAG().getName() + ": " + r.getRatingValue() + (j++<p.getRatingAL().size() ? ", " : "");
+					ags += r.getAG().getName() + ": " + r.getRatingValue() + (j++ < p.getRatingAL().size() ? ", " : "");
 				}
 				persList[i][3] = ags;
 			}
@@ -273,7 +273,37 @@ public class GUI extends JFrame{
 			 
 			if(userSelection==JFileChooser.APPROVE_OPTION){
 			    File fh = fileChooser.getSelectedFile();
+			    if(CSVFileFilter.getExtension(fh)==null || !CSVFileFilter.getExtension(fh).equals("csv")){
+			    	fh = new File(fh.toString() + ".csv");
+			    }
 			    System.out.println("Save as file: " + fh.getAbsolutePath());
+			    try{
+					fh.createNewFile();
+				}
+			    catch(IOException e1){
+			    	showError("Fehlende Berechtigung zum schreiben auf die ausgewählte Datei");
+					e1.printStackTrace();
+				}
+			    if(!fh.canWrite()){
+			    	showError("Fehlende Berechtigung zum schreiben auf die ausgewählte Datei");
+			    }
+			    else{
+			    	String txt = "ID,Name,Mindestanzahl,Höchstanzahl,Teilnehmer" + System.lineSeparator();
+			    	for(AG ag: Algorithmus.Verteilungsalgorithmus.ag){
+			    		txt += ag.getId() + "," + ag.getName() + "," + ag.getMindestanzahl() + "," + ag.getHoechstanzahl() + ",";
+						if(ag.getTeilnehmer()==null){
+							txt += ",";
+						}
+						else{
+							int j = 0;
+							for(Person p: ag.getTeilnehmer()){
+								txt += p.getName() + (j++ < ag.getTeilnehmer().size() ? ";" : "");
+							}
+						}
+			    		txt += System.lineSeparator();
+			    	}
+			    	RWFile.write(fh, txt);
+			    }
 			}
 		}
 	}
