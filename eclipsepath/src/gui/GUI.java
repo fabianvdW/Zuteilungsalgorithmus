@@ -88,6 +88,7 @@ public class GUI extends JFrame{
 	 * @author Agent77326
 	 */
 	protected GUI(){
+		dbm = new DBManager();
 		setTitle("Verteilungsalgorithmus");
 		setSize(500, 400);
 		setLocationRelativeTo(null);
@@ -121,6 +122,7 @@ public class GUI extends JFrame{
 		setJMenuBar(up);
 		login = new JDialog(this, "Server Login", true);
 		showLogin();
+		connect("agent77326.tk", 3306, "fabi", "4ma9vJdZUH7J70Wh", "fabi");
 	}
 	
 	protected void showTable(String[] colName, String[][] data){
@@ -258,6 +260,31 @@ public class GUI extends JFrame{
 	    error.setVisible(true);
 	}
 	
+	protected void connect(String server, int port, String user, String password, String database){
+		dbm.connect(server, port, user, password, database);
+		if(dbm.isConnected()){
+			dbm.initializeJavaObjectsFromDB();
+			login.dispose();
+			getContentPane().setLayout(new GridLayout(5, 2));
+			add(new JLabel("In der Datenbank gefunden"));
+			add(new JLabel(""));
+			add(new JLabel("AGs:"));
+			agField = new JTextField();
+			agField.setEditable(false);
+			agField.setText("" + Algorithmus.Verteilungsalgorithmus.ag.size());
+			add(agField);
+			add(new JLabel("Personen:"));
+			pField = new JTextField();
+			pField.setEditable(false);
+			pField.setText("" + Algorithmus.Verteilungsalgorithmus.personen.size());
+			add(pField);
+			setVisible(true);
+		}
+		else{
+			showError("Es konnte keine Verbindung zur Datenbank hergestellt werden");
+		}
+	}
+	
 	protected class LoginButtonHandler implements ActionListener{
 		public void actionPerformed(ActionEvent e){
 			String error = null;
@@ -278,9 +305,11 @@ public class GUI extends JFrame{
 					error = "Es wurden nicht alle Felder ausgefüllt";
 				}
 				else{
-					for(char s: loginPasswordField.getPassword()){
-						if(s==' '){
-							error = "Es wurden nicht alle Felder ausgefüllt";
+					if(loginPasswordField.getPassword().length<1){
+						for(char s: loginPasswordField.getPassword()){
+							if(s==' '){
+								error = "Es wurden nicht alle Felder ausgefüllt";
+							}
 						}
 					}
 				} 
@@ -290,33 +319,11 @@ public class GUI extends JFrame{
 				showError(error);
 			}
 			else{
-				dbm = new DBManager();
-				dbm.connect(loginServerField.getText(),
+				connect(loginServerField.getText(),
 						Integer.parseInt(loginServerPortField.getText()),
 						loginUserField.getText(),
 						String.valueOf(loginPasswordField.getPassword()),
 						loginDatabaseField.getText());
-				if(dbm.isConnected()){
-					dbm.initializeJavaObjectsFromDB();
-					login.dispose();
-					getContentPane().setLayout(new GridLayout(5, 2));
-					add(new JLabel("In der Datenbank gefunden"));
-					add(new JLabel(""));
-					add(new JLabel("AGs:"));
-					agField = new JTextField();
-					agField.setEditable(false);
-					agField.setText("" + Algorithmus.Verteilungsalgorithmus.ag.size());
-					add(agField);
-					add(new JLabel("Personen:"));
-					pField = new JTextField();
-					pField.setEditable(false);
-					pField.setText("" + Algorithmus.Verteilungsalgorithmus.personen.size());
-					add(pField);
-					setVisible(true);
-				}
-				else{
-					showError("Es konnte keine Verbindung zur Datenbank hergestellt werden");
-				}
 			}
 		}
 	}
