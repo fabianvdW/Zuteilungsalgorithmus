@@ -55,6 +55,24 @@ public class Verteilungsalgorithmus {
 	public static void verteile() {
 
 	}
+	public static void shuffleDaten(){
+		//Shuffle Liste ag
+		ArrayList<AG> shuffeldAg= new ArrayList<AG>();
+		while(ag.size()>0){
+			int random= (int) (Math.random()*ag.size());
+			shuffeldAg.add(ag.get(random));
+			ag.remove(random);
+		}
+		ag= shuffeldAg;
+		ArrayList<Person> shuffeldP= new ArrayList<Person>();
+		while(personen.size()>0){
+			int random= (int) (Math.random()*personen.size());
+			shuffeldP.add(personen.get(random));
+			personen.remove(random);
+		}
+		personen= shuffeldP;
+		
+	}
 
 	/**
 	 *	Beliebtheit	 
