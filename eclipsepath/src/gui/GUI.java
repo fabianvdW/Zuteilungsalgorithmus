@@ -354,7 +354,7 @@ public class GUI extends JFrame{
 				System.exit(0);
 			}
 		});
-		login.setVisible(true);
+		//login.setVisible(true);
 	}
 	
 	protected void showAGList(){
