@@ -224,6 +224,9 @@ public class Verteilungsalgorithmus {
 		ag = new ArrayList<AG>();
 		personen = new ArrayList<Person>();
 		Test.laufeTestsAufVerteilung(1);
+		macheAusgabe();
+		shuffleDaten();
+		macheAusgabe();
 		//verteile();
 		//macheAusgabe();
 	}
