@@ -240,19 +240,18 @@ public class Verteilungsalgorithmus {
 			System.out.println("Die Agen können die Personen nicht aufnehmen. Exit");
 			System.exit(0);
 		}
-		getAGNachBeliebtheitsRang(0);
 		int score=3;
-		while(score>=-3){
-			for(int beliebtheitsrang=ag.size()-1;beliebtheitsrang>=0;beliebtheitsrang--){
-				AG ags= getAGNachBeliebtheitsRang(beliebtheitsrang);
-				ArrayList<Person> ps = getUnAllocatedPersonenDieAGParamMitBewertungParamBewertertHaben(score, ags);
-				if(ps==null){
+		while(score>=-3){//Geht jeden Score von 3 bis -3 durch
+			for(int beliebtheitsrang=ag.size()-1;beliebtheitsrang>=0;beliebtheitsrang--){//Geht jede AG durch, die unbeliebtesten zuerst.
+				AG ags= getAGNachBeliebtheitsRang(beliebtheitsrang); //holt sich die AG abhängig von dem BeliebtheitsRang
+				ArrayList<Person> ps = getUnAllocatedPersonenDieAGParamMitBewertungParamBewertertHaben(score, ags); //Alle Personen, die noch keine AG haben und die AG mit der Bewertung score(von schleifenkopf) bewertet haben
+				if(ps==null||ps.size()==0){//Wenn das 0 personen sind oder die Liste null ist, zur nächsten AG.
 					continue;
 					
 				}
-				for(int i=0;i<(ps.size()<ags.getHoechstanzahl()? ps.size(): ags.getHoechstanzahl());i++){
+				for(int i=0;i<(ps.size()<ags.getHoechstanzahl()? ps.size(): ags.getHoechstanzahl());i++){ //Solange die AG noch nicht voll ist,
 					if(ags.istVoll())break;
-					Person lowVarianz= getLowestVarianz(ps,score);
+					Person lowVarianz= getLowestVarianz(ps,score); //die Person mit niedrigster Varianz einfügen.
 					try{
 						ags.addTeilnehmer(lowVarianz);
 						ps.remove(lowVarianz);
@@ -315,7 +314,7 @@ public class Verteilungsalgorithmus {
 					r = p.getRatingAL().get(i);
 				}
 			}
-			if(r==null) return null;
+			if(r==null) return ps;
 			if(r.getRatingValue()==bewertung){
 				ps.add(p);
 			}
