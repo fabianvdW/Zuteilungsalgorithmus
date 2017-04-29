@@ -268,6 +268,9 @@ public class AG {
 	public void addTeilnehmer(Person perso) throws Exception{
 		if(!istVoll){
 			if(!teilnehmer.contains(perso)){
+				if(perso.getBesuchteAG()!=null){
+					perso.getBesuchteAG().removeTeilnehmer(perso);
+				}
 				teilnehmer.add(perso);
 				perso.teileAGZu(this);
 			}else{
@@ -349,7 +352,7 @@ public class AG {
 	 * 
 	 */
 	public void setBeliebtheit(int b){
-		beliebtheit = b;
+		this.beliebtheit = b;
 	}
 	
 	/**

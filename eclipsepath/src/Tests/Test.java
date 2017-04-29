@@ -209,7 +209,10 @@ import Data.AG;
 import Data.Person;
 import Data.Rating;
 public class Test {
-
+	/**
+	 *  Creates test data for the algorithm and tests the algorithm with the data.
+	 * @param anzTests The amout of tests the methode should test the algorithm on.
+	 */
 	public static void laufeTestsAufVerteilung(int anzTests) {
 		double score=0;
 		for(int i=1;i<=anzTests;i++){
@@ -217,7 +220,7 @@ public class Test {
 			Verteilungsalgorithmus.ag.clear();
 			Verteilungsalgorithmus.personen.clear();
 			String uuid= "";
-			int random=(int)(Math.random()*10+5);
+			int random=(int)(Math.random()*250+150);
 			uuid=UUID.randomUUID().toString();
 			int agTeilnehmer=0;
 			while(agTeilnehmer<random){	
@@ -268,7 +271,7 @@ public class Test {
 				uuid=UUID.randomUUID().toString();
 				
 			}
-			//Verteilungsalgorithmus.verteile();
+			Verteilungsalgorithmus.verteile();
 			//Verteilungsalgorithmus.macheAusgabe();
 			try{
 			score+=Verteilungsalgorithmus.checkScore();

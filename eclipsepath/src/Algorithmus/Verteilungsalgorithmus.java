@@ -223,7 +223,7 @@ public class Verteilungsalgorithmus {
 	public static void main(String[] args) {
 		ag = new ArrayList<AG>();
 		personen = new ArrayList<Person>();
-		Test.laufeTestsAufVerteilung(5);
+		Test.laufeTestsAufVerteilung(10);
 		berechneBeliebtheit();
 		//verteile();
 		//macheAusgabe();
@@ -233,8 +233,163 @@ public class Verteilungsalgorithmus {
 	 * Der eigentliche Verteilungsalgorithmus
 	 */
 	public static void verteile() {
+		//macheAusgabe();
+		shuffleDaten(); //Damit einer z.B aus der A-Klasse, der als erstes eingetragen wird, keine Vorteile hat.
+		berechneBeliebtheit(); // Die Summe der Beliebtheit aller Personen pro AG
+		if(!checkObDieAGDiePersonenAufnehmenKann()){
+			System.out.println("Die Agen können die Personen nicht aufnehmen. Exit");
+			System.exit(0);
+		}
+		getAGNachBeliebtheitsRang(0);
+		int score=3;
+		while(score>=-3){
+			for(int beliebtheitsrang=ag.size()-1;beliebtheitsrang>=0;beliebtheitsrang--){
+				AG ags= getAGNachBeliebtheitsRang(beliebtheitsrang);
+				ArrayList<Person> ps = getUnAllocatedPersonenDieAGParamMitBewertungParamBewertertHaben(score, ags);
+				if(ps==null){
+					continue;
+					
+				}
+				for(int i=0;i<(ps.size()<ags.getHoechstanzahl()? ps.size(): ags.getHoechstanzahl());i++){
+					if(ags.istVoll())break;
+					Person lowVarianz= getLowestVarianz(ps,score);
+					try{
+						ags.addTeilnehmer(lowVarianz);
+						ps.remove(lowVarianz);
+					}catch(Exception e){
+						e.printStackTrace();
+						System.exit(0);
+					}
+				}
+			 }
+			score--;
+		}
 		
 	}
+	public static Person getLowestVarianz(ArrayList<Person> p, int bewertung){
+		Person lowest=null;
+		double varianz=100000.0;
+		for(Person ps:p){
+			double varianz2=getVarianz(ps, bewertung);
+			if(varianz2<varianz){
+				lowest=ps;
+				varianz=varianz2;
+			}
+		}
+		return lowest;
+	}
+	public static double getVarianz(Person p, int bewertung){
+		double score=0.0;
+		for(int i=0;i<ag.size();i++){
+			AG ags= ag.get(i);
+			if(getUnAllocatedPersonenDieAGParamMitBewertungParamBewertertHaben(bewertung, ags).contains(p)){
+				score+= 1.0/(1.0+Math.exp(ags.getBeliebtheit()*Math.sqrt(2.0)/personen.size()));
+			}
+		}
+		return score;
+	}
+	/**
+	 * Returns ArrayList of Persons who rated the AG with param bewertung
+	 * @param bewertung The bewertung the person rated the AG with
+	 * @param ags The ag
+	 * @return ArrayList of Persons
+	 */
+	public static ArrayList<Person> getUnAllocatedPersonenDieAGParamMitBewertungParamBewertertHaben(int bewertung, AG ags){
+		ArrayList<Person> ps = new ArrayList<Person>();
+		for(Person p: getUnAllocatedPersons()){
+			Rating r= null;
+			for(int i=0;i<ag.size();i++){
+				if(p.getRatingAL().get(i).getAG().equals(ags)){
+					r = p.getRatingAL().get(i);
+				}
+			}
+			if(r==null) return null;
+			if(r.getRatingValue()==bewertung){
+				ps.add(p);
+			}
+		}
+		return ps;
+	}
+	/**
+	 * 
+	 * @param beliebtheitsRang Die AG die den beliebtheitsRang haben soll
+	 * @return die AG mit dem BeliebtheitsRang beliebtheitsRang
+	 */
+	public static AG getAGNachBeliebtheitsRang(int beliebtheitsRang){
+		if(beliebtheitsRang>ag.size()-1){
+			System.out.println("BeliebtheitsRang ist nicht verfügbar.");
+		}
+		ArrayList<AG> AGenGeOrdnetNachRang = new ArrayList<AG>();
+		
+		for(int i=0;i<ag.size();i++){
+			AG highest = null;
+			for(AG ags: ag){
+				if(AGenGeOrdnetNachRang.contains(ags))continue;
+				if(highest==null){
+					highest=ags;
+					continue;
+				}
+				highest= ags.getBeliebtheit()>highest.getBeliebtheit()?ags:highest;
+			}
+			AGenGeOrdnetNachRang.add(highest);
+		}
+		//DEBUG
+		//for(AG ags: AGenGeOrdnetNachRang){
+		//System.out.println("AG: "+ags.getName()+" Beliebtheit: "+ags.getBeliebtheit());
+		//}
+		return AGenGeOrdnetNachRang.get(beliebtheitsRang);
+		
+	}
+	/**
+	 * 
+	 * @return an ArrayList of Persons which are not alllocated to an AG
+	 */
+	public static ArrayList<Person> getUnAllocatedPersons(){
+		ArrayList<Person> unallocated = new ArrayList<Person>();
+		for(Person p : personen){
+			if(p.getBesuchteAG()==null){
+				unallocated.add(p);
+			}
+		}
+		return unallocated;
+	}
+	/**
+	 * 
+	 * @param ag the AG that should be checked
+	 * @return True if the AG can take up another person, false if the AG cant.
+	 */
+	public static boolean spotFree(AG ag){
+		return !ag.istVoll();
+	}
+	/**
+	 * 
+	 * @return True if every person has an AG, false if not every person has an AG
+	 */
+	public static boolean allAllocated(){
+		for(Person p: personen){
+			if(p.getBesuchteAG()==null){
+				return false;
+			}
+		}
+		return true;
+	}
+	/**
+	 * Checks if the AGs can even take up all the person with the spots the AGs have available.
+	 * @return False if the AGs cant take up all the persons, True if the AGs can take up all the persons.
+	 */
+	public static boolean checkObDieAGDiePersonenAufnehmenKann(){
+		int personen=0;
+		for(AG ag : Verteilungsalgorithmus.ag){
+			personen+=ag.getHoechstanzahl();
+		}
+		if(personen<Verteilungsalgorithmus.personen.size()){
+			return false;
+		}
+		return true;
+	}
+	/**
+	 * Shuffles the Data, so that a person which was written in the DB first doesnt have an unfair advantage.
+	 */
 	public static void shuffleDaten(){
 		//Shuffle Liste ag
 		ArrayList<AG> shuffeldAg= new ArrayList<AG>();
@@ -313,6 +468,8 @@ public class Verteilungsalgorithmus {
 	 */
 	public static void macheAusgabe() {
 		System.out.println("Die Zuteilung ist erfolgreich fertig!");
+		System.out.println("Anzahl an Personen: "+personen.size());
+		System.out.println("Anzahl an AGen: "+ag.size());
 		System.out.println("Folgende Personen sind in folgenden AGen:");
 		System.out.println("----------------------------------------------------------");
 		ArrayList<AG> findenNichtStatt = new ArrayList<AG>();
@@ -326,7 +483,7 @@ public class Verteilungsalgorithmus {
 			}
 			System.out.println("In der AG " + ags.getName() + " sind folgende Personen: " + "("
 					+ ags.getTeilnehmer().size() + "/" + ags.getHoechstanzahl() + ")Teilnehmer~"
-					+ ((double) ags.getTeilnehmer().size()) / ags.getHoechstanzahl() + "%");
+					+ ((double) ags.getTeilnehmer().size()) / ags.getHoechstanzahl()*100 + "%");
 			ArrayList<Person> teilnehmer = ags.getTeilnehmer();
 			for (Person p : teilnehmer) {
 				System.out.println(p.getName());

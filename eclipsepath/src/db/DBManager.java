@@ -311,12 +311,8 @@ public class DBManager {
 			Algorithmus.Verteilungsalgorithmus.personen.add(getPerson(Integer.parseInt(id[0])));
 		}
 		try{
-			int personen=0;
-			for(AG ag : Verteilungsalgorithmus.ag){
-				personen+=ag.getHoechstanzahl();
-			}
-			if(personen<Verteilungsalgorithmus.personen.size()){
-				throw new Exception("Die AGen können diese Anzahl an Personen nicht aufnehmen");
+			if(!Verteilungsalgorithmus.checkObDieAGDiePersonenAufnehmenKann()){
+				throw new Exception("Die AGen können diese Anzahl an Personen nicht aufnehmen!");
 			}
 		}catch(Exception e){
 			Logger lgr = Logger.getLogger(DB.class.getName());
