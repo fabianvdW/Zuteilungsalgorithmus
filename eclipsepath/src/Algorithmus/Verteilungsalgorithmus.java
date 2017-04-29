@@ -223,7 +223,7 @@ public class Verteilungsalgorithmus {
 	public static void main(String[] args) {
 		ag = new ArrayList<AG>();
 		personen = new ArrayList<Person>();
-		Test.laufeTestsAufVerteilung(1);
+		Test.laufeTestsAufVerteilung(100);
 		berechneBeliebtheit();
 		//verteile();
 		//macheAusgabe();
@@ -233,6 +233,7 @@ public class Verteilungsalgorithmus {
 	 * Der eigentliche Verteilungsalgorithmus
 	 */
 	public static void verteile() {
+		//macheAusgabe();
 		shuffleDaten(); //Damit einer z.B aus der A-Klasse, der als erstes eingetragen wird, keine Vorteile hat.
 		berechneBeliebtheit(); // Die Summe der Beliebtheit aller Personen pro AG
 		if(!checkObDieAGDiePersonenAufnehmenKann()){
@@ -240,11 +241,74 @@ public class Verteilungsalgorithmus {
 			System.exit(0);
 		}
 		getAGNachBeliebtheitsRang(0);
-		while(!allAllocated()){
-			for(Person p: getUnAllocatedPersons()){
-				System.exit(0);
+		int score=3;
+		while(score>=-3){
+			for(int beliebtheitsrang=ag.size()-1;beliebtheitsrang>=0;beliebtheitsrang--){
+				AG ags= getAGNachBeliebtheitsRang(beliebtheitsrang);
+				ArrayList<Person> ps = getPersonenDieAGParamMitBewertungParamBewertertHaben(score, ags);
+				if(ps==null){
+					continue;
+					
+				}
+				for(int i=0;i<(ps.size()<ags.getHoechstanzahl()? ps.size(): ags.getHoechstanzahl());i++){
+					if(ags.istVoll())break;
+					Person highVarianz= getHighestVarianz(ps,score);
+					try{
+						ags.addTeilnehmer(highVarianz);
+						ps.remove(highVarianz);
+					}catch(Exception e){
+						e.printStackTrace();
+						System.exit(0);
+					}
+				}
+			 }
+			score--;
+		}
+		
+	}
+	public static Person getHighestVarianz(ArrayList<Person> p, int bewertung){
+		Person highest=null;
+		double varianz=0.0;
+		for(Person ps:p){
+			double varianz2=getVarianz(ps, bewertung);
+			if(varianz2>varianz){
+				highest=ps;
+				varianz=varianz2;
 			}
 		}
+		return highest;
+	}
+	public static double getVarianz(Person p, int bewertung){
+		double score=0.0;
+		for(int i=0;i<ag.size();i++){
+			AG ags= ag.get(i);
+			if(getPersonenDieAGParamMitBewertungParamBewertertHaben(bewertung, ags).contains(p)){
+				score+= 1.0/(1.0+Math.exp(ags.getBeliebtheit()*Math.sqrt(2.0)/personen.size()));
+			}
+		}
+		return score;
+	}
+	/**
+	 * Returns ArrayList of Persons who rated the AG with param bewertung
+	 * @param bewertung The bewertung the person rated the AG with
+	 * @param ags The ag
+	 * @return ArrayList of Persons
+	 */
+	public static ArrayList<Person> getPersonenDieAGParamMitBewertungParamBewertertHaben(int bewertung, AG ags){
+		ArrayList<Person> ps = new ArrayList<Person>();
+		for(Person p: personen){
+			Rating r= null;
+			for(int i=0;i<ag.size();i++){
+				if(p.getRatingAL().get(i).getAG().equals(ags)){
+					r = p.getRatingAL().get(i);
+				}
+			}
+			if(r==null) return null;
+			if(r.getRatingValue()==bewertung){
+				ps.add(p);
+			}
+		}
+		return ps;
 	}
 	/**
 	 * 
