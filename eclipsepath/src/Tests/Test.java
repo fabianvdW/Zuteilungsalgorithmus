@@ -213,16 +213,20 @@ public class Test {
 	public static void laufeTestsAufVerteilung(int anzTests) {
 		double score=0;
 		for(int i=1;i<=anzTests;i++){
+			
 			Verteilungsalgorithmus.ag.clear();
 			Verteilungsalgorithmus.personen.clear();
 			String uuid= "";
-			int random=(int)(Math.random()*150+50);
+			int random=(int)(Math.random()*10+5);
 			uuid=UUID.randomUUID().toString();
 			int agTeilnehmer=0;
 			while(agTeilnehmer<random){	
+				
 				int hoechstanzahl= (int) (Math.random()*(0.2*(double)random)+1);
+				hoechstanzahl= (hoechstanzahl==0||hoechstanzahl==1? 2: hoechstanzahl);
 				int mindestanzahl=0;
 				do{
+					
 					mindestanzahl=(int) (Math.random()*0.6*(double) hoechstanzahl);
 				}while(mindestanzahl==0);
 				AG ag = new AG(agTeilnehmer,uuid,mindestanzahl,hoechstanzahl);
@@ -263,8 +267,8 @@ public class Test {
 				uuid=UUID.randomUUID().toString();
 				
 			}
-			Verteilungsalgorithmus.verteile();
-			Verteilungsalgorithmus.macheAusgabe();
+			//Verteilungsalgorithmus.verteile();
+			//Verteilungsalgorithmus.macheAusgabe();
 			try{
 			score+=Verteilungsalgorithmus.checkScore();
 			}catch(Exception e){
