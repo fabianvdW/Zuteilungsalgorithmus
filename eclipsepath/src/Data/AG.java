@@ -349,7 +349,7 @@ public class AG {
 	 * 
 	 */
 	public void setBeliebtheit(int b){
-		beliebtheit = b;
+		this.beliebtheit = b;
 	}
 	
 	/**

@@ -223,7 +223,7 @@ public class Verteilungsalgorithmus {
 	public static void main(String[] args) {
 		ag = new ArrayList<AG>();
 		personen = new ArrayList<Person>();
-		Test.laufeTestsAufVerteilung(5);
+		Test.laufeTestsAufVerteilung(1);
 		berechneBeliebtheit();
 		//verteile();
 		//macheAusgabe();
@@ -233,8 +233,93 @@ public class Verteilungsalgorithmus {
 	 * Der eigentliche Verteilungsalgorithmus
 	 */
 	public static void verteile() {
+		shuffleDaten(); //Damit einer z.B aus der A-Klasse, der als erstes eingetragen wird, keine Vorteile hat.
+		berechneBeliebtheit(); // Die Summe der Beliebtheit aller Personen pro AG
+		if(!checkObDieAGDiePersonenAufnehmenKann()){
+			System.out.println("Die Agen können die Personen nicht aufnehmen. Exit");
+			System.exit(0);
+		}
+		getAGNachBeliebtheitsRang(0);
+		while(!allAllocated()){
+			for(Person p: getUnAllocatedPersons()){
+				System.exit(0);
+			}
+		}
+	}
+	public static AG getAGNachBeliebtheitsRang(int beliebtheitsRang){
+		if(beliebtheitsRang>ag.size()-1){
+			System.out.println("BeliebtheitsRang ist nicht verfügbar.");
+		}
+		ArrayList<AG> AGenGeOrdnetNachRang = new ArrayList<AG>();
+		
+		for(int i=0;i<ag.size();i++){
+			AG highest = null;
+			for(AG ags: ag){
+				if(highest==null){
+					highest=ags;
+					continue;
+				}
+				if(!AGenGeOrdnetNachRang.contains(ags))
+				highest= ags.getBeliebtheit()>highest.getBeliebtheit()?ags:highest;
+			}
+			AGenGeOrdnetNachRang.add(highest);
+		}
+		for(AG ags: AGenGeOrdnetNachRang){
+			System.out.println("AG: "+ags.getName()+" Beliebtheit: "+ags.getBeliebtheit());
+		}
+		return AGenGeOrdnetNachRang.get(beliebtheitsRang);
 		
 	}
+	/**
+	 * 
+	 * @return an ArrayList of Persons which are not alllocated to an AG
+	 */
+	public static ArrayList<Person> getUnAllocatedPersons(){
+		ArrayList<Person> unallocated = new ArrayList<Person>();
+		for(Person p : personen){
+			if(p.getBesuchteAG()==null){
+				unallocated.add(p);
+			}
+		}
+		return unallocated;
+	}
+	/**
+	 * 
+	 * @param ag the AG that should be checked
+	 * @return True if the AG can take up another person, false if the AG cant.
+	 */
+	public static boolean spotFree(AG ag){
+		return !ag.istVoll();
+	}
+	/**
+	 * 
+	 * @return True if every person has an AG, false if not every person has an AG
+	 */
+	public static boolean allAllocated(){
+		for(Person p: personen){
+			if(p.getBesuchteAG()==null){
+				return false;
+			}
+		}
+		return true;
+	}
+	/**
+	 * Checks if the AGs can even take up all the person with the spots the AGs have available.
+	 * @return False if the AGs cant take up all the persons, True if the AGs can take up all the persons.
+	 */
+	public static boolean checkObDieAGDiePersonenAufnehmenKann(){
+		int personen=0;
+		for(AG ag : Verteilungsalgorithmus.ag){
+			personen+=ag.getHoechstanzahl();
+		}
+		if(personen<Verteilungsalgorithmus.personen.size()){
+			return false;
+		}
+		return true;
+	}
+	/**
+	 * Shuffles the Data, so that a person which was written in the DB first doesnt have an unfair advantage.
+	 */
 	public static void shuffleDaten(){
 		//Shuffle Liste ag
 		ArrayList<AG> shuffeldAg= new ArrayList<AG>();
