@@ -203,6 +203,7 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -211,12 +212,15 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -226,8 +230,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
+import javax.swing.ListSelectionModel;
 
 import Data.AG;
 import Data.Person;
@@ -241,7 +244,7 @@ public class GUI extends JFrame{
 	// Main-Frame
 	private JMenuBar up;
 	private JMenu men1, men2, men3;
-	private JMenuItem fileExportAG, fileExportPerson, fileReload, fileExit, showAG, showPerson;
+	private JMenuItem fileExportAG, fileExportPerson, fileReload, fileExit, showAG, showPerson, runVerteile;
 	private JTextField agField, pField;
 	
 	// Other Modals
@@ -254,7 +257,7 @@ public class GUI extends JFrame{
 	
 	// Error-Frame
 	private JButton errorCloseButton;
-  
+	
 	// Database
 	private DBManager dbm;
 	
@@ -296,7 +299,9 @@ public class GUI extends JFrame{
 		men2.add(showPerson);
 		up.add(men2);
 		men3 = new JMenu("Auswerten");
-		men3.addMenuListener(new RunVerteilungsalgorithmus());
+		runVerteile = new JMenuItem("Ausführen");
+		runVerteile.addActionListener(new RunVerteilungsalgorithmus());
+		men3.add(runVerteile);
 		up.add(men3);
 		setJMenuBar(up);
 		login = new JDialog(this, "Server Login", true);
@@ -304,8 +309,10 @@ public class GUI extends JFrame{
 		connect("agent77326.tk", 3306, "fabi", "4ma9vJdZUH7J70Wh", "fabi");
 	}
 	
-	protected void showTable(String[] colName, String[][] data){
-	    JDialog table = new JDialog(this, "Datatable", false);
+	protected void showTable(String[] colName, String[][] data, String title){
+	    JFrame table = new JFrame();
+		table.setTitle(title);
+        table.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 	    table.setSize(1280, 720);
 	    table.setLocationRelativeTo(null);
 	    JTable t = new JTable(data, colName){
@@ -361,56 +368,78 @@ public class GUI extends JFrame{
 		String[][] agList = new String[Algorithmus.Verteilungsalgorithmus.ag.size()][5];
 		int i = 0;
 		String teilnehmer = null;
+		String[] sort = new String[Algorithmus.Verteilungsalgorithmus.ag.size()];
 		for(AG ag: Algorithmus.Verteilungsalgorithmus.ag){
-			agList[i][0] = "" + ag.getId();
-			agList[i][1] = ag.getName();
-			agList[i][2] = "" + ag.getMindestanzahl();
-			agList[i][3] = "" + ag.getHoechstanzahl();
-			if(ag.getTeilnehmer()==null){
-				agList[i][4] = "";
-			}
-			else{
-				teilnehmer = "";
-				int j = 0;
-				for(Person p: ag.getTeilnehmer()){
-					teilnehmer += p.getName() + (j++ < ag.getTeilnehmer().size() ? ", " : "");
+			sort[i++] = ag.getName() + ag.getId();
+		}
+		Arrays.sort(sort);
+		i = 0;
+		for(String name: sort){
+			for(AG ag: Algorithmus.Verteilungsalgorithmus.ag){
+				if(!name.equals(ag.getName() + ag.getId())){
+					continue;
 				}
-				agList[i][4] = teilnehmer;
+				agList[i][0] = "" + ag.getId();
+				agList[i][1] = ag.getName();
+				agList[i][2] = "" + ag.getMindestanzahl();
+				agList[i][3] = "" + ag.getHoechstanzahl();
+				if(ag.getTeilnehmer()==null){
+					agList[i][4] = "";
+				}
+				else{
+					teilnehmer = "";
+					int j = 0;
+					for(Person p: ag.getTeilnehmer()){
+						teilnehmer += p.getName() + (j++ < ag.getTeilnehmer().size() ? ", " : "");
+					}
+					agList[i][4] = teilnehmer;
+				}
 			}
 			i++;
 		}
 		String[] agListHead = new String[]{"ID", "Name", "Mindestanzahl", "Höchstanzahl", "Teilnehmer"};
-		showTable(agListHead, agList);
+		showTable(agListHead, agList, "AG-Liste");
 	}
 	
 	protected void showPersonenList(){
 		String[][] persList = new String[Algorithmus.Verteilungsalgorithmus.personen.size()][5];
 		int i = 0;
 		String ags = null;
+		String[] sort = new String[Algorithmus.Verteilungsalgorithmus.personen.size()];
 		for(Person p: Algorithmus.Verteilungsalgorithmus.personen){
-			persList[i][0] = "" + p.getId();
-			persList[i][1] = p.getName();
-			if(p.getBesuchteAG()==null){
-				persList[i][2] = "";
-			}
-			else{
-				persList[i][2] = "" + p.getBesuchteAG().getName();
-			}
-			if(p.getRatingAL()==null){
-				persList[i][3] = "";
-			}
-			else{
-				ags = "";
-				int j = 0;
-				for(Rating r: p.getRatingAL()){
-					ags += r.getAG().getName() + ": " + r.getRatingValue() + (j++ < p.getRatingAL().size() ? ", " : "");
+			sort[i++] = p.getName() + p.getId();
+		}
+		Arrays.sort(sort);
+		i = 0;
+		for(String name: sort){
+			for(Person p: Algorithmus.Verteilungsalgorithmus.personen){
+				if(!name.equals(p.getName() + p.getId())){
+					continue;
 				}
-				persList[i][3] = ags;
+				persList[i][0] = "" + p.getId();
+				persList[i][1] = p.getName();
+				if(p.getBesuchteAG()==null){
+					persList[i][2] = "";
+				}
+				else{
+					persList[i][2] = "" + p.getBesuchteAG().getName();
+				}
+				if(p.getRatingAL()==null){
+					persList[i][3] = "";
+				}
+				else{
+					ags = "";
+					int j = 0;
+					for(Rating r: p.getRatingAL()){
+						ags += r.getAG().getName() + ": " + r.getRatingValue() + (j++ < p.getRatingAL().size() ? ", " : "");
+					}
+					persList[i][3] = ags;
+				}
 			}
 			i++;
 		}
 		String[] persListHead = new String[]{"ID", "Name", "Aktuelle AG", "Gewählte AGs"};
-		showTable(persListHead, persList);
+		showTable(persListHead, persList, "Schüler-Liste");
 	}
 	
 	protected void showError(String msg){
@@ -433,7 +462,7 @@ public class GUI extends JFrame{
 	    ((JPanel) error.getContentPane()).getActionMap().put("ESCAPE_KEY", new AbstractAction(){
 			private static final long serialVersionUID = 1L;
 			public void actionPerformed(ActionEvent e){
-				error.dispatchEvent(new WindowEvent(error, WindowEvent.WINDOW_CLOSING)); 
+				error.dispatchEvent(new WindowEvent(error, WindowEvent.WINDOW_CLOSING));
 			}
 		});
 	    error.setVisible(true);
@@ -626,12 +655,8 @@ public class GUI extends JFrame{
 		}
 	}
 	
-	protected class RunVerteilungsalgorithmus implements MenuListener{
-		public void menuCanceled(MenuEvent e){}
-
-		public void menuDeselected(MenuEvent e){}
-
-		public void menuSelected(MenuEvent e){
+	protected class RunVerteilungsalgorithmus implements ActionListener{
+		public void actionPerformed(ActionEvent e){
 			Algorithmus.Verteilungsalgorithmus.verteile();
 			showAGList();
 		}
