@@ -246,6 +246,11 @@ public class Verteilungsalgorithmus {
 			}
 		}
 	}
+	/**
+	 * 
+	 * @param beliebtheitsRang Die AG die den beliebtheitsRang haben soll
+	 * @return die AG mit dem BeliebtheitsRang beliebtheitsRang
+	 */
 	public static AG getAGNachBeliebtheitsRang(int beliebtheitsRang){
 		if(beliebtheitsRang>ag.size()-1){
 			System.out.println("BeliebtheitsRang ist nicht verfügbar.");
@@ -255,18 +260,19 @@ public class Verteilungsalgorithmus {
 		for(int i=0;i<ag.size();i++){
 			AG highest = null;
 			for(AG ags: ag){
+				if(AGenGeOrdnetNachRang.contains(ags))continue;
 				if(highest==null){
 					highest=ags;
 					continue;
 				}
-				if(!AGenGeOrdnetNachRang.contains(ags))
 				highest= ags.getBeliebtheit()>highest.getBeliebtheit()?ags:highest;
 			}
 			AGenGeOrdnetNachRang.add(highest);
 		}
-		for(AG ags: AGenGeOrdnetNachRang){
-			System.out.println("AG: "+ags.getName()+" Beliebtheit: "+ags.getBeliebtheit());
-		}
+		//DEBUG
+		//for(AG ags: AGenGeOrdnetNachRang){
+		//System.out.println("AG: "+ags.getName()+" Beliebtheit: "+ags.getBeliebtheit());
+		//}
 		return AGenGeOrdnetNachRang.get(beliebtheitsRang);
 		
 	}
