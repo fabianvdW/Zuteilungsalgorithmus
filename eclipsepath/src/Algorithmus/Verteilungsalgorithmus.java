@@ -266,6 +266,12 @@ public class Verteilungsalgorithmus {
 		}
 		
 	}
+	/**
+	 * Returnt die Person mit der niedrigsten Varianz
+	 * @param p ArrayList an Personen
+	 * @param bewertung Die Bewertung
+	 * @return die Person mit der niedrigsten Varianz
+	 */
 	public static Person getLowestVarianz(ArrayList<Person> p, int bewertung){
 		Person lowest=null;
 		double varianz=100000.0;
@@ -278,6 +284,12 @@ public class Verteilungsalgorithmus {
 		}
 		return lowest;
 	}
+	/**
+	 * Rechnet die Varianz einer Person aus
+	 * @param p Die Person
+	 * @param bewertung Die Varianz auf der Bewertung
+	 * @return die Varianz
+	 */
 	public static double getVarianz(Person p, int bewertung){
 		double score=0.0;
 		for(int i=0;i<ag.size();i++){
