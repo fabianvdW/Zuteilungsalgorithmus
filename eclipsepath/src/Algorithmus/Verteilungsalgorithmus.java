@@ -223,7 +223,7 @@ public class Verteilungsalgorithmus {
 	public static void main(String[] args) {
 		ag = new ArrayList<AG>();
 		personen = new ArrayList<Person>();
-		Test.laufeTestsAufVerteilung(100);
+		Test.laufeTestsAufVerteilung(10);
 		berechneBeliebtheit();
 		//verteile();
 		//macheAusgabe();
@@ -245,7 +245,7 @@ public class Verteilungsalgorithmus {
 		while(score>=-3){
 			for(int beliebtheitsrang=ag.size()-1;beliebtheitsrang>=0;beliebtheitsrang--){
 				AG ags= getAGNachBeliebtheitsRang(beliebtheitsrang);
-				ArrayList<Person> ps = getPersonenDieAGParamMitBewertungParamBewertertHaben(score, ags);
+				ArrayList<Person> ps = getUnAllocatedPersonenDieAGParamMitBewertungParamBewertertHaben(score, ags);
 				if(ps==null){
 					continue;
 					
@@ -282,7 +282,7 @@ public class Verteilungsalgorithmus {
 		double score=0.0;
 		for(int i=0;i<ag.size();i++){
 			AG ags= ag.get(i);
-			if(getPersonenDieAGParamMitBewertungParamBewertertHaben(bewertung, ags).contains(p)){
+			if(getUnAllocatedPersonenDieAGParamMitBewertungParamBewertertHaben(bewertung, ags).contains(p)){
 				score+= 1.0/(1.0+Math.exp(ags.getBeliebtheit()*Math.sqrt(2.0)/personen.size()));
 			}
 		}
@@ -294,9 +294,9 @@ public class Verteilungsalgorithmus {
 	 * @param ags The ag
 	 * @return ArrayList of Persons
 	 */
-	public static ArrayList<Person> getPersonenDieAGParamMitBewertungParamBewertertHaben(int bewertung, AG ags){
+	public static ArrayList<Person> getUnAllocatedPersonenDieAGParamMitBewertungParamBewertertHaben(int bewertung, AG ags){
 		ArrayList<Person> ps = new ArrayList<Person>();
-		for(Person p: personen){
+		for(Person p: getUnAllocatedPersons()){
 			Rating r= null;
 			for(int i=0;i<ag.size();i++){
 				if(p.getRatingAL().get(i).getAG().equals(ags)){
@@ -468,6 +468,8 @@ public class Verteilungsalgorithmus {
 	 */
 	public static void macheAusgabe() {
 		System.out.println("Die Zuteilung ist erfolgreich fertig!");
+		System.out.println("Anzahl an Personen: "+personen.size());
+		System.out.println("Anzahl an AGen: "+ag.size());
 		System.out.println("Folgende Personen sind in folgenden AGen:");
 		System.out.println("----------------------------------------------------------");
 		ArrayList<AG> findenNichtStatt = new ArrayList<AG>();
@@ -481,7 +483,7 @@ public class Verteilungsalgorithmus {
 			}
 			System.out.println("In der AG " + ags.getName() + " sind folgende Personen: " + "("
 					+ ags.getTeilnehmer().size() + "/" + ags.getHoechstanzahl() + ")Teilnehmer~"
-					+ ((double) ags.getTeilnehmer().size()) / ags.getHoechstanzahl() + "%");
+					+ ((double) ags.getTeilnehmer().size()) / ags.getHoechstanzahl()*100 + "%");
 			ArrayList<Person> teilnehmer = ags.getTeilnehmer();
 			for (Person p : teilnehmer) {
 				System.out.println(p.getName());
