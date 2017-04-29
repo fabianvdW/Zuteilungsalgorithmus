@@ -223,10 +223,8 @@ public class Verteilungsalgorithmus {
 	public static void main(String[] args) {
 		ag = new ArrayList<AG>();
 		personen = new ArrayList<Person>();
-		Test.laufeTestsAufVerteilung(1);
-		macheAusgabe();
-		shuffleDaten();
-		macheAusgabe();
+		Test.laufeTestsAufVerteilung(5);
+		berechneBeliebtheit();
 		//verteile();
 		//macheAusgabe();
 	}
@@ -235,7 +233,7 @@ public class Verteilungsalgorithmus {
 	 * Der eigentliche Verteilungsalgorithmus
 	 */
 	public static void verteile() {
-
+		
 	}
 	public static void shuffleDaten(){
 		//Shuffle Liste ag
@@ -260,14 +258,17 @@ public class Verteilungsalgorithmus {
 	 *	Beliebtheit	 
 	 */
 	public static void berechneBeliebtheit(){
-		int i = 0;
 		for(AG ags: ag){
 			ags.setBeliebtheit(0);
 			for(Person p: personen){
-				ags.setBeliebtheit(ags.getBeliebtheit()+p.getRatingAL().get(i).getRatingValue());
+				int agindex=0;
+				for(int k=0;k<p.getRatingAL().size();k++){
+					if(p.getRatingAL().get(k).getAG().equals(ags)){
+						agindex=k;
+					}
+				}
+				ags.setBeliebtheit(ags.getBeliebtheit()+p.getRatingAL().get(agindex).getRatingValue());
 			}
-			i++;
-			System.out.println(ags.getBeliebtheit());
 		}
 	}
 
