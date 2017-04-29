@@ -252,10 +252,10 @@ public class Verteilungsalgorithmus {
 				}
 				for(int i=0;i<(ps.size()<ags.getHoechstanzahl()? ps.size(): ags.getHoechstanzahl());i++){
 					if(ags.istVoll())break;
-					Person highVarianz= getHighestVarianz(ps,score);
+					Person lowVarianz= getLowestVarianz(ps,score);
 					try{
-						ags.addTeilnehmer(highVarianz);
-						ps.remove(highVarianz);
+						ags.addTeilnehmer(lowVarianz);
+						ps.remove(lowVarianz);
 					}catch(Exception e){
 						e.printStackTrace();
 						System.exit(0);
@@ -266,17 +266,17 @@ public class Verteilungsalgorithmus {
 		}
 		
 	}
-	public static Person getHighestVarianz(ArrayList<Person> p, int bewertung){
-		Person highest=null;
-		double varianz=0.0;
+	public static Person getLowestVarianz(ArrayList<Person> p, int bewertung){
+		Person lowest=null;
+		double varianz=100000.0;
 		for(Person ps:p){
 			double varianz2=getVarianz(ps, bewertung);
-			if(varianz2>varianz){
-				highest=ps;
+			if(varianz2<varianz){
+				lowest=ps;
 				varianz=varianz2;
 			}
 		}
-		return highest;
+		return lowest;
 	}
 	public static double getVarianz(Person p, int bewertung){
 		double score=0.0;
