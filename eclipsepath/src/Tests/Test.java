@@ -247,14 +247,15 @@ public class Test {
 						ratings.add(r);
 					}else{
 						int rand=0;
-						if(sum>0){
-							rand= (int) (Math.random()*3-3);
-						}else{
-							if(k==random-1){
-								rand=-sum;
+						if(j!=Verteilungsalgorithmus.ag.size()-1){
+							if(sum>0){
+								rand= (int) (Math.random()*3-3);
 							}else{
 								rand=(int) (Math.random()*4);
-							}
+							}						}
+						else{
+								rand=-sum;
+							
 						}
 						sum+=rand;
 						Rating r= new Rating(Verteilungsalgorithmus.ag.get(j),rand);
