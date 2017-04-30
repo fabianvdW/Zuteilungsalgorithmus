@@ -215,21 +215,21 @@ public class Verteilungsalgorithmus {
 
 	/**
 	 * 
-	 * Initialisiert alle Objekte aus MYSQL. Startet Verteilung Macht Ausgabe
+	 * Initialisiert alle Objekte aus MYSQL. Startet Tests der Verteilung und macht ggf. Ausgabe
 	 * 
-	 * @param args
-	 *            Argumente.
+	 * @param args String Array aus Argumenten
+	 *          
 	 */
 	public static void main(String[] args) {
 		ag = new ArrayList<AG>();
 		personen = new ArrayList<Person>();
-		Test.laufeTestsAufVerteilung(10000);
+		Test.laufeTestsAufVerteilung(100);
 		//verteile();
 		//macheAusgabe();
 	}
 	/**
 	 * 
-	 * @return a String with a useful output.
+	 * @return Ein String, welcher beschreibt wieviele Personen ihre LieblingsAG, ihre zweit liebste AG. usw. bekommen haben.
 	 */
 	public static String getPersonenMitBewertung(){
 		int[] bewertungen = new int[8];
@@ -302,7 +302,7 @@ public class Verteilungsalgorithmus {
 				}
 				if(checkObDieAgenMindestzahlFehler()){//Wenn der mindestanzahl FEhler auftritt,
 					//System.out.println("MindestanzahlFehler");
-					for(AG ags: getAgDieNichtStattFinden()){//Apply fix. LUL
+					for(AG ags: getAgDieNichtStattFinden()){//Leute werden aus andren AGen in diese AG gezogen.
 						for(int i=0;i<checkObDieAgenMindestzahlFehlerDifferenz(ags);i++){
 							Person p= personAusAgZiehen(ags);
 							try{
@@ -330,7 +330,7 @@ public class Verteilungsalgorithmus {
 	/**
 	 * 
 	 * @param zielAG Die AG zu der eine Person konvertieren soll
-	 * @return die Person die aus ihrer Ag gezogen wird.
+	 * @return die Person die aus ihrer AG gezogen wird.
 	 */
 	public static Person personAusAgZiehen(AG zielAG){
 		Person bestPerson=null;
@@ -383,8 +383,8 @@ public class Verteilungsalgorithmus {
 		return findenNichtStatt;
 	}
 	/**
-	 *  Should only be used when there is the Mindestanzahl Fehler
-	 * @return Die Differenz, d. h. die Anzahl der Teilnehmer, die aus ihrer AG herausgezogen werden sollten.
+	 *  Sollte nur genutzt werden, wenn der Mindestanzahlfehler, auch wirklich auftritt (sonst macht diese Methode keinen bis wenig Sinn)
+	 * @return Die Differenz, d. h. die Anzahl der Teilnehmer, die aus ihrer AG herausgezogen werden sollten, damit alle anderen AGen stattfinden können.
 	 */
 	public static int checkObDieAgenMindestzahlFehlerDifferenz(AG age){
 		int anzP= getUnAllocatedPersons().size();
@@ -397,8 +397,8 @@ public class Verteilungsalgorithmus {
 		return anzAg-anzP;
 	}
 	/**
-	 * Überprüft, ob eine(oder mehrer) AGen die nicht stattfinden, eine höhere Mindestanzahl haben, als Teilnehmer übrig sind.
-	 * @return True if there is this mistake, false if there is not
+	 * Überprüft, ob eine(oder mehrere) AGen die nicht stattfinden, eine höhere Mindestanzahl haben, als Teilnehmer übrig sind.
+	 * @return True wenn die restlichen nicht zugewiesenenTeilnehmer nicht genug sind um die restlichen AGen mit ihrer Mindestanzahl zu befüllen, False wenn die restlichen nicht zugewiesenen Teilnehmer genug sind um die restlichen AGen mit ihrer Mindestanzahl zu befüllen
 	 */
 	public static boolean checkObDieAgenMindestzahlFehler(){
 		
@@ -416,9 +416,9 @@ public class Verteilungsalgorithmus {
 	}
 	/**
 	 * Returnt die Person mit der niedrigsten Varianz
-	 * @param p ArrayList an Personen
-	 * @param bewertung Die Bewertung
-	 * @return die Person mit der niedrigsten Varianz
+	 * @param p ArrayList an Personen aus denen die Person mit der niedrigsten Varianz bestimmt werden sollte
+	 * @param bewertung Die Bewertung, für die die Varianz berechnet werden soll
+	 * @return die Person mit der niedrigsten Varianz aus dem Parameter p
 	 */
 	public static Person getLowestVarianz(ArrayList<Person> p, int bewertung){
 		Person lowest=null;
@@ -434,9 +434,9 @@ public class Verteilungsalgorithmus {
 	}
 	/**
 	 * Rechnet die Varianz einer Person aus
-	 * @param p Die Person
-	 * @param bewertung Die Varianz auf der Bewertung
-	 * @return die Varianz
+	 * @param p Die Person für die die Varianz berechnet werden soll
+	 * @param bewertung Die Bewertung für welche die Varianz berechnet werden soll
+	 * @return die Varianz der Person p
 	 */
 	public static double getVarianz(Person p, int bewertung){
 		double score=0.0;
@@ -449,10 +449,10 @@ public class Verteilungsalgorithmus {
 		return score;
 	}
 	/**
-	 * Returns ArrayList of Persons who rated the AG with param bewertung
-	 * @param bewertung The bewertung the person rated the AG with
-	 * @param ags The ag
-	 * @return ArrayList of Persons
+	 * Returnt ArrayList aus Personen, die noch keine AG haben und die AG ags mit der Bewertung bewertung bewertet haben
+	 * @param bewertung Die bewertung die die Personen der AG gegeben haben sollten
+	 * @param ags Die AG welche betrachtet werden soll
+	 * @return ArrayList aus Personen, die noch keine AG haben und die AG ags mit der Bewertung bewertung bewertet haben
 	 */
 	public static ArrayList<Person> getUnAllocatedPersonenDieAGParamMitBewertungParamBewertertHaben(int bewertung, AG ags){
 		ArrayList<Person> ps = new ArrayList<Person>();
@@ -473,7 +473,7 @@ public class Verteilungsalgorithmus {
 	}
 	/**
 	 * 
-	 * @param beliebtheitsRang Die AG die den beliebtheitsRang haben soll
+	 * @param beliebtheitsRang Die AG die den BeliebtheitsRang beliebtheitsRang haben soll
 	 * @return die AG mit dem BeliebtheitsRang beliebtheitsRang
 	 */
 	public static AG getAGNachBeliebtheitsRang(int beliebtheitsRang){
@@ -499,7 +499,7 @@ public class Verteilungsalgorithmus {
 	}
 	/**
 	 * 
-	 * @return an ArrayList of Persons which are not alllocated to an AG
+	 * @return ArrayList aus Personen, die noch in keiner AG sind
 	 */
 	public static ArrayList<Person> getUnAllocatedPersons(){
 		ArrayList<Person> unallocated = new ArrayList<Person>();
@@ -512,15 +512,15 @@ public class Verteilungsalgorithmus {
 	}
 	/**
 	 * 
-	 * @param ag the AG that should be checked
-	 * @return True if the AG can take up another person, false if the AG cant.
+	 * @param ag Die AG die überprüft werden soll
+	 * @return True wenn die AG noch eine Person aufnehmen kann, False wenn die AG keine Person mehr aufnehmen kann
 	 */
 	public static boolean spotFree(AG ag){
 		return !ag.istVoll();
 	}
 	/**
 	 * 
-	 * @return True if every person has an AG, false if not every person has an AG
+	 * @return True wenn jede Persone eine AG hat, False wenn nicht jede Person eine AG hat
 	 */
 	public static boolean allAllocated(){
 		for(Person p: personen){
@@ -531,8 +531,8 @@ public class Verteilungsalgorithmus {
 		return true;
 	}
 	/**
-	 * Checks if the AGs can even take up all the person with the spots the AGs have available.
-	 * @return False if the AGs cant take up all the persons, True if the AGs can take up all the persons.
+	 * Überprüft ob die AGen insgesamt mit all ihren Plätzen überhaupt alle Personen aufnehmen können
+	 * @return True wenn die AGen insgesamt alle Personen unterbringen können, FAlse wenn die Agen ingesamt nicht alle Personen unterbringen können
 	 */
 	public static boolean checkObDieAGDiePersonenAufnehmenKann(){
 		int personen=0;
@@ -545,7 +545,7 @@ public class Verteilungsalgorithmus {
 		return true;
 	}
 	/**
-	 * Shuffles the Data, so that a person which was written in the DB first doesnt have an unfair advantage.
+	 * Mischt die Daten, damit z.B. Personen, die zu erst eingetragen werden keine unfairen Vorteile haben
 	 */
 	public static void shuffleDaten(){
 		//Shuffle Liste ag
@@ -567,7 +567,7 @@ public class Verteilungsalgorithmus {
 	}
 
 	/**
-	 *	Beliebtheit	 
+	 *	Berechnet die Beliebtheit jeder AG, dazu werden die einzelnen Bewertungen der Personen für diese AG einfach aufaddiert
 	 */
 	public static void berechneBeliebtheit(){
 		for(AG ags: ag){
@@ -676,7 +676,9 @@ public class Verteilungsalgorithmus {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		
+		if(!allAllocated()){
+			System.out.println("Es sind nicht alle zugewiesen");
+		}
 		//statusCheck();
 		System.out.println(getPersonenMitBewertung());
 		

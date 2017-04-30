@@ -216,13 +216,12 @@ public class DB {
 	private boolean isConnected;
 
 	/**
-	 * Class for managed connections and interactions with a given server
-	 * @author Agent77326
-	 * @param String the server-address e.g: example.com
-	 * @param int the server-port mySQL uses: default is 3306
-	 * @param String the user to login
-	 * @param String the password to authenticate
-	 * @param String the database to connect to
+	 * Klasse um mit einem MYSQl Server zu interagieren
+	 * @param server Der Server, mit dem man sich verbinden soll
+	 * @param port  Der Server-Port, den MYSQL benutzt, Default:3306
+	 * @param user Der Benutzer, der auf den Server zugreifen will
+	 * @param password Das Password zum authentifizieren
+	 * @param database Die Datenbank, mit der sich verbunden werden soll
 	 */
 	protected DB(String server, int port, String user, String password, String database){
 		try{
@@ -245,18 +244,17 @@ public class DB {
 	
 	/**
 	 * Gibt die Anzahl der Datensätze für die gegebene Tabelle zurück
-	 * @param String table der name der Tabelle
-	 * @return int die Größe
+	 * @param table Der name der Tabelle
+	 * @return Die Größe der Tabelle
 	 */
 	protected int getSize(String table){
 		return query("SELECT `id` FROM `" + table + "`")[0].length - 1;
 	}
 	
 	/**
-	 * Use this for updating, inserting and deleting data, if you only want to read use query();
-	 * @param String sql the statement with wildcards to fill with the data
-	 * 		e.g: "insert into  database.table values (default, ?, ?, ?, ?, ?, ?)"
-	 * @param String[] data the values here will be inserted into the wildcards at the sql-statement
+	 * Benutze das zum updaten, einfügen und löschen von Daten, zum Lesen die Funktion query() benutzen;
+	 * @param  sql Das SQL Statement mit Wildcards z.B.: "insert into  database.table values (default, ?, ?, ?, ?, ?, ?)"
+	 * @param data Die Daten hier werden in die Wildcards eingefügt
 	 */
 	protected void update(String sql, String[] data){
 		PreparedStatement ps = null;
@@ -285,9 +283,9 @@ public class DB {
 	}
 	
 	/**
-	 * Generates a request to the server by executing the given query
-	 * @param String query the request as sql-statement
-	 * @return ResultSet the returned data
+	 * Geniert eine Abfrage zum Server
+	 * @param sql Die Abfrage als SQL-Statement
+	 * @return Die zurückgegebene Daten des Servers als zwei dimensionaler Array
 	 */
 	protected String[][] query(String sql){
 		try{
@@ -309,8 +307,8 @@ public class DB {
 	}
 	
 	/**
-	 * Changes Data from the DB
-	 * @param String query the request as sql-statement
+	 * Ändert die Daten einer DB
+	 * @param sql Die Abfrage als SQL-Statement
 	 */
 	protected void update(String sql){
 		try{
@@ -331,9 +329,9 @@ public class DB {
 	}
 	
 	/**
-	 * Generates a request to the server by executing the given query
-	 * @param PreparedStatment query the request given as prepared
-	 * @return ResultSet the returned data
+	 * Generier eine Abfrage zum Server
+	 * @param sql Die Abfrage als SQL-Statement
+	 * @return Die zurückgegebenen Daten als zwei-dimensionales String Array
 	 */
 	protected String[][] query(PreparedStatement sql){
 		try{
@@ -355,10 +353,10 @@ public class DB {
 	}
 	
 	/**
-	 * Fetches the given data from a ResultSet into a 2-dimensional Array of Strings.
-	 * IMPORTANT! the first row is filled with the names of the columns
-	 * @param ResultSet the return of a query to the sql-server
-	 * @return String[][] with all data. 1.dim is each row and 2.dim is each column
+	 * Wandelt das ResultSet in ein zwei-dimensionalen String um
+	 * Wichtig, die erste Zeile ist gefüllt mit den Namen der Spalten
+	 * @param rs Das ResultSet einer query()
+	 * @return String[][] mit den Daten
 	 */
 	private String[][] fetch(ResultSet rs){
 		String[][] data = null;
@@ -401,14 +399,14 @@ public class DB {
 	}
 	
 	/**
-	 * Returns if the db is connected
+	 * @return True wenn DB mit dem Server verbunden ist, False wenn DB nicht mit dem Server verbunden ist
 	 */
 	protected boolean isConnected(){
 		return isConnected;
 	}
 	
 	/**
-	 * This must be run after the DB is not used any more to release the used connection
+	 * Schließt die Verbindung mit dem Server
 	 */
 	protected void close(){
 		if(con!=null){

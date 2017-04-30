@@ -217,15 +217,14 @@ public class DBManager {
 	private int profile;
 	
 	/**
-	 * @author Agent77326
+	 * Eine Klasse zum Managen der Klasse DB
 	 */
 	public DBManager(){
 		profile = 1;
 	}
 	
 	/**
-	 * @author Agent77326
-	 * @param profileNumber the ID of the profile when there are multiple tables on the same database
+	 * @param profileNumber Das Profil, das vom Server gelesen werden soll z.B. Unterschiedliche Profile für jedes Jahr, daher gibt es auch jedes Jahr neue Tabellen
 	 */
 	public DBManager(int profileNumber){
 		profile = profileNumber;
@@ -240,9 +239,9 @@ public class DBManager {
 	 * 
 	 * @param server Server URL
 	 * @param port PORT
-	 * @param user USER
+	 * @param user Benutzer
 	 * @param password PASSWORD
-	 * @param database Database that should be connected to.
+	 * @param database Database mit der sich verbunden werden soll
 	 */
 	public void connect(String server, int port, String user, String password, String database){
 		db = new DB(server, port, user, password, database);
@@ -261,7 +260,7 @@ public class DBManager {
 	}
 	
 	/**
-	 * Closes the current connection to the db and is now able to connect to a new one with connect()
+	 * Schließt die momentane Verbindung zu einer Datenbank
 	 */
 	public void close(){
 		if(db!=null){
@@ -270,7 +269,7 @@ public class DBManager {
 	}
 	
 	/**
-	 * Set the current profile
+	 * Setze das momentane Profil
 	 * @param profile ProfileID
 	 */
 	public void setProfile(int profile){
@@ -278,15 +277,15 @@ public class DBManager {
 	}
 	
 	/**
-	 * get the current profile
-	 * @return int Profile-ID
+	 * Hole das momentane Profile
+	 * @return Profile-ID
 	 */
 	public int getProfile(){
 		return profile;
 	}
 	
 	/**
-	 * Reads all the data from the database with the given profile into data and returns it
+	 * Ließt die ganzen Daten einer Datenbank und intitialisiert Java-Objekte
 	 *
 	 */
 	public void initializeJavaObjectsFromDB(){
@@ -381,8 +380,8 @@ public class DBManager {
 	}
 	
 	/**
-	 * Adds a person to the db
-	 * @param Person p die Person die hinzuzufügen ist
+	 * Fügt eine Person in die DB
+	 * @param p die Person die hinzuzufügen ist
 	 */
 	public void addPerson(Person p){
 		String tmp = "";
@@ -399,7 +398,7 @@ public class DBManager {
 	
 	/**
 	 * Gibt ein AG-Objekt zurück mit allen Daten die es in der DB gibt
-	 * @param String name der AG
+	 * @param id ID  der AG
 	 * @return AG das Objekt
 	 */
 	public AG getAG(int id){
@@ -430,7 +429,7 @@ public class DBManager {
 	
 	/**
 	 * Fügt eine AG hinzu
-	 * @param ag
+	 * @param ag Die AG die hinzuzufügen ist
 	 */
 	public void addAG(AG ag){
 		db.query("INSERT INTO `AG" + profile + "` "

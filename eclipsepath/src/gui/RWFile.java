@@ -212,14 +212,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-/**
- * @author Agent77326
- */
 public class RWFile{
 	/**
-	 * Writes to the String on the given file
-	 * @param fh Filehandle
-	 * @param txt the String to write
+	 * Schreibt den String zu einem gegebenen File
+	 * @param fh Die Datei
+	 * @param txt Der String, der geschrieben werden soll
 	 */
 	public static void write(File fh, String txt){
 		Writer w = null;
@@ -244,9 +241,9 @@ public class RWFile{
 	}
 	
 	/**
-	 * Reads the content of the given File
-	 * @param fh the Filehandle
-	 * @return the file-content as String
+	 * Liest den Inhalb einer Datei
+	 * @param fh Die Datei
+	 * @return Den Inhalt der Datei als String
 	 */
 	public static String read(File fh){
 		try{

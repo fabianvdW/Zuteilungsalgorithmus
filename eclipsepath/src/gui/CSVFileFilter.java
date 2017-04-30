@@ -203,13 +203,10 @@
 package gui;
 
 import java.io.File;
-
-/**
- * @author Agent77326
- */
 public class CSVFileFilter extends javax.swing.filechooser.FileFilter{
 	/**
-     * Get the extension of a file.
+     * Lese die Extension einer Datei
+     * @return Die Extension der Datei
      */
     protected static String getExtension(File f) {
         String ext = null;
@@ -223,7 +220,8 @@ public class CSVFileFilter extends javax.swing.filechooser.FileFilter{
     }
     
     /**
-     * abstract! automatically called on filter-trigger, returns if the file matches the required extension
+     * Abstract, Automatisch aufgerufen bei einem Filter-Trigger, überprüft ob eine bestimmte File-Endung stimmt.
+     * @return True, wenn die Endung übereinstimmt, False wenn die Endung nicht übereinstimmt
      */
 	public boolean accept(File f){
 		if(f.isDirectory()){
@@ -239,7 +237,8 @@ public class CSVFileFilter extends javax.swing.filechooser.FileFilter{
 	}
     
     /**
-     * abstract! automatically called on filter-trigger, returns the description
+     * Abstract. Automatisch augerufen bei einem Filter-Trigger
+     * @return Die Beschreibung einer CSV Datei
      */
 	public String getDescription(){
 		return ".csv (Comma-separated values) Listendatei";
