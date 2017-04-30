@@ -220,7 +220,7 @@ public class Test {
 			Verteilungsalgorithmus.ag.clear();
 			Verteilungsalgorithmus.personen.clear();
 			String uuid= "";
-			int random=(int)(Math.random()*250+150);
+			int random=(int)(Math.random()*50+15);
 			uuid=UUID.randomUUID().toString();
 			int agTeilnehmer=0;
 			while(agTeilnehmer<random){	
@@ -272,7 +272,7 @@ public class Test {
 				
 			}
 			Verteilungsalgorithmus.verteile();
-			Verteilungsalgorithmus.macheAusgabe();
+			//Verteilungsalgorithmus.macheAusgabe();
 			try{
 				score+=Verteilungsalgorithmus.checkScore();
 			}catch(Exception e){

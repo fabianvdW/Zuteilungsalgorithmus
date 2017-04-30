@@ -223,11 +223,15 @@ public class Verteilungsalgorithmus {
 	public static void main(String[] args) {
 		ag = new ArrayList<AG>();
 		personen = new ArrayList<Person>();
-		Test.laufeTestsAufVerteilung(1);
+		Test.laufeTestsAufVerteilung(1000);
 		berechneBeliebtheit();
 		//verteile();
 		//macheAusgabe();
 	}
+	/**
+	 * 
+	 * @return a String with a useful output.
+	 */
 	public static String getPersonenMitBewertung(){
 		int[] bewertungen = new int[8];
 		for(int i=0;i<8;i++){
@@ -267,15 +271,23 @@ public class Verteilungsalgorithmus {
 			System.exit(0);
 		}
 		int score=3;
-		while(score>=-3){//Geht jeden Score von 3 bis -3 durch
+		int counter=0;
+		while(!allAllocated()){//Geht jeden Score von 3 bis -3 durch
+			counter++;
+			if(counter==30000){
+				macheAusgabe();
+				getAGNachBeliebtheitsRang(0,true);
+				System.out.println("Fehler LUL XD");
+				System.exit(0);
+			}
 			for(int beliebtheitsrang=ag.size()-1;beliebtheitsrang>=0;beliebtheitsrang--){//Geht jede AG durch, die unbeliebtesten zuerst.
-				AG ags= getAGNachBeliebtheitsRang(beliebtheitsrang); //holt sich die AG abhängig von dem BeliebtheitsRang
+				AG ags= getAGNachBeliebtheitsRang(beliebtheitsrang,false); //holt sich die AG abhängig von dem BeliebtheitsRang
 				ArrayList<Person> ps = getUnAllocatedPersonenDieAGParamMitBewertungParamBewertertHaben(score, ags); //Alle Personen, die noch keine AG haben und die AG mit der Bewertung score(von schleifenkopf) bewertet haben
 				if(ps==null||ps.size()==0){//Wenn das 0 personen sind oder die Liste null ist, zur nächsten AG.
 					continue;
 					
 				}
-				for(int i=0;i<(ps.size()<ags.getHoechstanzahl()? ps.size(): ags.getHoechstanzahl());i++){ //Solange die AG noch nicht voll ist,
+				for(int i=0;i<=(ps.size()<ags.getHoechstanzahl()? ps.size(): ags.getHoechstanzahl());i++){ //Solange die AG noch nicht voll ist,
 					if(ags.istVoll())break;
 					Person lowVarianz= getLowestVarianz(ps,score); //die Person mit niedrigster Varianz einfügen.
 					try{
@@ -288,8 +300,121 @@ public class Verteilungsalgorithmus {
 				}
 			 }
 			score--;
+			if(score==-4){//Wenn der Score -4 ist, ist der Algorithmus einmal durch eine Iteration durch, danach sollen die Agen gefinsiht werden,
+				score=3;// So können AGen die nicht stattfinden würden herausgefiltert werden.
+				for(AG ags: ag){
+					ags.finishEintragung();
+				}
+				if(checkObDieAgenMindestzahlFehler(false)){//Wenn der mindestanzahl FEhler auftritt,
+					//DEBUGcheckObDieAgenMindestzahlFehler(true);
+					//DEBUGSystem.out.println("MindestanzahlFehler");
+					for(AG ags: getAgDieNichtStattFinden()){//Apply fix. LUL
+						for(int i=0;i<checkObDieAgenMindestzahlFehlerDifferenz();i++){
+							Person p= personAusAgZiehen(ags);
+							try{
+								ags.addTeilnehmer(p);
+							}catch(Exception e){
+								e.printStackTrace();
+								System.exit(0);
+							}
+						}
+						for(Person p: getUnAllocatedPersons()){
+							try{
+							ags.addTeilnehmer(p);
+							}catch(Exception e){
+								e.printStackTrace();
+								System.exit(0);
+							}
+						}
+						
+					}
+				}
+			}
 		}
 		
+	}
+	public static Person personAusAgZiehen(AG zielAG){
+		Person bestPerson=null;
+		int highestScore=-2147000;
+		for(Person p: getAllocatedPersons()){
+			int rating =0;
+			for(Rating r: p.getRatingAL()){
+				if(r.getAG().equals(zielAG))continue;
+				if(r.getAG().equals(p.getBesuchteAG())){
+					rating-=r.getRatingValue();
+				}
+				if(r.getAG().equals(zielAG)){
+					rating+=r.getRatingValue();
+				}
+			}
+			if(rating>highestScore){
+				bestPerson=p;
+				highestScore=rating;
+			}
+		
+			
+		}
+		return bestPerson;
+	}
+	/**
+	 * 
+	 * @return ArrayList von Personen, die einer AG zugewiesen sind.
+	 */
+	public static ArrayList<Person> getAllocatedPersons(){
+		ArrayList<Person> zugewiesen= new ArrayList<Person>();
+		for(Person p: personen){
+			if(p.getBesuchteAG()!=null){
+				zugewiesen.add(p);
+			}
+		}
+		return zugewiesen;	
+	}
+	/**
+	 *  
+	 * @return ArrayList von AG die nicht statt finden können.
+	 */
+	public static ArrayList<AG> getAgDieNichtStattFinden(){
+		ArrayList<AG> findenNichtStatt = new ArrayList<AG>();
+		for(AG ags: ag){
+			if(!ags.kannStattFinden()){
+				findenNichtStatt.add(ags);
+			}
+		}
+		return findenNichtStatt;
+	}
+	/**
+	 *  Should only be used when there is the Mindestanzahl Fehler
+	 * @return Die Differenz, d. h. die Anzahl der Teilnehmer, die aus ihrer AG herausgezogen werden sollten.
+	 */
+	public static int checkObDieAgenMindestzahlFehlerDifferenz(){
+		int anzP= getUnAllocatedPersons().size();
+		int anzAg=0;
+		for(AG ags: ag){
+			if(!ags.kannStattFinden()){
+				anzAg+=ags.getMindestanzahl();
+			}
+		}
+		return anzAg-anzP;
+	}
+	/**
+	 * Überprüft, ob eine(oder mehrer) AGen die nicht stattfinden, eine höhere Mindestanzahl haben, als Teilnehmer übrig sind.
+	 * @return True if there is this mistake, false if there is not
+	 */
+	public static boolean checkObDieAgenMindestzahlFehler(boolean ausgabe){
+		
+		int anzP= getUnAllocatedPersons().size();
+		if(ausgabe){System.out.println("AnzP:"+anzP);}
+		int anzAg=0;
+		for(AG ags: ag){
+			if(!ags.kannStattFinden()){
+				anzAg+=ags.getMindestanzahl();
+			}
+		}
+		if(ausgabe){System.out.println("AnzAG:"+anzAg);}
+		if(anzP<anzAg){
+			return true;
+		}
+		return false;
 	}
 	/**
 	 * Returnt die Person mit der niedrigsten Varianz
@@ -340,7 +465,8 @@ public class Verteilungsalgorithmus {
 					r = p.getRatingAL().get(i);
 				}
 			}
-			if(r==null) return ps;
+			if(r==null){
+				return ps;}
 			if(r.getRatingValue()==bewertung){
 				ps.add(p);
 			}
@@ -352,7 +478,7 @@ public class Verteilungsalgorithmus {
 	 * @param beliebtheitsRang Die AG die den beliebtheitsRang haben soll
 	 * @return die AG mit dem BeliebtheitsRang beliebtheitsRang
 	 */
-	public static AG getAGNachBeliebtheitsRang(int beliebtheitsRang){
+	public static AG getAGNachBeliebtheitsRang(int beliebtheitsRang,boolean ausgabe){
 		if(beliebtheitsRang>ag.size()-1){
 			System.out.println("BeliebtheitsRang ist nicht verfügbar.");
 		}
@@ -371,9 +497,11 @@ public class Verteilungsalgorithmus {
 			AGenGeOrdnetNachRang.add(highest);
 		}
 		//DEBUG
-		//for(AG ags: AGenGeOrdnetNachRang){
-		//System.out.println("AG: "+ags.getName()+" Beliebtheit: "+ags.getBeliebtheit());
-		//}
+		if(ausgabe){
+		for(AG ags: AGenGeOrdnetNachRang){
+		System.out.println("AG: "+ags.getName()+" Beliebtheit: "+ags.getBeliebtheit());
+		}
+		}
 		return AGenGeOrdnetNachRang.get(beliebtheitsRang);
 		
 	}
@@ -538,7 +666,7 @@ public class Verteilungsalgorithmus {
 		System.out.println("Folgende AGen können nicht stattfinden:");
 
 		for (AG ags : findenNichtStatt) {
-			System.out.println("Die AG " + ags.getName() + " kann nicht stattfinden.");
+			System.out.println("Die AG " + ags.getName() + " kann nicht stattfinden."+" Mindestanzahl: "+ags.getMindestanzahl());
 			System.out.println("");
 		}
 		System.out.println("----------------------------------------------------------");
