@@ -214,19 +214,21 @@ public class Test {
 	 * @param anzTests Die Anzahl an TestsSets, die erstellt werden sollen
 	 */
 	public static void laufeTestsAufVerteilung(int anzTests) {
+		long ms=0;
 		ArrayList<AG> highest= new ArrayList<AG>();
 		ArrayList<Person> highest2= new ArrayList<Person>();
 		double highestscore=-3;
 		double score=0;
 		double lowestScore = 1000.0;
 		for(int i=1;i<=anzTests;i++){
-			if(i%50==0){
+			if(i%1000==0){
 			System.out.println(i);
 			}
 			Verteilungsalgorithmus.ag.clear();
 			Verteilungsalgorithmus.personen.clear();
 			String uuid= "";
-			int random=(int)(Math.random()*250+150);
+			//int random=(int)(Math.random()*50+15);
+			int random=50;
 			uuid=UUID.randomUUID().toString();
 			int agTeilnehmer=0;
 			while(agTeilnehmer<random){	
@@ -277,7 +279,10 @@ public class Test {
 				uuid=UUID.randomUUID().toString();
 				
 			}
+			long pos1= System.currentTimeMillis();
 			Verteilungsalgorithmus.verteile();
+			long pos2= System.currentTimeMillis();
+			ms+=pos2-pos1;
 			//Verteilungsalgorithmus.macheAusgabe();
 			for(AG ags: Verteilungsalgorithmus.ag){
 				ags.finishEintragung();
@@ -316,10 +321,15 @@ public class Test {
 			}catch(Exception e){
 				e.printStackTrace();
 			}
+			
+			if(Verteilungsalgorithmus.checkScore()>=10){
+				Verteilungsalgorithmus.macheAusgabe();
+			}
 		}
 		System.out.println("Nach "+anzTests+" Versuchen erhält der Algorithmus eine durschnittliche Punktzahl von " +score/anzTests);
 		System.out.println("Nach "+anzTests+" Versuchen erhält der Algorithmus eine Bestpunktzahl von " +lowestScore);
 		System.out.println("Nach "+anzTests+" Versuchen erhält der Algorithmus eine Schlechteste Punktzahl von " +highestscore);
+		System.out.println("Insgesamte Laufzeit: "+ms+"ms \n Relative Laufzeit: "+(double)ms/(double)anzTests+"ms");
 		Verteilungsalgorithmus.ag=highest;
 		Verteilungsalgorithmus.personen=highest2;
 		//Verteilungsalgorithmus.macheAusgabe();

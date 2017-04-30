@@ -223,7 +223,8 @@ public class Verteilungsalgorithmus {
 	public static void main(String[] args) {
 		ag = new ArrayList<AG>();
 		personen = new ArrayList<Person>();
-		Test.laufeTestsAufVerteilung(100);
+		int durchlaeufe=10000;
+		Test.laufeTestsAufVerteilung(durchlaeufe);
 		//verteile();
 		//macheAusgabe();
 	}
@@ -282,7 +283,8 @@ public class Verteilungsalgorithmus {
 					
 				}
 				int psSize=ps.size();
-				for(int i=0;i<(psSize<ags.getHoechstanzahl()? psSize: ags.getHoechstanzahl());i++){ //Solange die AG noch nicht voll ist,
+				psSize=psSize<ags.getHoechstanzahl()? psSize: ags.getHoechstanzahl();
+				for(int i=0;i<psSize;i++){ //Solange die AG noch nicht voll ist,
 					if(ags.istVoll())break;
 					Person lowVarianz= getLowestVarianz(ps,score); //die Person mit niedrigster Varianz einfügen.
 					try{
@@ -302,7 +304,8 @@ public class Verteilungsalgorithmus {
 				}
 				if(checkObDieAgenMindestzahlFehler()){//Wenn der mindestanzahl FEhler auftritt,
 					//System.out.println("MindestanzahlFehler");
-					for(AG ags: getAgDieNichtStattFinden()){//Leute werden aus andren AGen in diese AG gezogen.
+					ArrayList<AG> nichtStatt= getAgDieNichtStattFinden();
+					for(AG ags: nichtStatt){//Leute werden aus andren AGen in diese AG gezogen.
 						for(int i=0;i<checkObDieAgenMindestzahlFehlerDifferenz(ags);i++){
 							Person p= personAusAgZiehen(ags);
 							try{
@@ -312,7 +315,8 @@ public class Verteilungsalgorithmus {
 								System.exit(0);
 							}
 						}
-						for(Person p: getUnAllocatedPersons()){
+						ArrayList<Person> unAllocated= getUnAllocatedPersons();
+						for(Person p: unAllocated){
 							try{
 							ags.addTeilnehmer(p);
 							}catch(Exception e){
@@ -335,10 +339,12 @@ public class Verteilungsalgorithmus {
 	public static Person personAusAgZiehen(AG zielAG){
 		Person bestPerson=null;
 		int highestScore=-2147000;
-		for(Person p: getAllocatedPersons()){
+		ArrayList<Person > allocated= getAllocatedPersons();
+		for(Person p: allocated){
 			int rating =0;
 			if(p.getBesuchteAG().equals(zielAG))continue;
-			for(Rating r: p.getRatingAL()){
+			ArrayList<Rating> ratings= p.getRatingAL();
+			for(Rating r: ratings){
 				
 				if(r.getAG().equals(p.getBesuchteAG())){
 					rating-=r.getRatingValue();
@@ -440,7 +446,8 @@ public class Verteilungsalgorithmus {
 	 */
 	public static double getVarianz(Person p, int bewertung){
 		double score=0.0;
-		for(int i=0;i<ag.size();i++){
+		int size=ag.size();
+		for(int i=0;i<size;i++){
 			AG ags= ag.get(i);
 			if(getUnAllocatedPersonenDieAGParamMitBewertungParamBewertertHaben(bewertung, ags).contains(p)){
 				score+= 1.0/(1.0+Math.exp(ags.getBeliebtheit()*Math.sqrt(2.0)/personen.size()));
@@ -456,18 +463,18 @@ public class Verteilungsalgorithmus {
 	 */
 	public static ArrayList<Person> getUnAllocatedPersonenDieAGParamMitBewertungParamBewertertHaben(int bewertung, AG ags){
 		ArrayList<Person> ps = new ArrayList<Person>();
-		for(Person p: getUnAllocatedPersons()){
+		ArrayList<Person> unAllocated= getUnAllocatedPersons();
+		for(Person p: unAllocated){
 			Rating r= null;
 			for(int i=0;i<ag.size();i++){
-				if(p.getRatingAL().get(i).getAG().getId()==ags.getId()){
-					r = p.getRatingAL().get(i);
+				Rating r2 = p.getRatingAL().get(i);
+				if(r2.getRatingValue()!=bewertung)continue;
+				if(r2.getAG().getId()==ags.getId()){
+					r = r2;
 				}
 			}
-			if(r==null){
-				continue;}
-			if(r.getRatingValue()==bewertung){
+				if(r==null) continue;
 				ps.add(p);
-			}
 		}
 		return ps;
 	}
@@ -493,6 +500,9 @@ public class Verteilungsalgorithmus {
 				highest= ags.getBeliebtheit()>highest.getBeliebtheit()?ags:highest;
 			}
 			AGenGeOrdnetNachRang.add(highest);
+			if(AGenGeOrdnetNachRang.size()==beliebtheitsRang+1){
+				return AGenGeOrdnetNachRang.get(beliebtheitsRang);
+			}
 		}
 		return AGenGeOrdnetNachRang.get(beliebtheitsRang);
 		
@@ -509,14 +519,6 @@ public class Verteilungsalgorithmus {
 			}
 		}
 		return unallocated;
-	}
-	/**
-	 * 
-	 * @param ag Die AG die überprüft werden soll
-	 * @return True wenn die AG noch eine Person aufnehmen kann, False wenn die AG keine Person mehr aufnehmen kann
-	 */
-	public static boolean spotFree(AG ag){
-		return !ag.istVoll();
 	}
 	/**
 	 * 
@@ -573,13 +575,15 @@ public class Verteilungsalgorithmus {
 		for(AG ags: ag){
 			ags.setBeliebtheit(0);
 			for(Person p: personen){
-				int agindex=0;
-				for(int k=0;k<p.getRatingAL().size();k++){
-					if(p.getRatingAL().get(k).getAG().equals(ags)){
-						agindex=k;
+				Rating a=null;
+				ArrayList<Rating> ratings= p.getRatingAL();
+				for(int k=0;k<ratings.size();k++){
+					Rating getK= ratings.get(k);
+					if(getK.getAG().equals(ags)){
+						a=getK;
 					}
 				}
-				ags.setBeliebtheit(ags.getBeliebtheit()+p.getRatingAL().get(agindex).getRatingValue());
+				ags.setBeliebtheit(ags.getBeliebtheit()+a.getRatingValue());
 			}
 		}
 	}
@@ -602,7 +606,7 @@ public class Verteilungsalgorithmus {
 	 * 
 	 * @return Score der Verteilung
 	 */
-	public static double checkScore() throws Exception{
+	public static double checkScore() {
 		double score=0;
 		for(Person p: personen){
 			if(p.getBesuchteAG()==null){
