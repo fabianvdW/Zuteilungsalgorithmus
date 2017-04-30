@@ -287,6 +287,11 @@ public class Test {
 			for(AG ags: Verteilungsalgorithmus.ag){
 				ags.finishEintragung();
 			}
+			if(!Verteilungsalgorithmus.allAllocated()){
+				Verteilungsalgorithmus.macheAusgabe();
+				System.out.println("LUL");
+				System.exit(0);
+			}
 			try{
 				if(i == 1){
 					lowestScore = Verteilungsalgorithmus.checkScore();

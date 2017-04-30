@@ -223,7 +223,7 @@ public class Verteilungsalgorithmus {
 	public static void main(String[] args) {
 		ag = new ArrayList<AG>();
 		personen = new ArrayList<Person>();
-		int durchlaeufe=10000;
+		int durchlaeufe=10000000;
 		Test.laufeTestsAufVerteilung(durchlaeufe);
 		//verteile();
 		//macheAusgabe();
@@ -318,6 +318,7 @@ public class Verteilungsalgorithmus {
 						ArrayList<Person> unAllocated= getUnAllocatedPersons();
 						for(Person p: unAllocated){
 							try{
+							if(ags.istVoll())continue;
 							ags.addTeilnehmer(p);
 							}catch(Exception e){
 								e.printStackTrace();
@@ -343,6 +344,7 @@ public class Verteilungsalgorithmus {
 		for(Person p: allocated){
 			int rating =0;
 			if(p.getBesuchteAG().equals(zielAG))continue;
+			if(p.getBesuchteAG().getTeilnehmer().size()==p.getBesuchteAG().getMindestanzahl()) continue;
 			ArrayList<Rating> ratings= p.getRatingAL();
 			for(Rating r: ratings){
 				
