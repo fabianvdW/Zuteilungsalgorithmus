@@ -223,7 +223,7 @@ public class Verteilungsalgorithmus {
 	public static void main(String[] args) {
 		ag = new ArrayList<AG>();
 		personen = new ArrayList<Person>();
-		Test.laufeTestsAufVerteilung(1000);
+		Test.laufeTestsAufVerteilung(10000);
 		berechneBeliebtheit();
 		//verteile();
 		//macheAusgabe();
@@ -364,8 +364,9 @@ public class Verteilungsalgorithmus {
 		int highestScore=-2147000;
 		for(Person p: getAllocatedPersons()){
 			int rating =0;
+			if(p.getBesuchteAG().equals(zielAG))continue;
 			for(Rating r: p.getRatingAL()){
-				if(p.getBesuchteAG().equals(zielAG))continue;
+				
 				if(r.getAG().equals(p.getBesuchteAG())){
 					rating-=r.getRatingValue();
 				}
