@@ -223,10 +223,36 @@ public class Verteilungsalgorithmus {
 	public static void main(String[] args) {
 		ag = new ArrayList<AG>();
 		personen = new ArrayList<Person>();
-		Test.laufeTestsAufVerteilung(10);
+		Test.laufeTestsAufVerteilung(1);
 		berechneBeliebtheit();
 		//verteile();
 		//macheAusgabe();
+	}
+	public static String getPersonenMitBewertung(){
+		int[] bewertungen = new int[8];
+		for(int i=0;i<8;i++){
+			bewertungen[i]=0;
+		}
+		for(Person p: personen){
+			int currRating=0;
+			AG currAg=p.getBesuchteAG();
+			if(currAg==null){
+				bewertungen[7]+=1;
+			}else{
+				for(Rating r: p.getRatingAL()){
+					if(r.getAG().equals(currAg)){
+						currRating=r.getRatingValue();
+					}
+				}
+				bewertungen[3-currRating]+=1;
+			}
+			
+		}
+		String s="";
+		for(int i=0;i<8;i++){
+			s+="Bewertung "+(3-i) +": "+ bewertungen[i]+" \n";
+		}
+		return s;
 	}
 
 	/**
@@ -468,7 +494,13 @@ public class Verteilungsalgorithmus {
 						currRating=r.getRatingValue();
 					}
 				}
-				score+=Math.pow(3-currRating, 2);
+				int maxRating=-4;
+				for(Rating r: p.getRatingAL()){
+					if(r.getRatingValue()>maxRating){
+						maxRating=r.getRatingValue();
+					}
+				}
+				score+=Math.pow(maxRating-currRating, 2);
 			}
 		}
 		return score/personen.size();
@@ -526,6 +558,7 @@ public class Verteilungsalgorithmus {
 		}
 		
 		statusCheck();
+		System.out.println(getPersonenMitBewertung());
 		
 	}
 

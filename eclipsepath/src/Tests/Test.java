@@ -272,7 +272,7 @@ public class Test {
 				
 			}
 			Verteilungsalgorithmus.verteile();
-			//Verteilungsalgorithmus.macheAusgabe();
+			Verteilungsalgorithmus.macheAusgabe();
 			try{
 				score+=Verteilungsalgorithmus.checkScore();
 			}catch(Exception e){
