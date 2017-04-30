@@ -365,7 +365,7 @@ public class Verteilungsalgorithmus {
 		for(Person p: getAllocatedPersons()){
 			int rating =0;
 			for(Rating r: p.getRatingAL()){
-				if(r.getAG().equals(zielAG))continue;
+				if(p.getBesuchteAG().equals(zielAG))continue;
 				if(r.getAG().equals(p.getBesuchteAG())){
 					rating-=r.getRatingValue();
 				}
