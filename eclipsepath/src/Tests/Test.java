@@ -215,6 +215,7 @@ public class Test {
 	 */
 	public static void laufeTestsAufVerteilung(int anzTests) {
 		double score=0;
+		double lowestScore = 1000.0;
 		for(int i=1;i<=anzTests;i++){
 			
 			Verteilungsalgorithmus.ag.clear();
@@ -274,11 +275,21 @@ public class Test {
 			Verteilungsalgorithmus.verteile();
 			//Verteilungsalgorithmus.macheAusgabe();
 			try{
+				if(i == 1){
+					lowestScore = Verteilungsalgorithmus.checkScore();
+					}
+				if(lowestScore > Verteilungsalgorithmus.checkScore())
+						lowestScore = Verteilungsalgorithmus.checkScore();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			try{
 				score+=Verteilungsalgorithmus.checkScore();
 			}catch(Exception e){
 				e.printStackTrace();
 			}
 		}
 		System.out.println("Nach "+anzTests+" Versuchen erhält der Algorithmus eine durschnittliche Punktzahl von " +score/anzTests);
+		System.out.println("Nach "+anzTests+" Versuchen erhält der Algorithmus eine Bestpunktzahl von " +lowestScore);
 	}
 }

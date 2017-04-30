@@ -332,8 +332,8 @@ public class Verteilungsalgorithmus {
 					ags.finishEintragung();
 				}
 				if(checkObDieAgenMindestzahlFehler(false)){//Wenn der mindestanzahl FEhler auftritt,
-					checkObDieAgenMindestzahlFehler(true);
-					System.out.println("MindestanzahlFehler");
+					checkObDieAgenMindestzahlFehler(false);
+					//System.out.println("MindestanzahlFehler");
 					for(AG ags: getAgDieNichtStattFinden()){//Apply fix. LUL
 						for(int i=0;i<checkObDieAgenMindestzahlFehlerDifferenz(ags);i++){
 							Person p= personAusAgZiehen(ags);
