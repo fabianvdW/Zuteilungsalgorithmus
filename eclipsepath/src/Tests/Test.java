@@ -211,13 +211,15 @@ import Data.Rating;
 public class Test {
 	/**
 	 *  Creates test data for the algorithm and tests the algorithm with the data.
-	 * @param anzTests The amout of tests the methode should test the algorithm on.
+	 * @param anzTests The amount of tests the method should test the algorithm on.
 	 */
 	public static void laufeTestsAufVerteilung(int anzTests) {
 		double score=0;
 		double lowestScore = 1000.0;
 		for(int i=1;i<=anzTests;i++){
-			
+			if(i%50==0){
+			System.out.println(i);
+			}
 			Verteilungsalgorithmus.ag.clear();
 			Verteilungsalgorithmus.personen.clear();
 			String uuid= "";
@@ -274,6 +276,9 @@ public class Test {
 			}
 			Verteilungsalgorithmus.verteile();
 			//Verteilungsalgorithmus.macheAusgabe();
+			for(AG ags: Verteilungsalgorithmus.ag){
+				ags.finishEintragung();
+			}
 			try{
 				if(i == 1){
 					lowestScore = Verteilungsalgorithmus.checkScore();
