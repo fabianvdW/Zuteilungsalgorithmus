@@ -655,6 +655,7 @@ public class GUI extends JFrame{
 	protected class RunVerteilungsalgorithmus implements ActionListener{
 		public void actionPerformed(ActionEvent e){
 			Algorithmus.Verteilungsalgorithmus.verteile();
+			Algorithmus.Verteilungsalgorithmus.macheAusgabe();
 			showAGList();
 		}
 	}

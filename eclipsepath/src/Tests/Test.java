@@ -211,16 +211,19 @@ import Data.Rating;
 public class Test {
 	/**
 	 *  Creates test data for the algorithm and tests the algorithm with the data.
-	 * @param anzTests The amout of tests the methode should test the algorithm on.
+	 * @param anzTests The amount of tests the method should test the algorithm on.
 	 */
 	public static void laufeTestsAufVerteilung(int anzTests) {
 		double score=0;
+		double lowestScore = 1000.0;
 		for(int i=1;i<=anzTests;i++){
-			
+			if(i%50==0){
+			System.out.println(i);
+			}
 			Verteilungsalgorithmus.ag.clear();
 			Verteilungsalgorithmus.personen.clear();
 			String uuid= "";
-			int random=(int)(Math.random()*250+150);
+			int random=(int)(Math.random()*50+15);
 			uuid=UUID.randomUUID().toString();
 			int agTeilnehmer=0;
 			while(agTeilnehmer<random){	
@@ -273,6 +276,18 @@ public class Test {
 			}
 			Verteilungsalgorithmus.verteile();
 			//Verteilungsalgorithmus.macheAusgabe();
+			for(AG ags: Verteilungsalgorithmus.ag){
+				ags.finishEintragung();
+			}
+			try{
+				if(i == 1){
+					lowestScore = Verteilungsalgorithmus.checkScore();
+					}
+				if(lowestScore > Verteilungsalgorithmus.checkScore())
+						lowestScore = Verteilungsalgorithmus.checkScore();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
 			try{
 				score+=Verteilungsalgorithmus.checkScore();
 			}catch(Exception e){
@@ -280,5 +295,6 @@ public class Test {
 			}
 		}
 		System.out.println("Nach "+anzTests+" Versuchen erhält der Algorithmus eine durschnittliche Punktzahl von " +score/anzTests);
+		System.out.println("Nach "+anzTests+" Versuchen erhält der Algorithmus eine Bestpunktzahl von " +lowestScore);
 	}
 }
