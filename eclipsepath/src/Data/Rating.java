@@ -205,13 +205,26 @@ package Data;
 public class Rating {
 	private AG bewerteteAG;
 	private int rating;
+	/**
+	 * Objekt zum Speichern von Bewertungen der Personen für AGen
+	 * @param bewerteteAG Die AG, die bewertet wurde
+	 * @param rating Das Rating der AG, welche bewertet wurde
+	 */
 	public Rating(AG bewerteteAG, int rating){
 		this.bewerteteAG=bewerteteAG;
 		this.rating=rating;
 	}
+	/**
+	 * 
+	 * @return Die AG, welche das Rating speichert
+	 */
 	public AG getAG(){
 		return this.bewerteteAG;
 	}
+	/**
+	 * 
+	 * @return Das Rating als Zahl, welche das Rating speichert
+	 */
 	public int getRatingValue(){
 		return this.rating;
 	}

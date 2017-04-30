@@ -210,10 +210,13 @@ import Data.Person;
 import Data.Rating;
 public class Test {
 	/**
-	 *  Creates test data for the algorithm and tests the algorithm with the data.
-	 * @param anzTests The amount of tests the method should test the algorithm on.
+	 *  Erstellt TestSets für den Verteilungsalgorithmus und testet diesen.
+	 * @param anzTests Die Anzahl an TestsSets, die erstellt werden sollen
 	 */
 	public static void laufeTestsAufVerteilung(int anzTests) {
+		ArrayList<AG> highest= new ArrayList<AG>();
+		ArrayList<Person> highest2= new ArrayList<Person>();
+		double highestscore=-3;
 		double score=0;
 		double lowestScore = 1000.0;
 		for(int i=1;i<=anzTests;i++){
@@ -223,7 +226,7 @@ public class Test {
 			Verteilungsalgorithmus.ag.clear();
 			Verteilungsalgorithmus.personen.clear();
 			String uuid= "";
-			int random=(int)(Math.random()*50+15);
+			int random=(int)(Math.random()*250+150);
 			uuid=UUID.randomUUID().toString();
 			int agTeilnehmer=0;
 			while(agTeilnehmer<random){	
@@ -282,9 +285,29 @@ public class Test {
 			try{
 				if(i == 1){
 					lowestScore = Verteilungsalgorithmus.checkScore();
+					highestscore=Verteilungsalgorithmus.checkScore();
+					for(AG ags:Verteilungsalgorithmus.ag){
+						highest.add(ags);
 					}
-				if(lowestScore > Verteilungsalgorithmus.checkScore())
+					for(Person p: Verteilungsalgorithmus.personen){
+						highest2.add(p);
+					}
+					}
+				if(lowestScore > Verteilungsalgorithmus.checkScore()){
 						lowestScore = Verteilungsalgorithmus.checkScore();
+				}
+				if(Verteilungsalgorithmus.checkScore()>highestscore){
+					highestscore=Verteilungsalgorithmus.checkScore();
+					highest.clear();
+					highest2.clear();
+					for(AG ags:Verteilungsalgorithmus.ag){
+						highest.add(ags);
+					}
+					for(Person p: Verteilungsalgorithmus.personen){
+						highest2.add(p);
+					}
+				}
+				
 			}catch(Exception e){
 				e.printStackTrace();
 			}
@@ -296,5 +319,9 @@ public class Test {
 		}
 		System.out.println("Nach "+anzTests+" Versuchen erhält der Algorithmus eine durschnittliche Punktzahl von " +score/anzTests);
 		System.out.println("Nach "+anzTests+" Versuchen erhält der Algorithmus eine Bestpunktzahl von " +lowestScore);
+		System.out.println("Nach "+anzTests+" Versuchen erhält der Algorithmus eine Schlechteste Punktzahl von " +highestscore);
+		Verteilungsalgorithmus.ag=highest;
+		Verteilungsalgorithmus.personen=highest2;
+		//Verteilungsalgorithmus.macheAusgabe();
 	}
 }

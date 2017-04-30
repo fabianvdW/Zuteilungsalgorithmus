@@ -234,7 +234,7 @@ public class Person {
 	
 	/**
 	 * 
-	 * @return ID
+	 * @return ID der Person
 	 */
 	public int getId(){
 		return id;
@@ -242,7 +242,7 @@ public class Person {
 	
 	/**
 	 * 
-	 * @return Name
+	 * @return Name der Person
 	 */
 	public String getName(){
 		return this.name;
@@ -250,7 +250,7 @@ public class Person {
 	
 	/**
 	 * 
-	 * @return Das Rating
+	 * @return Das Rating der Person als ArrayList
 	 */
 	public ArrayList<Rating> getRatingAL(){
 		return this.ratings;
@@ -266,7 +266,7 @@ public class Person {
 	
 	/**
 	 * 
-	 * @return Return die aG, die die Person besucht.
+	 * @return Return die AG, die die Person besucht.
 	 */
 	public AG getBesuchteAG(){
 		return this.besuchtAG;
