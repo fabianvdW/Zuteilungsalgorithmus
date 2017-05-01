@@ -215,6 +215,7 @@ import java.util.Arrays;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -245,12 +246,15 @@ public class GUI extends JFrame{
 	private JTextField agField, pField;
 	
 	// Other Modals
-	private JDialog login, error;
+	private JDialog login, error, ags;
 	
 	// Login-Frame
 	private JTextField loginServerField, loginServerPortField, loginUserField, loginDatabaseField;
 	private JPasswordField loginPasswordField;
 	private JButton loginButton, exitButton;
+	
+	// AG-Selection
+	private JComboBox<String> selectAG;
 	
 	// Error-Frame
 	private JButton errorCloseButton;
@@ -536,6 +540,26 @@ public class GUI extends JFrame{
 		}
 	}
 	
+	protected void showAGSelection(){
+		ags = new JDialog(this, "AG zum Anzeigen auswählen", true);
+		String[] labels = new String[Algorithmus.Verteilungsalgorithmus.ag.size() + 1];
+		labels[0] = "Alle";
+		for(int i = 0; i < Algorithmus.Verteilungsalgorithmus.ag.size(); i++){
+			labels[i + 1] = Algorithmus.Verteilungsalgorithmus.ag.get(i).getName();
+		}
+		selectAG = new JComboBox<String>(labels);
+		selectAG.setMaximumRowCount(5);
+		ags.getContentPane().setLayout(new GridLayout(1, 2));
+		ags.getContentPane().add(selectAG, BorderLayout.CENTER);
+		JButton button = new JButton("OK");
+		button.addActionListener(new ShowAGSelectionHandler());
+		ags.getContentPane().add(button, BorderLayout.CENTER);
+		ags.pack();
+		ags.setSize(400, 150);
+		login.setLocationRelativeTo(null);
+		ags.setVisible(true);
+	}
+	
 	protected class ExportAGHandler implements ActionListener{
 		public void actionPerformed(ActionEvent e){
 			JFileChooser fileChooser = new JFileChooser();
@@ -631,9 +655,62 @@ public class GUI extends JFrame{
 		}
 	}
 	
+	protected class ShowAGSelectionHandler implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			if(selectAG.getSelectedItem().equals("Alle")){
+				showAGList();
+			}
+			else{
+				for(AG a: Algorithmus.Verteilungsalgorithmus.ag){
+					if(!selectAG.getSelectedItem().equals(a.getName())){
+						continue;
+					}
+					String[][] persList = new String[a.getTeilnehmer().size()][5];
+					int i = 0;
+					String ags = null;
+					String[] sort = new String[a.getTeilnehmer().size()];
+					for(Person p: a.getTeilnehmer()){
+						sort[i++] = p.getName() + p.getId();
+					}
+					Arrays.sort(sort);
+					i = 0;
+					for(String name: sort){
+						for(Person p: a.getTeilnehmer()){
+							if(!name.equals(p.getName() + p.getId())){
+								continue;
+							}
+							persList[i][0] = "" + p.getId();
+							persList[i][1] = p.getName();
+							if(p.getBesuchteAG()==null){
+								persList[i][2] = "";
+							}
+							else{
+								persList[i][2] = "" + p.getBesuchteAG().getName();
+							}
+							if(p.getRatingAL()==null){
+								persList[i][3] = "";
+							}
+							else{
+								ags = "";
+								int j = 0;
+								for(Rating r: p.getRatingAL()){
+									ags += r.getAG().getName() + ": " + r.getRatingValue() + (j++ < p.getRatingAL().size() ? ", " : "");
+								}
+								persList[i][3] = ags;
+							}
+						}
+						i++;
+					}
+					String[] persListHead = new String[]{"ID", "Name", "Aktuelle AG", "Gewählte AGs"};
+					showTable(persListHead, persList, "Teilnehmer der AG: " + selectAG.getSelectedItem());
+				}
+			}
+		}
+	}
+	
 	protected class ShowAGHandler implements ActionListener{
 		public void actionPerformed(ActionEvent e){
-			showAGList();
+			showAGSelection();
 		}
 	}
 	
