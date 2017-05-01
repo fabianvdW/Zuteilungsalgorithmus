@@ -223,7 +223,7 @@ public class Verteilungsalgorithmus {
 	public static void main(String[] args) {
 		ag = new ArrayList<AG>();
 		personen = new ArrayList<Person>();
-		int durchlaeufe=1000000;
+		int durchlaeufe=100000;
 		Test.laufeTestsAufVerteilung(durchlaeufe);
 		//verteile();
 		//macheAusgabe();

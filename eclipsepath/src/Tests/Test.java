@@ -323,6 +323,24 @@ public class Test {
 			}
 			try{
 				score+=Verteilungsalgorithmus.checkScore();
+				
+				if(Verteilungsalgorithmus.checkScore()==0){
+					Verteilungsalgorithmus.macheAusgabe();
+					int counter=0;
+					for(Person p: Verteilungsalgorithmus.personen){
+						int max=-4;
+						for(Rating r: p.getRatingAL()){
+							if(r.getRatingValue()>max){
+								max=r.getRatingValue();
+							}
+						}
+						if(!p.getBesuchteAG().getBewertungen().get(3-max).contains(p)){
+							counter++;
+						}
+					}
+					System.out.println("Leute die nicht beste AG haben: "+counter);
+					System.exit(0);
+				}
 			}catch(Exception e){
 				e.printStackTrace();
 			}
