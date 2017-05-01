@@ -319,6 +319,7 @@ public class GUI extends JFrame{
     		}
 		};
 	    table.getContentPane().add(new JScrollPane(t), BorderLayout.CENTER);
+	    table.pack();
 	    table.setVisible(true);
 	}
 	
@@ -358,6 +359,7 @@ public class GUI extends JFrame{
 				System.exit(0);
 			}
 		});
+		login.pack();
 		//login.setVisible(true);
 	}
 	
@@ -462,6 +464,7 @@ public class GUI extends JFrame{
 				error.dispatchEvent(new WindowEvent(error, WindowEvent.WINDOW_CLOSING));
 			}
 		});
+	    error.pack();
 	    error.setVisible(true);
 	}
 	
