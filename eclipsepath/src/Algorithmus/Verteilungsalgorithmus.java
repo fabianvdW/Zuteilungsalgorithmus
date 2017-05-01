@@ -620,7 +620,7 @@ public class Verteilungsalgorithmus {
 						maxRating=r.getRatingValue();
 					}
 				}
-				score+=Math.pow(maxRating-currRating, 10);
+				score+=Math.pow(maxRating-currRating, 2);
 			}
 		}
 		return score/personen.size();
