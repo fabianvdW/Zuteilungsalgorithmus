@@ -221,7 +221,7 @@ public class Test {
 		double score=0;
 		double lowestScore = 1000.0;
 		for(int i=1;i<=anzTests;i++){
-			if(i%1000==0){
+			if(i%10000==0){
 			System.out.println(i);
 			}
 			Verteilungsalgorithmus.ag.clear();
