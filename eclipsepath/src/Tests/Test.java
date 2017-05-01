@@ -220,92 +220,124 @@ public class Test {
 		double highestscore=-3;
 		double score=0;
 		double lowestScore = 1000.0;
+		int gebrauchteTests=0;
+		int random=0;
+		int countNichtPerfektePersonen = 0;
 		for(int i=1;i<=anzTests;i++){
-			if(i%10000==0){
-			System.out.println(i);
-			}
-			Verteilungsalgorithmus.ag.clear();
-			Verteilungsalgorithmus.personen.clear();
-			String uuid= "";
-			//int random=(int)(Math.random()*50+15);
-			int random=50;
-			uuid=UUID.randomUUID().toString();
-			int agTeilnehmer=0;
-			while(agTeilnehmer<random){	
-				
-				int hoechstanzahl= (int) (Math.random()*(0.2*(double)random)+1);
-				hoechstanzahl= (hoechstanzahl==0||hoechstanzahl==1? 2: hoechstanzahl);
-				int mindestanzahl=0;
-				do{
+			if(lowestScore != 0.0){
+				gebrauchteTests = i;
+				if(i%100==0){
+				System.out.println("durchlauf: "+ i);
+				}
+				Verteilungsalgorithmus.ag.clear();
+				Verteilungsalgorithmus.personen.clear();
+				String uuid= "";
+				//int random=(int)(Math.random()*50+15);
+				random=125;
+				uuid=UUID.randomUUID().toString();
+				int agTeilnehmer=0;
+				while(agTeilnehmer<random){	
 					
-					mindestanzahl=(int) (Math.random()*0.6*(double) hoechstanzahl);
-				}while(mindestanzahl==0);
-				AG ag = new AG(agTeilnehmer,uuid,mindestanzahl,hoechstanzahl);
-				uuid=new String("");
-				uuid=UUID.randomUUID().toString();
-				Verteilungsalgorithmus.ag.add(ag);
-				agTeilnehmer+=hoechstanzahl;
-			}
-			for(int k=0;k<random;k++){
-				ArrayList<Rating> ratings = new ArrayList<Rating>();
-				int sum=0;
-				for(int j=0;j<Verteilungsalgorithmus.ag.size();j++){
-					if(j==0){
-						int rand= (int) (Math.random()*7-3);
+					int hoechstanzahl= (int) (Math.random()*(0.2*(double)random)+1);
+					hoechstanzahl= (hoechstanzahl==0||hoechstanzahl==1? 2: hoechstanzahl);
+					int mindestanzahl=0;
+					do{
 						
-						sum+=rand;
-						Rating r = new Rating(Verteilungsalgorithmus.ag.get(j), rand);
-						ratings.add(r);
-					}else{
-						int rand=0;
-						if(j!=Verteilungsalgorithmus.ag.size()-1){
-							if(sum>0){
-								rand= (int) (Math.random()*3-3);
-							}else{
-								rand=(int) (Math.random()*4);
-							}						}
-						else{
-								rand=-sum;
+						mindestanzahl=(int) (Math.random()*0.6*(double) hoechstanzahl);
+					}while(mindestanzahl==0);
+					AG ag = new AG(agTeilnehmer,uuid,mindestanzahl,hoechstanzahl);
+					uuid=new String("");
+					uuid=UUID.randomUUID().toString();
+					Verteilungsalgorithmus.ag.add(ag);
+					agTeilnehmer+=hoechstanzahl;
+				}
+				for(int k=0;k<random;k++){
+					ArrayList<Rating> ratings = new ArrayList<Rating>();
+					int sum=0;
+					for(int j=0;j<Verteilungsalgorithmus.ag.size();j++){
+						if(j==0){
+							int rand= (int) (Math.random()*7-3);
 							
+							sum+=rand;
+							Rating r = new Rating(Verteilungsalgorithmus.ag.get(j), rand);
+							ratings.add(r);
+						}else{
+							int rand=0;
+							if(j!=Verteilungsalgorithmus.ag.size()-1){
+								if(sum>0){
+									rand= (int) (Math.random()*3-3);
+								}else{
+									rand=(int) (Math.random()*4);
+								}						}
+							else{
+									rand=-sum;
+								
+							}
+							sum+=rand;
+							Rating r= new Rating(Verteilungsalgorithmus.ag.get(j),rand);
+							ratings.add(r);
 						}
-						sum+=rand;
-						Rating r= new Rating(Verteilungsalgorithmus.ag.get(j),rand);
-						ratings.add(r);
 					}
+					Person p= new Person(k, uuid,ratings );
+					Verteilungsalgorithmus.personen.add(p);
+					uuid=new String("");
+					uuid=UUID.randomUUID().toString();
+					
 				}
-				Person p= new Person(k, uuid,ratings );
-				Verteilungsalgorithmus.personen.add(p);
-				uuid=new String("");
-				uuid=UUID.randomUUID().toString();
-				
-			}
-			long pos1= System.currentTimeMillis();
-			Verteilungsalgorithmus.verteile();
-			long pos2= System.currentTimeMillis();
-			ms+=pos2-pos1;
-			//Verteilungsalgorithmus.macheAusgabe();
-			for(AG ags: Verteilungsalgorithmus.ag){
-				ags.finishEintragung();
-			}
-			if(!Verteilungsalgorithmus.allAllocated()){
-				Verteilungsalgorithmus.macheAusgabe();
-				System.out.println("LUL");
-				System.exit(0);
-			}
-			try{
-				if(i == 1){
-					lowestScore = Verteilungsalgorithmus.checkScore();
-					highestscore=Verteilungsalgorithmus.checkScore();
-					for(AG ags:Verteilungsalgorithmus.ag){
-						highest.add(ags);
-					}
-					for(Person p: Verteilungsalgorithmus.personen){
-						highest2.add(p);
-					}
-					}
-				if(lowestScore > Verteilungsalgorithmus.checkScore()){
+				long pos1= System.currentTimeMillis();
+				Verteilungsalgorithmus.verteile();
+				long pos2= System.currentTimeMillis();
+				ms+=pos2-pos1;
+				//Verteilungsalgorithmus.macheAusgabe();
+				for(AG ags: Verteilungsalgorithmus.ag){
+					ags.finishEintragung();
+				}
+				if(!Verteilungsalgorithmus.allAllocated()){
+					Verteilungsalgorithmus.macheAusgabe();
+					System.out.println("LUL");
+					System.exit(0);
+				}
+				try{
+					if(i == 1){
 						lowestScore = Verteilungsalgorithmus.checkScore();
+						highestscore=Verteilungsalgorithmus.checkScore();
+						for(AG ags:Verteilungsalgorithmus.ag){
+							highest.add(ags);
+						}
+						for(Person p: Verteilungsalgorithmus.personen){
+							highest2.add(p);
+						}
+					}				}catch(Exception e){
+						e.printStackTrace();
+					}finally{}
 				}
+				if(lowestScore > Verteilungsalgorithmus.checkScore()){
+					lowestScore = Verteilungsalgorithmus.checkScore();
+					int zaehler = 0;
+					int zaehler2 = 0;
+					int bestMglRating = 0;
+					countNichtPerfektePersonen = 0;
+					for(AG ags:Verteilungsalgorithmus.ag){
+						zaehler2 = 0;
+						for(zaehler = 0; zaehler>ags.getTeilnehmer().size()-1;zaehler++){
+							//hoechstes rating der Person zaehler
+							for(Rating rating: ags.getTeilnehmer().get(zaehler).getRatingAL())
+								if(rating.getRatingValue() > bestMglRating){
+									bestMglRating = rating.getRatingValue();
+								}
+							}
+							int wertDesRatingsDerBesuchtenAg = ags.getTeilnehmer().get(zaehler).getRatingAL().get(zaehler2).getRatingValue();
+							if(wertDesRatingsDerBesuchtenAg != bestMglRating){
+								countNichtPerfektePersonen++;
+								if(countNichtPerfektePersonen%1==0)
+									System.out.println("nichtPerfektePersonen: " + countNichtPerfektePersonen);
+							}
+							zaehler2++;
+						}
+					//Verteilungsalgorithmus.macheAusgabe();
+					}
+				}
+				
 				if(Verteilungsalgorithmus.checkScore()>highestscore){
 					highestscore=Verteilungsalgorithmus.checkScore();
 					highest.clear();
@@ -317,24 +349,21 @@ public class Test {
 						highest2.add(p);
 					}
 				}
+				try{
+					score+=Verteilungsalgorithmus.checkScore();
+				}catch(Exception e){
+					e.printStackTrace();
+				}
 				
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-			try{
-				score+=Verteilungsalgorithmus.checkScore();
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-			
-			if(Verteilungsalgorithmus.checkScore()>=10){
-				Verteilungsalgorithmus.macheAusgabe();
-			}
-		}
-		System.out.println("Nach "+anzTests+" Versuchen erhält der Algorithmus eine durschnittliche Punktzahl von " +score/anzTests);
-		System.out.println("Nach "+anzTests+" Versuchen erhält der Algorithmus eine Bestpunktzahl von " +lowestScore);
-		System.out.println("Nach "+anzTests+" Versuchen erhält der Algorithmus eine Schlechteste Punktzahl von " +highestscore);
+				if(Verteilungsalgorithmus.checkScore()>=10){
+					Verteilungsalgorithmus.macheAusgabe();
+				}									
+		System.out.println("Nach "+gebrauchteTests+" Versuchen erhält der Algorithmus eine durschnittliche Punktzahl von " +score/gebrauchteTests);
+		System.out.println("Nach "+gebrauchteTests+" Versuchen erhält der Algorithmus eine absolute Bestpunktzahl von " +lowestScore*random);
+		System.out.println("Nach "+gebrauchteTests+" Versuchen erhält der Algorithmus eine relative Bestpunktzahl von " +lowestScore);
+		System.out.println("Nach "+gebrauchteTests+" Versuchen erhält der Algorithmus eine Schlechteste Punktzahl von " +highestscore);
 		System.out.println("Insgesamte Laufzeit: "+ms+"ms \n Relative Laufzeit: "+(double)ms/(double)anzTests+"ms");
+		System.out.println("Personen die Nicht in lieblngsAg sind in bester Verteilung: " + countNichtPerfektePersonen);
 		Verteilungsalgorithmus.ag=highest;
 		Verteilungsalgorithmus.personen=highest2;
 		//Verteilungsalgorithmus.macheAusgabe();
