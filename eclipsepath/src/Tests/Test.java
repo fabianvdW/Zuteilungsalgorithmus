@@ -228,7 +228,7 @@ public class Test {
 			Verteilungsalgorithmus.personen.clear();
 			String uuid= "";
 			//int random=(int)(Math.random()*50+15);
-			int random=50;
+			int random=250;
 			uuid=UUID.randomUUID().toString();
 			int agTeilnehmer=0;
 			while(agTeilnehmer<random){	
