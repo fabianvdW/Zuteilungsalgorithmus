@@ -203,6 +203,8 @@
 package Data;
 import java.util.ArrayList;
 
+import Algorithmus.Verteilungsalgorithmus;
+
 public class AG {
 	private String name;
 	private int mindestanzahl;
@@ -211,6 +213,7 @@ public class AG {
 	private boolean istVoll;
 	private boolean kannStattFinden;
 	private ArrayList<Person> teilnehmer;
+	private ArrayList<ArrayList<Person>> bewertungen ;
 	private int id;
 
 	/**
@@ -223,6 +226,10 @@ public class AG {
 		this.name=name;
 		this.mindestanzahl=mindestanzahl;
 		teilnehmer= new ArrayList<Person>();
+		bewertungen = new ArrayList<ArrayList<Person>>();
+		for(int i=0;i<7;i++){
+			bewertungen.add(new ArrayList<Person>());
+		}
 		this.hoechstanzahl=hoechstanzahl;
 	}
 	
@@ -237,7 +244,43 @@ public class AG {
 		this(name,mindestanzahl,hoechstanzahl);
 		this.id=id;
 	}
-	
+	/**
+	 * Berechnet die beliebtheit der AG
+	 */
+	public void berechneBeliebtheit(){
+		beliebtheit=0;
+		for(Person p: Verteilungsalgorithmus.personen){
+			Rating a=null;
+			ArrayList<Rating> ratings= p.getRatingAL();
+			for(int k=0;k<ratings.size();k++){
+				Rating getK= ratings.get(k);
+				if(getK.getAG().equals(this)){
+					a=getK;
+				}
+			}
+			beliebtheit+=a.getRatingValue();
+		}
+	}
+	/**
+	 * Intialisiert die Bewertungen einer AG.
+	 */
+	public void initBewertungen(){
+		for(Person p: Verteilungsalgorithmus.personen){
+			ArrayList<Rating> ratings= p.getRatingAL();
+			for(Rating r: ratings){
+				if(r.getAG().equals(this)){
+					bewertungen.get(3-r.getRatingValue()).add(p);
+				}
+			}
+		}
+	}
+	/**
+	 * Rückgabe der bewertungen
+	 * @return die Arraylist der Arraylist an Personen
+	 */
+	public ArrayList<ArrayList<Person>> getBewertungen(){
+		return this.bewertungen;
+	}
 	/**
 	 * Klasse AG, Verwaltet die Daten einer AG
 	 * @param id ID der AG

@@ -266,6 +266,8 @@ public class Verteilungsalgorithmus {
 		//DEBUGmacheAusgabe();
 		shuffleDaten(); //Damit einer z.B aus der A-Klasse, der als erstes eingetragen wird, keine Vorteile hat.
 		berechneBeliebtheit(); // Die Summe der Beliebtheit aller Personen pro AG
+		initBewertungen();
+		initVarianz();
 		if(!checkObDieAGDiePersonenAufnehmenKann()){
 			System.out.println("Die Agen können die Personen nicht aufnehmen. Exit");
 			System.exit(0);
@@ -331,6 +333,14 @@ public class Verteilungsalgorithmus {
 			}
 		}
 		
+	}
+	/**
+	 * Initialisiert das Attribut Varianz für jede Person
+	 */
+	public static void initVarianz(){
+		for(Person p: personen){
+			p.initVarianz();
+		}
 	}
 	/**
 	 * 
@@ -447,15 +457,8 @@ public class Verteilungsalgorithmus {
 	 * @return die Varianz der Person p
 	 */
 	public static double getVarianz(Person p, int bewertung){
-		double score=0.0;
-		int size=ag.size();
-		for(int i=0;i<size;i++){
-			AG ags= ag.get(i);
-			if(getUnAllocatedPersonenDieAGParamMitBewertungParamBewertertHaben(bewertung, ags).contains(p)){
-				score+= 1.0/(1.0+Math.exp(ags.getBeliebtheit()*Math.sqrt(2.0)/personen.size()));
-			}
-		}
-		return score;
+		return p.getVarianz()[3-bewertung];
+		
 	}
 	/**
 	 * Returnt ArrayList aus Personen, die noch keine AG haben und die AG ags mit der Bewertung bewertung bewertet haben
@@ -467,16 +470,9 @@ public class Verteilungsalgorithmus {
 		ArrayList<Person> ps = new ArrayList<Person>();
 		ArrayList<Person> unAllocated= getUnAllocatedPersons();
 		for(Person p: unAllocated){
-			Rating r= null;
-			for(int i=0;i<ag.size();i++){
-				Rating r2 = p.getRatingAL().get(i);
-				if(r2.getRatingValue()!=bewertung)continue;
-				if(r2.getAG().getId()==ags.getId()){
-					r = r2;
-				}
-			}
-				if(r==null) continue;
+			if(ags.getBewertungen().get(3-bewertung).contains(p)){
 				ps.add(p);
+			}
 		}
 		return ps;
 	}
@@ -569,24 +565,22 @@ public class Verteilungsalgorithmus {
 		personen= shuffeldP;
 		
 	}
+	/**
+	 * Initialisiert die Bewertungen jeder AG.
+	 */
+	public static void initBewertungen(){
+		for(AG ags:ag){
+			ags.initBewertungen();
+		}
+	}
 
 	/**
 	 *	Berechnet die Beliebtheit jeder AG, dazu werden die einzelnen Bewertungen der Personen für diese AG einfach aufaddiert
 	 */
 	public static void berechneBeliebtheit(){
 		for(AG ags: ag){
-			ags.setBeliebtheit(0);
-			for(Person p: personen){
-				Rating a=null;
-				ArrayList<Rating> ratings= p.getRatingAL();
-				for(int k=0;k<ratings.size();k++){
-					Rating getK= ratings.get(k);
-					if(getK.getAG().equals(ags)){
-						a=getK;
-					}
-				}
-				ags.setBeliebtheit(ags.getBeliebtheit()+a.getRatingValue());
-			}
+			ags.berechneBeliebtheit();
+		
 		}
 	}
 
