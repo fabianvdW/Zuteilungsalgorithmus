@@ -235,6 +235,7 @@ public class Test {
 			int random=50;
 			uuid=UUID.randomUUID().toString();
 			int agTeilnehmer=0;
+			while(agTeilnehmer<random+0.1*random){	
 				
 				int hoechstanzahl= (int) (Math.random()*(0.2*(double)random)+1);
 				hoechstanzahl= (hoechstanzahl==0||hoechstanzahl==1? 2: hoechstanzahl);
