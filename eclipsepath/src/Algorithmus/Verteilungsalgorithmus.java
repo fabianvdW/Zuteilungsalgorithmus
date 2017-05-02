@@ -223,7 +223,8 @@ public class Verteilungsalgorithmus {
 	public static void main(String[] args) {
 		ag = new ArrayList<AG>();
 		personen = new ArrayList<Person>();
-		int durchlaeufe=10000;
+		log= new ArrayList<String>();
+		int durchlaeufe=1;
 		Test.laufeTestsAufVerteilung(durchlaeufe);
 		//verteile();
 		//macheAusgabe();
@@ -258,23 +259,125 @@ public class Verteilungsalgorithmus {
 		}
 		return s;
 	}
+	/**
+	 *  Verteilungsalgorithmus
+	 * @param legeLogAn Ob der Log angelegt werden soll
+	 */
+	public static void verteile(boolean legeLogAn){
+		if(!legeLogAn){
+			verteile();
+		}else{
+			log= new ArrayList<String>();
+			log.add("Status:");
+			log.add(statusCheck());
+			shuffleDaten(); //Damit einer z.B aus der A-Klasse, der als erstes eingetragen wird, keine Vorteile hat.
+			log.add("Daten geshuffelt");
+			berechneBeliebtheit(); // Die Summe der Beliebtheit aller Personen pro AG
+			log.add("Beliebtheit berechnet");
+			initBewertungen();
+			log.add("Bewertung initialisiert");
+			initVarianz();
+			log.add("Varianz berechnet");
+			if(!checkObDieAGDiePersonenAufnehmenKann()){
+				System.out.println("Die Agen können die Personen nicht aufnehmen. Exit");
+				System.exit(0);
+			}
+			int score=3;
+			while(!allAllocated()||score!=-4 ){//Geht jeden Score von 3 bis -3 durch
+				if(score==-4){
+					score=3;
+				}
+				log.add("Hauptschleife, Score: "+score);
+				log.add("Die AGen werden nach Beliebtheitsrang durchgelaufen:");
+				for(int beliebtheitsrang=ag.size()-1;beliebtheitsrang>=0;beliebtheitsrang--){//Geht jede AG durch, die unbeliebtesten zuerst.
+					
+					AG ags= getAGNachBeliebtheitsRang(beliebtheitsrang); //holt sich die AG abhängig von dem BeliebtheitsRang
+					log.add("Momentane AG: \n" +ags.toString());
+					ArrayList<Person> ps = getUnAllocatedPersonenDieAGParamMitBewertungParamBewertertHaben(score, ags); //Alle Personen, die noch keine AG haben und die AG mit der Bewertung score(von schleifenkopf) bewertet haben
+					log.add("\nPersonen, die noch keine AG haben und die Ag bewertet haben:\n");
+					for(Person p: ps){
+						log.add(p.toString());
+					}
+					if(ps==null||ps.size()==0){//Wenn das 0 personen sind oder die Liste null ist, zur nächsten AG.
+						continue;
+						
+					}
+					int psSize=ps.size();
+					log.add("\nZuweisungsschleife\n");
+					psSize=psSize<ags.getHoechstanzahl()? psSize: ags.getHoechstanzahl();
+					for(int i=0;i<psSize;i++){ //Solange die AG noch nicht voll ist,
+						if(ags.istVoll()){
+							log.add("\nDie AG ist voll, break!\n\n");
+							break;
+						}
+						
+						Person lowVarianz= getLowestVarianz(ps,score); //die Person mit niedrigster Varianz einfügen.
+						log.add("\nPerson mit niedrigster Varianz gefunden:\n"+lowVarianz.toString()+"\n Person eingefügt");
+						try{
+							ags.addTeilnehmer(lowVarianz);
+							log.add("\nStatus AG: "+ ags.getTeilnehmer().size()+"/"+ags.getHoechstanzahl());
+							ps.remove(lowVarianz);
+						}catch(Exception e){
+							e.printStackTrace();
+							System.exit(0);
+						}
+					}
+				 }
+				score--;
+				if(score==-4){//Wenn der Score -4 ist, ist der Algorithmus einmal durch eine Iteration durch, danach sollen die Agen gefinsiht werden,
+					// So können AGen die nicht stattfinden würden herausgefiltert werden.
+					log.add("\n Der Score ist -4! \n");
+					for(AG ags: ag){
+						ags.finishEintragung();
+					}
+					log.add("\nDie AGs wurden gefinishet!\n");
+					log.add("\n"+getUnAllocatedPersons().size()+" Personen sind nicht zugewiesen und" + getAgDieNichtStattFinden().size()+" Agen finden nicht statt.! \n");
+					if(checkObDieAgenMindestzahlFehler()){//Wenn der mindestanzahl FEhler auftritt,
+						//System.out.println("MindestanzahlFehler");
+						log.add("Mindestzahlfehler");
+						ArrayList<AG> nichtStatt= getAgDieNichtStattFinden();
+						for(AG ags: nichtStatt){//Leute werden aus andren AGen in diese AG gezogen.
+							log.add("Es müssen " + checkObDieAgenMindestzahlFehlerDifferenz(ags)+" Personen aus ihrer AG gezogen werden!");
+							for(int i=0;i<checkObDieAgenMindestzahlFehlerDifferenz(ags);i++){
+								Person p= personAusAgZiehen(ags);
+								if(p==null){log.add("Es konnte keine Person aus ihrer AG gezogen werden!");continue;}
+								log.add("Die Person wird aus ihrer AG gezogen!"+p.toString());
+								try{
+									ags.addTeilnehmer(p);
+								}catch(Exception e){
+									e.printStackTrace();
+									System.exit(0);
+								}
+							}
+							log.add("Die restlichen unzugewiesenen Personen werden der AG zugewiesen!");
+							ArrayList<Person> unAllocated= getUnAllocatedPersons();
+							for(Person p: unAllocated){
+								try{
+									//TODO
+								if(ags.istVoll())continue;
+								ags.addTeilnehmer(p);
+								}catch(Exception e){
+									e.printStackTrace();
+									System.exit(0);
+								}
+							}
+							
+						}
+					}
+				}
+			}
+			log.add("Verteilung Done!");
+		}
+	}
 
 	/**
 	 * Der eigentliche Verteilungsalgorithmus
 	 */
-	public static void verteile() {
-		//DEBUGmacheAusgabe();
-		log= new ArrayList<String>();
-		log.add("Status:");
-		log.add(statusCheck());
+	private static void verteile() {
 		shuffleDaten(); //Damit einer z.B aus der A-Klasse, der als erstes eingetragen wird, keine Vorteile hat.
-		log.add("Daten geshuffelt");
 		berechneBeliebtheit(); // Die Summe der Beliebtheit aller Personen pro AG
-		log.add("Beliebtheit berechnet");
 		initBewertungen();
-		log.add("Bewertung initialisiert");
 		initVarianz();
-		log.add("Varianz berechnet");
 		if(!checkObDieAGDiePersonenAufnehmenKann()){
 			System.out.println("Die Agen können die Personen nicht aufnehmen. Exit");
 			System.exit(0);
@@ -284,35 +387,23 @@ public class Verteilungsalgorithmus {
 			if(score==-4){
 				score=3;
 			}
-			log.add("Hauptschleife, Score: "+score);
-			log.add("Die AGen werden nach Beliebtheitsrang durchgelaufen:");
 			for(int beliebtheitsrang=ag.size()-1;beliebtheitsrang>=0;beliebtheitsrang--){//Geht jede AG durch, die unbeliebtesten zuerst.
 				
 				AG ags= getAGNachBeliebtheitsRang(beliebtheitsrang); //holt sich die AG abhängig von dem BeliebtheitsRang
-				log.add("Momentane AG: \n" +ags.toString());
 				ArrayList<Person> ps = getUnAllocatedPersonenDieAGParamMitBewertungParamBewertertHaben(score, ags); //Alle Personen, die noch keine AG haben und die AG mit der Bewertung score(von schleifenkopf) bewertet haben
-				log.add("\nPersonen, die noch keine AG haben und die Ag bewertet haben:\n");
-				for(Person p: ps){
-					log.add(p.toString());
-				}
 				if(ps==null||ps.size()==0){//Wenn das 0 personen sind oder die Liste null ist, zur nächsten AG.
 					continue;
 					
 				}
 				int psSize=ps.size();
-				log.add("\nZuweisungsschleife\n");
 				psSize=psSize<ags.getHoechstanzahl()? psSize: ags.getHoechstanzahl();
 				for(int i=0;i<psSize;i++){ //Solange die AG noch nicht voll ist,
 					if(ags.istVoll()){
-						log.add("\nDie AG ist voll, break!\n\n");
 						break;
-					}
-					
+					}	
 					Person lowVarianz= getLowestVarianz(ps,score); //die Person mit niedrigster Varianz einfügen.
-					log.add("\nPerson mit niedrigster Varianz gefunden:\n"+lowVarianz.toString()+"\n Person eingefügt");
 					try{
 						ags.addTeilnehmer(lowVarianz);
-						log.add("\nStatus AG: "+ ags.getTeilnehmer().size()+"/"+ags.getHoechstanzahl());
 						ps.remove(lowVarianz);
 					}catch(Exception e){
 						e.printStackTrace();
@@ -323,19 +414,16 @@ public class Verteilungsalgorithmus {
 			score--;
 			if(score==-4){//Wenn der Score -4 ist, ist der Algorithmus einmal durch eine Iteration durch, danach sollen die Agen gefinsiht werden,
 				// So können AGen die nicht stattfinden würden herausgefiltert werden.
-				log.add("\n Der Score ist -4! \n");
 				for(AG ags: ag){
 					ags.finishEintragung();
 				}
-				log.add("\nDie AGs wurden gefinishet!\n");
-				log.add("\n"+getUnAllocatedPersons().size()+" Personen sind nicht zugewiesen und" + getAgDieNichtStattFinden().size()+" Agen finden nicht statt.! \n");
 				if(checkObDieAgenMindestzahlFehler()){//Wenn der mindestanzahl FEhler auftritt,
 					//System.out.println("MindestanzahlFehler");
-					log.add("Mindestzahlfehler");
 					ArrayList<AG> nichtStatt= getAgDieNichtStattFinden();
 					for(AG ags: nichtStatt){//Leute werden aus andren AGen in diese AG gezogen.
 						for(int i=0;i<checkObDieAgenMindestzahlFehlerDifferenz(ags);i++){
 							Person p= personAusAgZiehen(ags);
+							if(p==null){continue;}
 							try{
 								ags.addTeilnehmer(p);
 							}catch(Exception e){
@@ -346,6 +434,7 @@ public class Verteilungsalgorithmus {
 						ArrayList<Person> unAllocated= getUnAllocatedPersons();
 						for(Person p: unAllocated){
 							try{
+								//TODO
 							if(ags.istVoll())continue;
 							ags.addTeilnehmer(p);
 							}catch(Exception e){
@@ -358,6 +447,7 @@ public class Verteilungsalgorithmus {
 				}
 			}
 		}
+		
 		
 	}
 	/**
@@ -616,9 +706,11 @@ public class Verteilungsalgorithmus {
 	public static String statusCheck(){
 		String s="";
 		for(AG ags: ag){
+			s+=System.lineSeparator();
 			s+=(ags.toString());
 		}
 		for(Person p: personen){
+			s+=System.lineSeparator();
 			s+=(p.toString());
 			
 		}

@@ -234,6 +234,7 @@ import javax.swing.KeyStroke;
 import Data.AG;
 import Data.Person;
 import Data.Rating;
+import Tests.Test;
 import db.DBManager;
 
 public class GUI extends JFrame{
@@ -397,7 +398,12 @@ public class GUI extends JFrame{
 		menItem = new JMenuItem("Ausführen");
 		menItem.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				Algorithmus.Verteilungsalgorithmus.verteile();
+				Algorithmus.Verteilungsalgorithmus.verteile(true);
+				try{
+				Test.writeFile(Algorithmus.Verteilungsalgorithmus.log);
+				}catch(Exception ei){
+					ei.printStackTrace();
+				}
 				Algorithmus.Verteilungsalgorithmus.macheAusgabe();
 				showAGList();
 			}

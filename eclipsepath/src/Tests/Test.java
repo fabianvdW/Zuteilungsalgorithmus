@@ -284,7 +284,7 @@ public class Test {
 				
 			}
 			long pos1= System.currentTimeMillis();
-			Verteilungsalgorithmus.verteile();
+			Verteilungsalgorithmus.verteile(true);
 			long pos2= System.currentTimeMillis();
 			ms+=pos2-pos1;
 			//Verteilungsalgorithmus.statusCheck();
@@ -297,16 +297,6 @@ public class Test {
 				System.exit(0);
 			}
 			try{
-				if(i == 1){
-					lowestScore = Verteilungsalgorithmus.checkScore();
-					highestscore=Verteilungsalgorithmus.checkScore();
-					for(AG ags:Verteilungsalgorithmus.ag){
-						highest.add(ags);
-					}
-					for(Person p: Verteilungsalgorithmus.personen){
-						highest2.add(p);
-					}
-					}
 				if(lowestScore > Verteilungsalgorithmus.checkScore()){
 						lowestScore = Verteilungsalgorithmus.checkScore();
 				}
@@ -368,12 +358,13 @@ public class Test {
 		}
 		Verteilungsalgorithmus.ag=highest;
 		Verteilungsalgorithmus.personen=highest2;
-		Verteilungsalgorithmus.macheAusgabe();
+		//Verteilungsalgorithmus.macheAusgabe();
 	}
 	public static void writeFile(ArrayList<String> toWrite) throws IOException{
 		FileWriter fw = new FileWriter("log.txt");
 	    BufferedWriter bw = new BufferedWriter(fw);
 	    for(String s: toWrite){
+	    	s+=System.lineSeparator();
 	    	bw.write(s);
 	    	bw.newLine();
 	    }
