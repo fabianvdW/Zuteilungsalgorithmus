@@ -215,7 +215,6 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import javax.swing.AbstractAction;
-import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -244,9 +243,8 @@ public class GUI extends JFrame{
 	// Main-Frame
 	private JTextField agField, pField;
 	
-	private JDialog loginDialog;
-	
 	// Login-Frame
+	private JDialog loginDialog;
 	private JTextField loginServerField, loginServerPortField, loginUserField, loginDatabaseField;
 	private JPasswordField loginPasswordField;
 	
@@ -271,9 +269,10 @@ public class GUI extends JFrame{
 		setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 		JMenuBar up = new JMenuBar();
-		JMenu men1 = new JMenu("File");
-		JMenuItem fileExportAG = new JMenuItem("Export AGs");
-		fileExportAG.addActionListener(new ActionListener(){
+		JMenu men = new JMenu("File");
+		// Menu Nr. 1
+		JMenuItem menItem = new JMenuItem("Export AGs");
+		menItem.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				JFileChooser fileChooser = new JFileChooser();
 				fileChooser.setAcceptAllFileFilterUsed(false);
@@ -317,8 +316,9 @@ public class GUI extends JFrame{
 				}
 			}
 		});
-		JMenuItem fileExportPerson = new JMenuItem("Export Schüler");
-		fileExportPerson.addActionListener(new ActionListener(){
+		men.add(menItem);
+		menItem = new JMenuItem("Export Schüler");
+		menItem.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				JFileChooser fileChooser = new JFileChooser();
 				fileChooser.setAcceptAllFileFilterUsed(false);
@@ -358,8 +358,9 @@ public class GUI extends JFrame{
 				}
 			}
 		});
-		JMenuItem fileReload = new JMenuItem("Reload Database");
-		fileReload.addActionListener(new ActionListener(){
+		men.add(menItem);
+		menItem = new JMenuItem("Reload Database");
+		menItem.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				dbm.initializeJavaObjectsFromDB();
 				agField.setText("" + Algorithmus.Verteilungsalgorithmus.ag.size());
@@ -367,40 +368,42 @@ public class GUI extends JFrame{
 				repaint();
 			}
 		});
-		JMenuItem fileExit = new JMenuItem("Exit");
-		fileExit.addActionListener(new ExitButtonHandler());
-		men1.add(fileExportAG);
-		men1.add(fileExportPerson);
-		men1.add(fileReload);
-		men1.add(fileExit);
-		up.add(men1);
-		JMenu men2 = new JMenu("Zeige");
-		JMenuItem showAG = new JMenuItem("AGs");
-		showAG.addActionListener(new ActionListener(){
+		men.add(menItem);
+		menItem = new JMenuItem("Exit");
+		menItem.addActionListener(new ExitButtonHandler());
+		men.add(menItem);
+		up.add(men);
+		
+		// Menu Nr. 2
+		men = new JMenu("Zeige");
+		menItem = new JMenuItem("AGs");
+		menItem.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				showAGSelection();
 			}
 		});
-		JMenuItem showPerson = new JMenuItem("Schüler");
-		showPerson.addActionListener(new ActionListener(){
+		men.add(menItem);
+		menItem = new JMenuItem("Schüler");
+		menItem.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				showPersonenList();
 			}
 		});
-		men2.add(showAG);
-		men2.add(showPerson);
-		up.add(men2);
-		JMenu men3 = new JMenu("Auswerten");
-		JMenuItem runVerteile = new JMenuItem("Ausführen");
-		runVerteile.addActionListener(new ActionListener(){
+		men.add(menItem);
+		up.add(men);
+		
+		// Menu Nr. 3
+		men = new JMenu("Auswerten");
+		menItem = new JMenuItem("Ausführen");
+		menItem.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				Algorithmus.Verteilungsalgorithmus.verteile();
 				Algorithmus.Verteilungsalgorithmus.macheAusgabe();
 				showAGList();
 			}
 		});
-		men3.add(runVerteile);
-		up.add(men3);
+		men.add(menItem);
+		up.add(men);
 		setJMenuBar(up);
 		showLogin();
 		connect("agent77326.tk", 3306, "fabi", "4ma9vJdZUH7J70Wh", "fabi");
@@ -648,45 +651,6 @@ public class GUI extends JFrame{
 			labels[i + 1] = Algorithmus.Verteilungsalgorithmus.ag.get(i).getName();
 		}
 	    selectAG = new JComboBox<String>(labels);
-	    selectAG.setKeySelectionManager(new JComboBox.KeySelectionManager(){
-		  	long lastKeyTime = 0;
-			String pattern = "";
-			public int selectionForKey(char aKey, @SuppressWarnings("rawtypes") ComboBoxModel model){
-				int selIx = 01;
-				Object sel = model.getSelectedItem();
-				if(sel != null){
-					for(int i = 0; i < model.getSize(); i++){
-						if(sel.equals(model.getElementAt(i))){
-							selIx = i;
-							break;
-						}
-					}
-				}
-				long curTime = System.currentTimeMillis();
-				if(curTime - lastKeyTime < 300){
-					pattern += ("" + aKey).toLowerCase();
-				}
-				else{
-					pattern = ("" + aKey).toLowerCase();
-				}
-				lastKeyTime = curTime;
-				for(int i = selIx + 1; i < model.getSize(); i++){
-					String s = model.getElementAt(i).toString().toLowerCase();
-					if(s.startsWith(pattern)){
-						return i;
-					}
-				}
-				for(int i = 0; i < selIx; i++){
-					if(model.getElementAt(i) != null){
-						String s = model.getElementAt(i).toString().toLowerCase();
-						if(s.startsWith(pattern)){
-							return i;
-						}
-					}
-				}
-				return -1;
-			}
-	    });
 		ags.getContentPane().setLayout(new FlowLayout(FlowLayout.CENTER));
 		ags.getContentPane().add(selectAG);
 		JButton button = new JButton("OK");
