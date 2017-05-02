@@ -292,7 +292,7 @@ Rating
     </PackageNode>
     <PackageNode id="71">
       <children id="72"/>
-      <location class="Point2D.Double" id="73" x="1520.0" y="0.0"/>
+      <location class="Point2D.Double" id="73" x="1960.0" y="0.0"/>
       <id id="74" value="ec06d20d-6ad5-4ee0-a703-93d449cda9c1"/>
       <revision>1</revision>
       <backgroundColor id="75">
@@ -319,7 +319,7 @@ CSVFileFilter</text>
     </PackageNode>
     <ClassNode id="79">
       <children id="80"/>
-      <location class="Point2D.Double" id="81" x="1960.0" y="40.0"/>
+      <location class="Point2D.Double" id="81" x="1960.0" y="120.0"/>
       <id id="82" value="f2b1b177-bdbb-4b03-913a-d9e227833ac2"/>
       <revision>1</revision>
       <backgroundColor reference="75"/>
@@ -330,28 +330,15 @@ CSVFileFilter</text>
       </name>
       <attributes id="84" justification="0" size="4" underlined="false">
         <text>-serialVersionUID
--up:JMenuBar
--men1:JMenu
--men2:JMenu
--men3:JMenu
--fileExportAG:JMenuItem
--fileExportPerson:JMenuItem
--fileReload:JMenuItem
--fileExit:JMenuItem
--showAG:JMenuItem
--showPerson:JMenuItem
 -agField:JTextField
 -pField:JTextField
--login:JDialog
--error:JDialog
+-loginDialog:JDialog
 -loginServerField:JTextField
 -loginServerPortField:JTextField
 -loginUserField:JTextField
 -loginDatabaseField:JTextField
 -loginPasswordField:JPasswordField
--loginButton:JButton
--exitButton:JButton
--errorCloseButton:JButton
+-selectAG:JComboBox&lt;String&gt;
 -dbm:DBManager</text>
       </attributes>
       <methods id="85" justification="0" size="4" underlined="false">
@@ -362,12 +349,13 @@ CSVFileFilter</text>
 #showAGList()
 #showPersonenList()
 #showError(msg:String)
-#connect(server: String, port:int, user : String, passwort: String, database :String)</text>
+#connect(server: String, port:int, user : String, passwort: String, database :String)
+#showAGSelection()</text>
       </methods>
     </ClassNode>
     <ClassNode id="86">
       <children id="87"/>
-      <location class="Point2D.Double" id="88" x="2460.0" y="90.0"/>
+      <location class="Point2D.Double" id="88" x="2440.0" y="120.0"/>
       <id id="89" value="93de4bf9-25f5-486c-bc88-10ff4a56223b"/>
       <revision>1</revision>
       <backgroundColor reference="75"/>
@@ -386,14 +374,14 @@ CSVFileFilter</text>
     </ClassNode>
     <ClassNode id="93">
       <children id="94"/>
-      <location class="Point2D.Double" id="95" x="2620.0" y="330.0"/>
-      <id id="96" value="9987d465-2024-47df-a4ae-94e1be025247"/>
+      <location class="Point2D.Double" id="95" x="2440.0" y="260.0"/>
+      <id id="96" value="86e9482d-a716-486b-861b-027b04f8dd30"/>
       <revision>1</revision>
       <backgroundColor reference="75"/>
       <borderColor reference="76"/>
       <textColor reference="76"/>
       <name id="97" justification="1" size="3" underlined="false">
-        <text>ExportAGHandler
+        <text>ExitButtonHandler
 {abstract}</text>
       </name>
       <attributes id="98" justification="0" size="4" underlined="false">
@@ -405,331 +393,105 @@ CSVFileFilter</text>
     </ClassNode>
     <ClassNode id="100">
       <children id="101"/>
-      <location class="Point2D.Double" id="102" x="2480.0" y="510.0"/>
-      <id id="103" value="f285a85f-da85-4e34-97b8-4bb6cd9168cc"/>
+      <location class="Point2D.Double" id="102" x="2150.0" y="520.0"/>
+      <id id="103" value="59e9ebbf-78cb-4def-9669-4685b9828ab7"/>
       <revision>1</revision>
       <backgroundColor reference="75"/>
       <borderColor reference="76"/>
       <textColor reference="76"/>
       <name id="104" justification="1" size="3" underlined="false">
-        <text>ExportPersonenHandler
-{abstract}</text>
+        <text>RWFile</text>
       </name>
       <attributes id="105" justification="0" size="4" underlined="false">
         <text></text>
       </attributes>
       <methods id="106" justification="0" size="4" underlined="false">
-        <text>+actionPerformed(e:ActionEvent)</text>
+        <text>+write(fh:File,txt:String){static}
++read(fh:File):String{static}</text>
       </methods>
     </ClassNode>
     <ClassNode id="107">
       <children id="108"/>
-      <location class="Point2D.Double" id="109" x="2460.0" y="620.0"/>
-      <id id="110" value="e7f1a5c9-18d4-4e4f-8cfe-0cf126106473"/>
+      <location class="Point2D.Double" id="109" x="1960.0" y="520.0"/>
+      <id id="110" value="88673757-b576-499d-b914-ebc7cb9345af"/>
       <revision>1</revision>
       <backgroundColor reference="75"/>
       <borderColor reference="76"/>
       <textColor reference="76"/>
       <name id="111" justification="1" size="3" underlined="false">
-        <text>ReloadDatabaseHandler
+        <text>CSVFileFilter
 {abstract}</text>
       </name>
       <attributes id="112" justification="0" size="4" underlined="false">
         <text></text>
       </attributes>
       <methods id="113" justification="0" size="4" underlined="false">
-        <text>+actionPerformed(e:ActionEvent)</text>
-      </methods>
-    </ClassNode>
-    <ClassNode id="114">
-      <children id="115"/>
-      <location class="Point2D.Double" id="116" x="2450.0" y="770.0"/>
-      <id id="117" value="ff69db6e-1ad8-4434-bd1b-aabc50d3c83f"/>
-      <revision>1</revision>
-      <backgroundColor reference="75"/>
-      <borderColor reference="76"/>
-      <textColor reference="76"/>
-      <name id="118" justification="1" size="3" underlined="false">
-        <text>ShowAGHandler
-{abstract}</text>
-      </name>
-      <attributes id="119" justification="0" size="4" underlined="false">
-        <text></text>
-      </attributes>
-      <methods id="120" justification="0" size="4" underlined="false">
-        <text>+actionPerformed(e:ActionEvent)</text>
-      </methods>
-    </ClassNode>
-    <ClassNode id="121">
-      <children id="122"/>
-      <location class="Point2D.Double" id="123" x="2370.0" y="880.0"/>
-      <id id="124" value="10a825a0-da97-40ad-bfc1-7a58c195eae8"/>
-      <revision>1</revision>
-      <backgroundColor reference="75"/>
-      <borderColor reference="76"/>
-      <textColor reference="76"/>
-      <name id="125" justification="1" size="3" underlined="false">
-        <text>ShowPersonHandler
-{abstract}</text>
-      </name>
-      <attributes id="126" justification="0" size="4" underlined="false">
-        <text></text>
-      </attributes>
-      <methods id="127" justification="0" size="4" underlined="false">
-        <text>+actionPerformed(e:ActionEvent)</text>
-      </methods>
-    </ClassNode>
-    <ClassNode id="128">
-      <children id="129"/>
-      <location class="Point2D.Double" id="130" x="2370.0" y="1050.0"/>
-      <id id="131" value="a80030fd-6d5d-426e-9af6-33807971bf85"/>
-      <revision>1</revision>
-      <backgroundColor reference="75"/>
-      <borderColor reference="76"/>
-      <textColor reference="76"/>
-      <name id="132" justification="1" size="3" underlined="false">
-        <text>ErrorCloseButtonHandler
-{abstract}</text>
-      </name>
-      <attributes id="133" justification="0" size="4" underlined="false">
-        <text></text>
-      </attributes>
-      <methods id="134" justification="0" size="4" underlined="false">
-        <text>+actionPerformed(e:ActionEvent)</text>
-      </methods>
-    </ClassNode>
-    <ClassNode id="135">
-      <children id="136"/>
-      <location class="Point2D.Double" id="137" x="2420.0" y="1200.0"/>
-      <id id="138" value="86e9482d-a716-486b-861b-027b04f8dd30"/>
-      <revision>1</revision>
-      <backgroundColor reference="75"/>
-      <borderColor reference="76"/>
-      <textColor reference="76"/>
-      <name id="139" justification="1" size="3" underlined="false">
-        <text>ExitButtonHandler
-{abstract}</text>
-      </name>
-      <attributes id="140" justification="0" size="4" underlined="false">
-        <text></text>
-      </attributes>
-      <methods id="141" justification="0" size="4" underlined="false">
-        <text>+actionPerformed(e:ActionEvent)</text>
-      </methods>
-    </ClassNode>
-    <ClassNode id="142">
-      <children id="143"/>
-      <location class="Point2D.Double" id="144" x="2180.0" y="1160.0"/>
-      <id id="145" value="580e3b92-7199-4d70-b62d-0079f443c473"/>
-      <revision>1</revision>
-      <backgroundColor reference="75"/>
-      <borderColor reference="76"/>
-      <textColor reference="76"/>
-      <name id="146" justification="1" size="3" underlined="false">
-        <text>RunVerteilungsalgorithmus
-{abstract}</text>
-      </name>
-      <attributes id="147" justification="0" size="4" underlined="false">
-        <text></text>
-      </attributes>
-      <methods id="148" justification="0" size="4" underlined="false">
-        <text>+menuCanceled(e:MenuEvent)
-+menuDeselected(e:MenuEvent)
-+menuSelected(e:MenuEvent)</text>
-      </methods>
-    </ClassNode>
-    <ClassNode id="149">
-      <children id="150"/>
-      <location class="Point2D.Double" id="151" x="1970.0" y="1160.0"/>
-      <id id="152" value="59e9ebbf-78cb-4def-9669-4685b9828ab7"/>
-      <revision>1</revision>
-      <backgroundColor reference="75"/>
-      <borderColor reference="76"/>
-      <textColor reference="76"/>
-      <name id="153" justification="1" size="3" underlined="false">
-        <text>RWFile</text>
-      </name>
-      <attributes id="154" justification="0" size="4" underlined="false">
-        <text></text>
-      </attributes>
-      <methods id="155" justification="0" size="4" underlined="false">
-        <text>+write(fh:File,txt:String){static}
-+read(fh:File):String{static}</text>
-      </methods>
-    </ClassNode>
-    <ClassNode id="156">
-      <children id="157"/>
-      <location class="Point2D.Double" id="158" x="1810.0" y="1210.0"/>
-      <id id="159" value="88673757-b576-499d-b914-ebc7cb9345af"/>
-      <revision>1</revision>
-      <backgroundColor reference="75"/>
-      <borderColor reference="76"/>
-      <textColor reference="76"/>
-      <name id="160" justification="1" size="3" underlined="false">
-        <text>CSVFileFilter
-{abstract}</text>
-      </name>
-      <attributes id="161" justification="0" size="4" underlined="false">
-        <text></text>
-      </attributes>
-      <methods id="162" justification="0" size="4" underlined="false">
         <text>#getExtension(f:File):String
 +accept(f:File):boolean
 +getDescription():String</text>
       </methods>
     </ClassNode>
   </nodes>
-  <edges id="163">
-    <CompositionEdge id="164">
+  <edges id="114">
+    <CompositionEdge id="115">
       <start class="ClassNode" reference="12"/>
       <end class="ClassNode" reference="3"/>
-      <startLocation class="Point2D.Double" id="165" x="100.0" y="10.0"/>
-      <endLocation class="Point2D.Double" id="166" x="130.0" y="160.0"/>
-      <transitionPoints id="167"/>
-      <id id="168" value="dad9aff9-d207-41a5-a3cd-b349f049d29f"/>
+      <startLocation class="Point2D.Double" id="116" x="100.0" y="10.0"/>
+      <endLocation class="Point2D.Double" id="117" x="130.0" y="160.0"/>
+      <transitionPoints id="118"/>
+      <id id="119" value="dad9aff9-d207-41a5-a3cd-b349f049d29f"/>
       <revision>1</revision>
       <bentStyle name="AUTO"/>
       <startLabel></startLabel>
       <middleLabel></middleLabel>
       <endLabel></endLabel>
     </CompositionEdge>
-    <CompositionEdge id="169">
+    <CompositionEdge id="120">
       <start class="ClassNode" reference="79"/>
       <end class="ClassNode" reference="86"/>
-      <startLocation class="Point2D.Double" id="170" x="210.0" y="170.0"/>
-      <endLocation class="Point2D.Double" id="171" x="20.0" y="50.0"/>
-      <transitionPoints id="172"/>
-      <id id="173" value="14a0f404-d3f0-4e69-928c-13dc2850f6d4"/>
+      <startLocation class="Point2D.Double" id="121" x="210.0" y="170.0"/>
+      <endLocation class="Point2D.Double" id="122" x="20.0" y="50.0"/>
+      <transitionPoints id="123"/>
+      <id id="124" value="14a0f404-d3f0-4e69-928c-13dc2850f6d4"/>
       <revision>1</revision>
       <bentStyle name="AUTO"/>
       <startLabel></startLabel>
       <middleLabel></middleLabel>
       <endLabel></endLabel>
     </CompositionEdge>
-    <CompositionEdge id="174">
+    <CompositionEdge id="125">
       <start class="ClassNode" reference="79"/>
       <end class="ClassNode" reference="93"/>
-      <startLocation class="Point2D.Double" id="175" x="180.0" y="310.0"/>
-      <endLocation class="Point2D.Double" id="176" x="110.0" y="30.0"/>
-      <transitionPoints id="177"/>
-      <id id="178" value="6970b228-cccd-4862-bae2-fd9297231710"/>
+      <startLocation class="Point2D.Double" id="126" x="240.0" y="530.0"/>
+      <endLocation class="Point2D.Double" id="127" x="50.0" y="70.0"/>
+      <transitionPoints id="128"/>
+      <id id="129" value="d36c6b1f-50be-4475-90c6-39e8932f6d42"/>
       <revision>1</revision>
       <bentStyle name="AUTO"/>
       <startLabel></startLabel>
       <middleLabel></middleLabel>
       <endLabel></endLabel>
     </CompositionEdge>
-    <CompositionEdge id="179">
-      <start class="ClassNode" reference="79"/>
-      <end class="ClassNode" reference="100"/>
-      <startLocation class="Point2D.Double" id="180" x="210.0" y="290.0"/>
-      <endLocation class="Point2D.Double" id="181" x="60.0" y="40.0"/>
-      <transitionPoints id="182"/>
-      <id id="183" value="fb03722c-72fb-4e40-9e05-ba380f02aea4"/>
-      <revision>1</revision>
-      <bentStyle name="AUTO"/>
-      <startLabel></startLabel>
-      <middleLabel></middleLabel>
-      <endLabel></endLabel>
-    </CompositionEdge>
-    <CompositionEdge id="184">
-      <start class="ClassNode" reference="79"/>
-      <end class="ClassNode" reference="107"/>
-      <startLocation class="Point2D.Double" id="185" x="180.0" y="430.0"/>
-      <endLocation class="Point2D.Double" id="186" x="80.0" y="80.0"/>
-      <transitionPoints id="187"/>
-      <id id="188" value="e61f7a0c-64ca-4aa3-a00a-4a8d87dc0c90"/>
-      <revision>1</revision>
-      <bentStyle name="AUTO"/>
-      <startLabel></startLabel>
-      <middleLabel></middleLabel>
-      <endLabel></endLabel>
-    </CompositionEdge>
-    <CompositionEdge id="189">
-      <start class="ClassNode" reference="79"/>
-      <end class="ClassNode" reference="114"/>
-      <startLocation class="Point2D.Double" id="190" x="210.0" y="520.0"/>
-      <endLocation class="Point2D.Double" id="191" x="40.0" y="40.0"/>
-      <transitionPoints id="192"/>
-      <id id="193" value="eec4d52e-9f3d-46ad-9ad1-3657e4aa316b"/>
-      <revision>1</revision>
-      <bentStyle name="AUTO"/>
-      <startLabel></startLabel>
-      <middleLabel></middleLabel>
-      <endLabel></endLabel>
-    </CompositionEdge>
-    <CompositionEdge id="194">
-      <start class="ClassNode" reference="79"/>
-      <end class="ClassNode" reference="121"/>
-      <startLocation class="Point2D.Double" id="195" x="160.0" y="520.0"/>
-      <endLocation class="Point2D.Double" id="196" x="50.0" y="50.0"/>
-      <transitionPoints id="197"/>
-      <id id="198" value="cb4c8658-fe29-45ac-a562-72688e37f7db"/>
-      <revision>1</revision>
-      <bentStyle name="AUTO"/>
-      <startLabel></startLabel>
-      <middleLabel></middleLabel>
-      <endLabel></endLabel>
-    </CompositionEdge>
-    <CompositionEdge id="199">
-      <start class="ClassNode" reference="79"/>
-      <end class="ClassNode" reference="128"/>
-      <startLocation class="Point2D.Double" id="200" x="200.0" y="540.0"/>
-      <endLocation class="Point2D.Double" id="201" x="40.0" y="60.0"/>
-      <transitionPoints id="202"/>
-      <id id="203" value="ae3556a3-580b-4d56-8908-9b079a97bf18"/>
-      <revision>1</revision>
-      <bentStyle name="AUTO"/>
-      <startLabel></startLabel>
-      <middleLabel></middleLabel>
-      <endLabel></endLabel>
-    </CompositionEdge>
-    <CompositionEdge id="204">
-      <start class="ClassNode" reference="79"/>
-      <end class="ClassNode" reference="135"/>
-      <startLocation class="Point2D.Double" id="205" x="240.0" y="530.0"/>
-      <endLocation class="Point2D.Double" id="206" x="50.0" y="70.0"/>
-      <transitionPoints id="207"/>
-      <id id="208" value="d36c6b1f-50be-4475-90c6-39e8932f6d42"/>
-      <revision>1</revision>
-      <bentStyle name="AUTO"/>
-      <startLabel></startLabel>
-      <middleLabel></middleLabel>
-      <endLabel></endLabel>
-    </CompositionEdge>
-    <CompositionEdge id="209">
-      <start class="ClassNode" reference="79"/>
-      <end class="ClassNode" reference="142"/>
-      <startLocation class="Point2D.Double" id="210" x="90.0" y="530.0"/>
-      <endLocation class="Point2D.Double" id="211" x="90.0" y="80.0"/>
-      <transitionPoints class="Point2D.Double-array" id="212"/>
-      <id id="213" value="596dbb51-396c-47ac-8aa6-bc2382fd4e2a"/>
-      <revision>1</revision>
-      <bentStyle name="AUTO"/>
-      <startLabel></startLabel>
-      <middleLabel></middleLabel>
-      <endLabel></endLabel>
-    </CompositionEdge>
-    <DependencyEdge id="214">
+    <DependencyEdge id="130">
       <start class="ClassNode" reference="79"/>
       <end class="ClassNode" reference="58"/>
-      <startLocation class="Point2D.Double" id="215" x="20.0" y="330.0"/>
-      <endLocation class="Point2D.Double" id="216" x="90.0" y="160.0"/>
-      <transitionPoints id="217"/>
-      <id id="218" value="80c98dbf-f1af-43c2-aa7c-3846291b2792"/>
+      <startLocation class="Point2D.Double" id="131" x="20.0" y="330.0"/>
+      <endLocation class="Point2D.Double" id="132" x="90.0" y="160.0"/>
+      <transitionPoints id="133"/>
+      <id id="134" value="80c98dbf-f1af-43c2-aa7c-3846291b2792"/>
       <revision>1</revision>
       <bentStyle name="AUTO"/>
       <startLabel></startLabel>
       <middleLabel></middleLabel>
       <endLabel></endLabel>
     </DependencyEdge>
-    <DependencyEdge id="219">
+    <DependencyEdge id="135">
       <start class="ClassNode" reference="79"/>
       <end class="ClassNode" reference="12"/>
-      <startLocation class="Point2D.Double" id="220" x="80.0" y="370.0"/>
-      <endLocation class="Point2D.Double" id="221" x="290.0" y="220.0"/>
-      <transitionPoints id="222"/>
-      <id id="223" value="a788b526-eb1b-4c5d-b683-d3ccd9da5073"/>
+      <startLocation class="Point2D.Double" id="136" x="80.0" y="370.0"/>
+      <endLocation class="Point2D.Double" id="137" x="290.0" y="220.0"/>
+      <transitionPoints id="138"/>
+      <id id="139" value="a788b526-eb1b-4c5d-b683-d3ccd9da5073"/>
       <revision>1</revision>
       <bentStyle name="AUTO"/>
       <startLabel></startLabel>
@@ -740,6 +502,7 @@ CSVFileFilter</text>
 </ClassDiagramGraph>]]></SCRIPT>
 	<BR />
 	<BR />
+
 	<IMG alt="embedded diagram image" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAACtcAAAVfCAIAAABEa7J0AACAAElEQVR42uzdf0hb+3/48X4WshBc
 CI4g4qRkGVKy4sc5hwSRLogQpMjdZ64gxZUipRAu4kTEcSnlw0XkgpRykSIBEXFFxCESshBEKKWT
 IiKIuxORUhARKS74oYiUEEK+L3x/75tz88tUYxqT5+MPeXs8Oeckx/fr9Xon75xzK3ltbt1MSQAA
@@ -4146,5 +3909,8 @@ CAAAAC33JZAhAAAAAAAAAGAXohCafn6JQgAAAGi5L4EMAQAAAAAAAAC7EIXQ9PNLFAIAAEDLfQlk
 CAAAAAAAAADYhSiEpp9fohAAAABa7ksgQwAAAAAAAADALt+g2RGFAAAA0HJf8hkCAAAAAAAAAHfB
 f9DUWOEAAAAtgigEAAAAAAAAAHcC+/REIQAAAKAJEIUAAAAAAAAA4E5gn54oBAAAADQBohAAAAAA
 AAAAAAAAAEB9/B9AfRhyfqE4tQAAAABJRU5ErkJg" />
+
+	
+
 </BODY>
 </HTML>
