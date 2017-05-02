@@ -203,6 +203,7 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -215,11 +216,11 @@ import java.util.Arrays;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -254,7 +255,7 @@ public class GUI extends JFrame{
 	private JButton loginButton, exitButton;
 	
 	// AG-Selection
-	private JComboBox<String> selectAG;
+	private JList<String> selectAG;
 	
 	// Error-Frame
 	private JButton errorCloseButton;
@@ -279,11 +280,100 @@ public class GUI extends JFrame{
 		up = new JMenuBar();
 		men1 = new JMenu("File");
 		fileExportAG = new JMenuItem("Export AGs");
-		fileExportAG.addActionListener(new ExportAGHandler());
+		fileExportAG.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				JFileChooser fileChooser = new JFileChooser();
+				fileChooser.setAcceptAllFileFilterUsed(false);
+				fileChooser.setDialogTitle("Tabellen-Export: AG");
+				fileChooser.setFileFilter(new CSVFileFilter());
+				int userSelection = fileChooser.showSaveDialog(GUI.this);
+				 
+				if(userSelection==JFileChooser.APPROVE_OPTION){
+				    File fh = fileChooser.getSelectedFile();
+				    if(CSVFileFilter.getExtension(fh)==null || !CSVFileFilter.getExtension(fh).equals("csv")){
+				    	fh = new File(fh.toString() + ".csv");
+				    }
+				    System.out.println("Save as file: " + fh.getAbsolutePath());
+				    try{
+						fh.createNewFile();
+					}
+				    catch(IOException e1){
+				    	showError("Fehlende Berechtigung zum schreiben auf die ausgewählte Datei", "Zugriff verweigert");
+						e1.printStackTrace();
+					}
+				    if(!fh.canWrite()){
+				    	showError("Fehlende Berechtigung zum schreiben auf die ausgewählte Datei", "Zugriff verweigert");
+				    }
+				    else{
+				    	String txt = "ID,Name,Mindestanzahl,Höchstanzahl,Teilnehmer" + System.lineSeparator();
+				    	for(AG ag: Algorithmus.Verteilungsalgorithmus.ag){
+				    		txt += ag.getId() + "," + ag.getName() + "," + ag.getMindestanzahl() + "," + ag.getHoechstanzahl() + ",";
+							if(ag.getTeilnehmer()==null){
+								txt += ",";
+							}
+							else{
+								int j = 0;
+								for(Person p: ag.getTeilnehmer()){
+									txt += p.getName() + (j++ < ag.getTeilnehmer().size() ? ";" : "");
+								}
+							}
+				    		txt += System.lineSeparator();
+				    	}
+				    	RWFile.write(fh, txt);
+				    }
+				}
+			}
+		});
 		fileExportPerson = new JMenuItem("Export Schüler");
-		fileExportPerson.addActionListener(new ExportPersonenHandler());
+		fileExportPerson.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				JFileChooser fileChooser = new JFileChooser();
+				fileChooser.setAcceptAllFileFilterUsed(false);
+				fileChooser.setDialogTitle("Tabellen-Export: Personen");
+				fileChooser.setFileFilter(new CSVFileFilter());
+				int userSelection = fileChooser.showSaveDialog(GUI.this);
+				 
+				if(userSelection==JFileChooser.APPROVE_OPTION){
+				    File fh = fileChooser.getSelectedFile();
+				    if(CSVFileFilter.getExtension(fh)==null || !CSVFileFilter.getExtension(fh).equals("csv")){
+				    	fh = new File(fh.toString() + ".csv");
+				    }
+				    System.out.println("Save as file: " + fh.getAbsolutePath());
+				    try{
+						fh.createNewFile();
+					}
+				    catch(IOException e1){
+				    	showError("Fehlende Berechtigung zum schreiben auf die ausgewählte Datei", "Zugriff verweigert");
+						e1.printStackTrace();
+					}
+				    if(!fh.canWrite()){
+				    	showError("Fehlende Berechtigung zum schreiben auf die ausgewählte Datei", "Zugriff verweigert");
+				    }
+				    else{
+				    	String txt = "ID,Name,Aktuelle AG,Gewählte AGs" + System.lineSeparator();
+			    		int j = 0;
+				    	for(Person p: Algorithmus.Verteilungsalgorithmus.personen){
+				    		txt += p.getId() + "," + p.getName() + "," + p.getBesuchteAG() + ",";
+				    		j = 0;
+				    		for(Rating r: p.getRatingAL()){
+				    			txt += r.getAG().getName() + ":" + r.getRatingValue() + (j++ < p.getRatingAL().size() ? ";" : "");
+				    		}
+				    		txt += System.lineSeparator();
+				    	}
+				    	RWFile.write(fh, txt);
+				    }
+				}
+			}
+		});
 		fileReload = new JMenuItem("Reload Database");
-		fileReload.addActionListener(new ReloadDatabaseHandler());
+		fileReload.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				dbm.initializeJavaObjectsFromDB();
+				agField.setText("" + Algorithmus.Verteilungsalgorithmus.ag.size());
+				pField.setText("" + Algorithmus.Verteilungsalgorithmus.personen.size());
+				repaint();
+			}
+		});
 		fileExit = new JMenuItem("Exit");
 		fileExit.addActionListener(new ExitButtonHandler());
 		men1.add(fileExportAG);
@@ -293,15 +383,29 @@ public class GUI extends JFrame{
 		up.add(men1);
 		men2 = new JMenu("Zeige");
 		showAG = new JMenuItem("AGs");
-		showAG.addActionListener(new ShowAGHandler());
+		showAG.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				showAGSelection();
+			}
+		});
 		showPerson = new JMenuItem("Schüler");
-		showPerson.addActionListener(new ShowPersonHandler());
+		showPerson.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				showPersonenList();
+			}
+		});
 		men2.add(showAG);
 		men2.add(showPerson);
 		up.add(men2);
 		men3 = new JMenu("Auswerten");
 		runVerteile = new JMenuItem("Ausführen");
-		runVerteile.addActionListener(new RunVerteilungsalgorithmus());
+		runVerteile.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				Algorithmus.Verteilungsalgorithmus.verteile();
+				Algorithmus.Verteilungsalgorithmus.macheAusgabe();
+				showAGList();
+			}
+		});
 		men3.add(runVerteile);
 		up.add(men3);
 		setJMenuBar(up);
@@ -328,35 +432,73 @@ public class GUI extends JFrame{
 	}
 	
 	protected void showLogin(){
-		login.getContentPane().setLayout(new GridLayout(6, 2));
-		login.setSize(400, 200);
+		login.getContentPane().setLayout(new GridLayout(6,1));
+		login.setSize(300, 150);
 		login.setLocationRelativeTo(null);
-		loginServerField = new JTextField();
+		// Server-IP
+		JPanel rowPane = new JPanel(new GridLayout(1, 2));
+		JPanel grid1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		grid1.add(new JLabel("SQL-Server IP"));
+		rowPane.add(grid1);
+		JPanel grid2 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		loginServerField = new JTextField(12);
 		loginServerField.addActionListener(new LoginButtonHandler());
-		loginServerPortField = new JTextField();
+		grid2.add(loginServerField);
+		rowPane.add(grid2);
+		login.add(rowPane);
+		// Server-Port
+		rowPane = new JPanel(new GridLayout(1, 2));
+		grid1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		grid1.add(new JLabel("Server-Port (Standard: 3306)"));
+		rowPane.add(grid1);
+		grid2 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		loginServerPortField = new JTextField(12);
 		loginServerPortField.addActionListener(new LoginButtonHandler());
-		loginUserField = new JTextField();
+		grid2.add(loginServerPortField);
+		rowPane.add(grid2);
+		login.add(rowPane);
+		// User-Acc
+		rowPane = new JPanel(new GridLayout(1, 2));
+		grid1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		grid1.add(new JLabel("Benutzername"));
+		rowPane.add(grid1);
+		grid2 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		loginUserField = new JTextField(12);
 		loginUserField.addActionListener(new LoginButtonHandler());
-		loginPasswordField = new JPasswordField();
+		grid2.add(loginUserField);
+		rowPane.add(grid2);
+		login.add(rowPane);
+		// User-Password
+		rowPane = new JPanel(new GridLayout(1, 2));
+		grid1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		grid1.add(new JLabel("Password"));
+		rowPane.add(grid1);
+		grid2 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		loginPasswordField = new JPasswordField(12);
 		loginPasswordField.addActionListener(new LoginButtonHandler());
-		loginDatabaseField = new JTextField();
+		grid2.add(loginPasswordField);
+		rowPane.add(grid2);
+		login.add(rowPane);
+		// Database
+		rowPane = new JPanel(new GridLayout(1, 2));
+		grid1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		grid1.add(new JLabel("Datenbank"));
+		rowPane.add(grid1);
+		grid2 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		loginDatabaseField = new JTextField(12);
 		loginDatabaseField.addActionListener(new LoginButtonHandler());
+		grid2.add(loginDatabaseField);
+		rowPane.add(grid2);
+		login.add(rowPane);
+		// Buttons
+		JPanel loginButtons = new JPanel();
 		loginButton = new JButton("Login");
 		loginButton.addActionListener(new LoginButtonHandler());
+		loginButtons.add(loginButton);
 		exitButton = new JButton("Exit");
 		exitButton.addActionListener(new ExitButtonHandler());
-		login.add(new JLabel("SQL-Server IP"), BorderLayout.CENTER);
-		login.add(loginServerField, BorderLayout.CENTER);
-		login.add(new JLabel("Server-Port (Standard: 3306)"), BorderLayout.CENTER);
-		login.add(loginServerPortField, BorderLayout.CENTER);
-		login.add(new JLabel("Benutzername"), BorderLayout.CENTER);
-		login.add(loginUserField, BorderLayout.CENTER);
-		login.add(new JLabel("Password"), BorderLayout.CENTER);
-		login.add(loginPasswordField, BorderLayout.CENTER);
-		login.add(new JLabel("Datenbank"), BorderLayout.CENTER);
-		login.add(loginDatabaseField, BorderLayout.CENTER);
-		login.add(loginButton, BorderLayout.CENTER);
-		login.add(exitButton, BorderLayout.CENTER);
+		loginButtons.add(exitButton);
+		login.add(loginButtons, BorderLayout.CENTER);
 		// Close all windows when login-frame is closed
 		login.addWindowListener(new WindowAdapter(){
 			public void windowClosing(WindowEvent e){
@@ -401,7 +543,7 @@ public class GUI extends JFrame{
 			i++;
 		}
 		String[] agListHead = new String[]{"ID", "Name", "Mindestanzahl", "Höchstanzahl", "Teilnehmer"};
-		showTable(agListHead, agList, "AG-Liste");
+		showTable(agListHead, agList, "Alle AGs");
 	}
 	
 	protected void showPersonenList(){
@@ -445,15 +587,23 @@ public class GUI extends JFrame{
 		showTable(persListHead, persList, "Schüler-Liste");
 	}
 	
-	protected void showError(String msg){
-	    error = new JDialog(this, "Error", true);
+	protected void showError(String msg, String title){
+	    error = new JDialog(this, title, true);
 	    error.setSize(300, 120);
 	    error.setLocationRelativeTo(null);
 	    error.getContentPane().setLayout(new GridLayout(2, 1));
-	    error.add(new JLabel(msg), BorderLayout.CENTER);
+	    JPanel grid = new JPanel(new FlowLayout(FlowLayout.CENTER));
+	    grid.add(new JLabel(msg));
+	    error.add(grid);
 	    errorCloseButton = new JButton("OK");
-	    errorCloseButton.addActionListener(new ErrorCloseButtonHandler());
-	    error.add(errorCloseButton, BorderLayout.CENTER);
+	    errorCloseButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				error.dispatchEvent(new WindowEvent(error, WindowEvent.WINDOW_CLOSING));
+			}
+		});
+	    grid = new JPanel(new FlowLayout());
+	    grid.add(errorCloseButton);
+	    error.add(grid);
 	    ((JPanel) error.getContentPane()).getInputMap(JPanel.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "enter");
 	    ((JPanel) error.getContentPane()).getActionMap().put("enter", new AbstractAction(){
 			private static final long serialVersionUID = 1L;
@@ -493,50 +643,7 @@ public class GUI extends JFrame{
 			setVisible(true);
 		}
 		else{
-			showError("Es konnte keine Verbindung zur Datenbank hergestellt werden");
-		}
-	}
-	
-	protected class LoginButtonHandler implements ActionListener{
-		public void actionPerformed(ActionEvent e){
-			String error = null;
-			if(loginServerField.getText()==null || loginServerField.getText().equals("")){
-				error = "Es wurden nicht alle Felder ausgefüllt";
-			}
-			else if(loginServerPortField.getText()==null || loginServerPortField.getText().equals("")){
-				error = "Es wurden nicht alle Felder ausgefüllt";
-			}
-			else if(loginUserField.getText()==null || loginUserField.getText().equals("")){
-				error = "Es wurden nicht alle Felder ausgefüllt";
-			}
-			else if(loginDatabaseField.getText()==null || loginDatabaseField.getText().equals("")){
-				error = "Es wurden nicht alle Felder ausgefüllt";
-			}
-			else{
-				if(loginPasswordField.getPassword()==null){
-					error = "Es wurden nicht alle Felder ausgefüllt";
-				}
-				else{
-					if(loginPasswordField.getPassword().length<1){
-						for(char s: loginPasswordField.getPassword()){
-							if(s==' '){
-								error = "Es wurden nicht alle Felder ausgefüllt";
-							}
-						}
-					}
-				} 
-			}
-			
-			if(error!=null){
-				showError(error);
-			}
-			else{
-				connect(loginServerField.getText(),
-						Integer.parseInt(loginServerPortField.getText()),
-						loginUserField.getText(),
-						String.valueOf(loginPasswordField.getPassword()),
-						loginDatabaseField.getText());
-			}
+			showError("Es konnte keine Verbindung zur Datenbank hergestellt werden", "Verbindungsfehler");
 		}
 	}
 	
@@ -547,12 +654,64 @@ public class GUI extends JFrame{
 		for(int i = 0; i < Algorithmus.Verteilungsalgorithmus.ag.size(); i++){
 			labels[i + 1] = Algorithmus.Verteilungsalgorithmus.ag.get(i).getName();
 		}
-		selectAG = new JComboBox<String>(labels);
-		selectAG.setMaximumRowCount(5);
-		ags.getContentPane().setLayout(new GridLayout(1, 2));
+		selectAG = new JList<String>(labels);
+		ags.getContentPane().setLayout(new FlowLayout());
 		ags.getContentPane().add(selectAG, BorderLayout.CENTER);
 		JButton button = new JButton("OK");
-		button.addActionListener(new ShowAGSelectionHandler());
+		button.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				for(String sel: selectAG.getSelectedValuesList()){
+					if(sel.equals("Alle")){
+						showAGList();
+					}
+					else{
+						for(AG a: Algorithmus.Verteilungsalgorithmus.ag){
+							if(!sel.equals(a.getName())){
+								continue;
+							}
+							String[][] persList = new String[a.getTeilnehmer().size()][5];
+							int i = 0;
+							String ags = null;
+							String[] sort = new String[a.getTeilnehmer().size()];
+							for(Person p: a.getTeilnehmer()){
+								sort[i++] = p.getName() + p.getId();
+							}
+							Arrays.sort(sort);
+							i = 0;
+							for(String name: sort){
+								for(Person p: a.getTeilnehmer()){
+									if(!name.equals(p.getName() + p.getId())){
+										continue;
+									}
+									persList[i][0] = "" + p.getId();
+									persList[i][1] = p.getName();
+									if(p.getBesuchteAG()==null){
+										persList[i][2] = "";
+									}
+									else{
+										persList[i][2] = "" + p.getBesuchteAG().getName();
+									}
+									if(p.getRatingAL()==null){
+										persList[i][3] = "";
+									}
+									else{
+										ags = "";
+										int j = 0;
+										for(Rating r: p.getRatingAL()){
+											ags += r.getAG().getName() + ": " + r.getRatingValue() + (j++ < p.getRatingAL().size() ? ", " : "");
+										}
+										persList[i][3] = ags;
+									}
+								}
+								i++;
+							}
+							String[] persListHead = new String[]{"ID", "Name", "Aktuelle AG", "Gewählte AGs"};
+							showTable(persListHead, persList, "Teilnehmer der AG: " + sel);
+						}
+					}
+				}
+			}
+		});
 		ags.getContentPane().add(button, BorderLayout.CENTER);
 		ags.pack();
 		ags.setSize(400, 150);
@@ -560,183 +719,52 @@ public class GUI extends JFrame{
 		ags.setVisible(true);
 	}
 	
-	protected class ExportAGHandler implements ActionListener{
+	protected class LoginButtonHandler implements ActionListener{
 		public void actionPerformed(ActionEvent e){
-			JFileChooser fileChooser = new JFileChooser();
-			fileChooser.setAcceptAllFileFilterUsed(false);
-			fileChooser.setDialogTitle("Tabellen-Export: AG");
-			fileChooser.setFileFilter(new CSVFileFilter());
-			int userSelection = fileChooser.showSaveDialog(GUI.this);
-			 
-			if(userSelection==JFileChooser.APPROVE_OPTION){
-			    File fh = fileChooser.getSelectedFile();
-			    if(CSVFileFilter.getExtension(fh)==null || !CSVFileFilter.getExtension(fh).equals("csv")){
-			    	fh = new File(fh.toString() + ".csv");
-			    }
-			    System.out.println("Save as file: " + fh.getAbsolutePath());
-			    try{
-					fh.createNewFile();
-				}
-			    catch(IOException e1){
-			    	showError("Fehlende Berechtigung zum schreiben auf die ausgewählte Datei");
-					e1.printStackTrace();
-				}
-			    if(!fh.canWrite()){
-			    	showError("Fehlende Berechtigung zum schreiben auf die ausgewählte Datei");
-			    }
-			    else{
-			    	String txt = "ID,Name,Mindestanzahl,Höchstanzahl,Teilnehmer" + System.lineSeparator();
-			    	for(AG ag: Algorithmus.Verteilungsalgorithmus.ag){
-			    		txt += ag.getId() + "," + ag.getName() + "," + ag.getMindestanzahl() + "," + ag.getHoechstanzahl() + ",";
-						if(ag.getTeilnehmer()==null){
-							txt += ",";
-						}
-						else{
-							int j = 0;
-							for(Person p: ag.getTeilnehmer()){
-								txt += p.getName() + (j++ < ag.getTeilnehmer().size() ? ";" : "");
-							}
-						}
-			    		txt += System.lineSeparator();
-			    	}
-			    	RWFile.write(fh, txt);
-			    }
+			String error = null;
+			try{
+				Integer.parseInt(loginServerPortField.getText());
 			}
-		}
-	}
-	
-	protected class ExportPersonenHandler implements ActionListener{
-		public void actionPerformed(ActionEvent e){
-			JFileChooser fileChooser = new JFileChooser();
-			fileChooser.setAcceptAllFileFilterUsed(false);
-			fileChooser.setDialogTitle("Tabellen-Export: Personen");
-			fileChooser.setFileFilter(new CSVFileFilter());
-			int userSelection = fileChooser.showSaveDialog(GUI.this);
-			 
-			if(userSelection==JFileChooser.APPROVE_OPTION){
-			    File fh = fileChooser.getSelectedFile();
-			    if(CSVFileFilter.getExtension(fh)==null || !CSVFileFilter.getExtension(fh).equals("csv")){
-			    	fh = new File(fh.toString() + ".csv");
-			    }
-			    System.out.println("Save as file: " + fh.getAbsolutePath());
-			    try{
-					fh.createNewFile();
-				}
-			    catch(IOException e1){
-			    	showError("Fehlende Berechtigung zum schreiben auf die ausgewählte Datei");
-					e1.printStackTrace();
-				}
-			    if(!fh.canWrite()){
-			    	showError("Fehlende Berechtigung zum schreiben auf die ausgewählte Datei");
-			    }
-			    else{
-			    	String txt = "ID,Name,Aktuelle AG,Gewählte AGs" + System.lineSeparator();
-		    		int j = 0;
-			    	for(Person p: Algorithmus.Verteilungsalgorithmus.personen){
-			    		txt += p.getId() + "," + p.getName() + "," + p.getBesuchteAG() + ",";
-			    		j = 0;
-			    		for(Rating r: p.getRatingAL()){
-			    			txt += r.getAG().getName() + ":" + r.getRatingValue() + (j++ < p.getRatingAL().size() ? ";" : "");
-			    		}
-			    		txt += System.lineSeparator();
-			    	}
-			    	RWFile.write(fh, txt);
-			    }
+			catch(java.lang.NumberFormatException ex){
+				error = "Der Server-Port ist keine gültige Zahl";
 			}
-		}
-	}
-	
-	protected class ReloadDatabaseHandler implements ActionListener{
-		public void actionPerformed(ActionEvent e){
-			dbm.initializeJavaObjectsFromDB();
-			agField.setText("" + Algorithmus.Verteilungsalgorithmus.ag.size());
-			pField.setText("" + Algorithmus.Verteilungsalgorithmus.personen.size());
-			repaint();
-		}
-	}
-	
-	protected class ShowAGSelectionHandler implements ActionListener{
-		public void actionPerformed(ActionEvent e){
-			if(selectAG.getSelectedItem().equals("Alle")){
-				showAGList();
+			if(loginServerField.getText()==null || loginServerField.getText().equals("")){
+				error = "Die Server-Adresse wurde nicht angegeben";
+			}
+			else if(loginServerPortField.getText()==null || loginServerPortField.getText().equals("")){
+				error = "Der Server-Port wurde nicht angegeben (Standartwert: 3306)";
+			}
+			else if(loginUserField.getText()==null || loginUserField.getText().equals("")){
+				error = "Der Benutzername wurde nicht angegeben";
+			}
+			else if(loginDatabaseField.getText()==null || loginDatabaseField.getText().equals("")){
+				error = "Es wurde keine Datenbank ausgewählt";
+			}
+			else if(String.valueOf(loginPasswordField.getPassword()).equals("") || loginPasswordField.getPassword() == null){
+				error = "Es wurde kein Password angegeben";
+			}
+			
+			if(error!=null){
+				showError(error, "Login fehlgeschlagen");
 			}
 			else{
-				for(AG a: Algorithmus.Verteilungsalgorithmus.ag){
-					if(!selectAG.getSelectedItem().equals(a.getName())){
-						continue;
-					}
-					String[][] persList = new String[a.getTeilnehmer().size()][5];
-					int i = 0;
-					String ags = null;
-					String[] sort = new String[a.getTeilnehmer().size()];
-					for(Person p: a.getTeilnehmer()){
-						sort[i++] = p.getName() + p.getId();
-					}
-					Arrays.sort(sort);
-					i = 0;
-					for(String name: sort){
-						for(Person p: a.getTeilnehmer()){
-							if(!name.equals(p.getName() + p.getId())){
-								continue;
-							}
-							persList[i][0] = "" + p.getId();
-							persList[i][1] = p.getName();
-							if(p.getBesuchteAG()==null){
-								persList[i][2] = "";
-							}
-							else{
-								persList[i][2] = "" + p.getBesuchteAG().getName();
-							}
-							if(p.getRatingAL()==null){
-								persList[i][3] = "";
-							}
-							else{
-								ags = "";
-								int j = 0;
-								for(Rating r: p.getRatingAL()){
-									ags += r.getAG().getName() + ": " + r.getRatingValue() + (j++ < p.getRatingAL().size() ? ", " : "");
-								}
-								persList[i][3] = ags;
-							}
-						}
-						i++;
-					}
-					String[] persListHead = new String[]{"ID", "Name", "Aktuelle AG", "Gewählte AGs"};
-					showTable(persListHead, persList, "Teilnehmer der AG: " + selectAG.getSelectedItem());
+				try{
+					connect(loginServerField.getText(),
+							Integer.parseInt(loginServerPortField.getText()),
+							loginUserField.getText(),
+							String.valueOf(loginPasswordField.getPassword()),
+							loginDatabaseField.getText());
+				}
+				catch(Exception ex){
+					showError("Es konnte keine Verbindung zum Server hergestellt werden", "Verbindung fehlgeschlagen");
 				}
 			}
-		}
-	}
-	
-	protected class ShowAGHandler implements ActionListener{
-		public void actionPerformed(ActionEvent e){
-			showAGSelection();
-		}
-	}
-	
-	protected class ShowPersonHandler implements ActionListener{
-		public void actionPerformed(ActionEvent e){
-			showPersonenList();
-		}
-	}
-	
-	protected class ErrorCloseButtonHandler implements ActionListener{
-		public void actionPerformed(ActionEvent e){
-			error.dispatchEvent(new WindowEvent(error, WindowEvent.WINDOW_CLOSING));
 		}
 	}
 	
 	protected class ExitButtonHandler implements ActionListener{
 		public void actionPerformed(ActionEvent e){
 			System.exit(0);
-		}
-	}
-	
-	protected class RunVerteilungsalgorithmus implements ActionListener{
-		public void actionPerformed(ActionEvent e){
-			Algorithmus.Verteilungsalgorithmus.verteile();
-			Algorithmus.Verteilungsalgorithmus.macheAusgabe();
-			showAGList();
 		}
 	}
 }
