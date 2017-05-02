@@ -139,7 +139,8 @@ DBManager
 -hoechstanzahl:int
 -teilnehmer:ArrayList&lt;Person&gt;
 -istVoll:boolean
--kannStattFinden:boolean</text>
+-kannStattFinden:boolean
+-bewertungen: ArrayList&lt;ArrayList&lt;Person&gt;&gt;</text>
       </attributes>
       <methods id="37" justification="0" size="4" underlined="false">
         <text>+AG(name:String,mindestanzahl:int,hoechstanzahl:int)
@@ -155,7 +156,11 @@ DBManager
 +istVoll():boolean
 +kannStattFinden():boolean
 +finishEintragung():Person
-+toString():String</text>
++toString():String
++berechneBeliebtheit(){static}
++getBewertungen():ArrayList&lt;ArrayList&lt;Person&gt;&gt;
++initBewertungen()
+</text>
       </methods>
     </ClassNode>
     <PackageNode id="38">
@@ -178,7 +183,7 @@ Rating
     </PackageNode>
     <ClassNode id="44">
       <children id="45"/>
-      <location class="Point2D.Double" id="46" x="580.0" y="570.0"/>
+      <location class="Point2D.Double" id="46" x="580.0" y="640.0"/>
       <id id="47" value="cb9d950c-6115-4ce0-a109-b405011af5af"/>
       <revision>1</revision>
       <backgroundColor reference="7"/>
@@ -191,7 +196,8 @@ Rating
         <text>-id:int
 -name:String
 -ratings:ArrayList&lt;Rating&gt;
--besuchtAg: AG</text>
+-besuchtAg: AG
+-varianz:double[]</text>
       </attributes>
       <methods id="50" justification="0" size="4" underlined="false">
         <text>+Person(name:String,ratings:ArrayList&lt;Rating&gt;)
@@ -201,7 +207,9 @@ Rating
 +getRating():ArrayList&lt;Rating&gt;
 +teileAGZu(ag:AG)
 +getBesuchteAg():AG
-+toString():String</text>
++toString():String
++getVarianz():double[]
++initVarianz()</text>
       </methods>
     </ClassNode>
     <ClassNode id="51">
@@ -260,9 +268,11 @@ Rating
 +checkObDieAGDiePersonenAufnehmenKann():boolean{static}
 +shuffleDaten(){static}
 +berechneBeliebtheit(){static}
++initBewertungen(){static}
 +statusCheck(){static}
 +checkScore():double{static}
-+macheAusgabe(){static}</text>
++macheAusgabe(){static}
++initVarianz(){static}</text>
       </methods>
     </ClassNode>
     <PackageNode id="65">

@@ -204,11 +204,14 @@ package Data;
 
 import java.util.ArrayList;
 
+import Algorithmus.Verteilungsalgorithmus;
+
 public class Person {
 	private String name;
 	private ArrayList<Rating> ratings;
 	private AG besuchtAG;
 	private int id;
+	private double[] varianz;
 
 	/**
 	 * Objekt zum speichern einer Person
@@ -218,6 +221,7 @@ public class Person {
 	public Person(String name, ArrayList<Rating> ratings){
 		this.name=name;
 		this.ratings=ratings;
+		varianz=new double[7];
 	}
 
 	/**
@@ -230,6 +234,25 @@ public class Person {
 		this(name,ratings);
 		this.id=id;
 		
+	}
+	/**
+	 * Initialisiert das Attribut Varianz
+	 */
+	public void initVarianz(){
+		for(int i=0;i<7;i++){
+			for(AG ags: Verteilungsalgorithmus.ag){
+				if(ags.getBewertungen().get(i).contains(this)){
+					varianz[i]+=1.0/(1.0+Math.exp(ags.getBeliebtheit()*Math.sqrt(2.0)/Verteilungsalgorithmus.personen.size()));
+				}
+			}
+		}
+	}
+	/**
+	 * Das Attribut Varianz
+	 * @return Returnt das Attribut Varianz
+	 */
+	public double[] getVarianz(){
+		return this.varianz;
 	}
 	
 	/**

@@ -201,6 +201,9 @@
    limitations under the License.
 */
 package Tests;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -214,22 +217,25 @@ public class Test {
 	 * @param anzTests Die Anzahl an TestsSets, die erstellt werden sollen
 	 */
 	public static void laufeTestsAufVerteilung(int anzTests) {
+		long ms=0;
 		ArrayList<AG> highest= new ArrayList<AG>();
 		ArrayList<Person> highest2= new ArrayList<Person>();
+		ArrayList<String> highestLog= new ArrayList<String>();
 		double highestscore=-3;
 		double score=0;
 		double lowestScore = 1000.0;
 		for(int i=1;i<=anzTests;i++){
-			if(i%50==0){
+			if(i%10000==0){
 			System.out.println(i);
 			}
 			Verteilungsalgorithmus.ag.clear();
 			Verteilungsalgorithmus.personen.clear();
 			String uuid= "";
-			int random=(int)(Math.random()*250+150);
+			//int random=(int)(Math.random()*50+15);
+			int random=50;
 			uuid=UUID.randomUUID().toString();
 			int agTeilnehmer=0;
-			while(agTeilnehmer<random){	
+			while(agTeilnehmer<random+0.1*random){	
 				
 				int hoechstanzahl= (int) (Math.random()*(0.2*(double)random)+1);
 				hoechstanzahl= (hoechstanzahl==0||hoechstanzahl==1? 2: hoechstanzahl);
@@ -277,10 +283,18 @@ public class Test {
 				uuid=UUID.randomUUID().toString();
 				
 			}
+			long pos1= System.currentTimeMillis();
 			Verteilungsalgorithmus.verteile();
-			//Verteilungsalgorithmus.macheAusgabe();
+			long pos2= System.currentTimeMillis();
+			ms+=pos2-pos1;
+			//Verteilungsalgorithmus.statusCheck();
 			for(AG ags: Verteilungsalgorithmus.ag){
 				ags.finishEintragung();
+			}
+			if(!Verteilungsalgorithmus.allAllocated()){
+				Verteilungsalgorithmus.macheAusgabe();
+				System.out.println("LUL");
+				System.exit(0);
 			}
 			try{
 				if(i == 1){
@@ -306,6 +320,10 @@ public class Test {
 					for(Person p: Verteilungsalgorithmus.personen){
 						highest2.add(p);
 					}
+					highestLog.clear();
+					for(String s: Verteilungsalgorithmus.log){
+						highestLog.add(s);
+					}
 				}
 				
 			}catch(Exception e){
@@ -313,15 +331,53 @@ public class Test {
 			}
 			try{
 				score+=Verteilungsalgorithmus.checkScore();
+				
+				//if(Verteilungsalgorithmus.checkScore()==0){
+					//Verteilungsalgorithmus.macheAusgabe();
+					//int counter=0;
+					//for(Person p: Verteilungsalgorithmus.personen){
+					//	int max=-4;
+					//	for(Rating r: p.getRatingAL()){
+					//		if(r.getRatingValue()>max){
+					///			max=r.getRatingValue();
+					//		}
+					//	}
+					//	if(!p.getBesuchteAG().getBewertungen().get(3-max).contains(p)){
+					//		counter++;
+					//	}
+					//}
+				//	System.out.println("Leute die nicht beste AG haben: "+counter);
+					//System.exit(0);
+				//}
 			}catch(Exception e){
 				e.printStackTrace();
+			}
+			
+			if(Verteilungsalgorithmus.checkScore()>=10){
+				Verteilungsalgorithmus.macheAusgabe();
 			}
 		}
 		System.out.println("Nach "+anzTests+" Versuchen erhält der Algorithmus eine durschnittliche Punktzahl von " +score/anzTests);
 		System.out.println("Nach "+anzTests+" Versuchen erhält der Algorithmus eine Bestpunktzahl von " +lowestScore);
 		System.out.println("Nach "+anzTests+" Versuchen erhält der Algorithmus eine Schlechteste Punktzahl von " +highestscore);
+		System.out.println("Insgesamte Laufzeit: "+ms+"ms \n Relative Laufzeit: "+(double)ms/(double)anzTests+"ms");
+		try{
+		writeFile(highestLog);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 		Verteilungsalgorithmus.ag=highest;
 		Verteilungsalgorithmus.personen=highest2;
-		//Verteilungsalgorithmus.macheAusgabe();
+		Verteilungsalgorithmus.macheAusgabe();
+	}
+	public static void writeFile(ArrayList<String> toWrite) throws IOException{
+		FileWriter fw = new FileWriter("log.txt");
+	    BufferedWriter bw = new BufferedWriter(fw);
+	    for(String s: toWrite){
+	    	bw.write(s);
+	    	bw.newLine();
+	    }
+	    bw.close();
+	    fw.close();
 	}
 }
