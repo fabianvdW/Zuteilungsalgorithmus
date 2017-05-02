@@ -707,7 +707,14 @@ public class GUI extends JFrame{
 				}
 			}
 		});
-		ags.getContentPane().add(button, BorderLayout.CENTER);
+		ags.getContentPane().add(button);
+		button = new JButton("Abbrechen");
+		button.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				ags.dispatchEvent(new WindowEvent(ags, WindowEvent.WINDOW_CLOSING));
+			}
+		});
+		ags.getContentPane().add(button);
 		ags.setSize(400, 150);
 		ags.pack();
 		ags.setLocationRelativeTo(null);
