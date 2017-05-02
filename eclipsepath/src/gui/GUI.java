@@ -249,7 +249,6 @@ public class GUI extends JFrame{
 	// Login-Frame
 	private JTextField loginServerField, loginServerPortField, loginUserField, loginDatabaseField;
 	private JPasswordField loginPasswordField;
-	private JButton loginButton, exitButton;
 	
 	// AG-Selection
 	private JComboBox<String> selectAG;
@@ -486,10 +485,10 @@ public class GUI extends JFrame{
 		loginDialog.add(rowPane);
 		// Buttons
 		JPanel loginButtons = new JPanel();
-		loginButton = new JButton("Login");
+		JButton loginButton = new JButton("Login");
 		loginButton.addActionListener(new LoginButtonHandler());
 		loginButtons.add(loginButton);
-		exitButton = new JButton("Exit");
+		JButton exitButton = new JButton("Exit");
 		exitButton.addActionListener(new ExitButtonHandler());
 		loginButtons.add(exitButton);
 		loginDialog.add(loginButtons, BorderLayout.CENTER);
