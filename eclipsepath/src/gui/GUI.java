@@ -215,12 +215,13 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import javax.swing.AbstractAction;
+import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -241,13 +242,9 @@ public class GUI extends JFrame{
 	private static final long serialVersionUID = 1L;
 	
 	// Main-Frame
-	private JMenuBar up;
-	private JMenu men1, men2, men3;
-	private JMenuItem fileExportAG, fileExportPerson, fileReload, fileExit, showAG, showPerson, runVerteile;
 	private JTextField agField, pField;
 	
-	// Other Modals
-	private JDialog login, error, ags;
+	private JDialog loginDialog;
 	
 	// Login-Frame
 	private JTextField loginServerField, loginServerPortField, loginUserField, loginDatabaseField;
@@ -255,10 +252,7 @@ public class GUI extends JFrame{
 	private JButton loginButton, exitButton;
 	
 	// AG-Selection
-	private JList<String> selectAG;
-	
-	// Error-Frame
-	private JButton errorCloseButton;
+	private JComboBox<String> selectAG;
 	
 	// Database
 	private DBManager dbm;
@@ -277,9 +271,9 @@ public class GUI extends JFrame{
 		setSize(500, 400);
 		setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-		up = new JMenuBar();
-		men1 = new JMenu("File");
-		fileExportAG = new JMenuItem("Export AGs");
+		JMenuBar up = new JMenuBar();
+		JMenu men1 = new JMenu("File");
+		JMenuItem fileExportAG = new JMenuItem("Export AGs");
 		fileExportAG.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				JFileChooser fileChooser = new JFileChooser();
@@ -324,7 +318,7 @@ public class GUI extends JFrame{
 				}
 			}
 		});
-		fileExportPerson = new JMenuItem("Export Schüler");
+		JMenuItem fileExportPerson = new JMenuItem("Export Schüler");
 		fileExportPerson.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				JFileChooser fileChooser = new JFileChooser();
@@ -365,7 +359,7 @@ public class GUI extends JFrame{
 				}
 			}
 		});
-		fileReload = new JMenuItem("Reload Database");
+		JMenuItem fileReload = new JMenuItem("Reload Database");
 		fileReload.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				dbm.initializeJavaObjectsFromDB();
@@ -374,21 +368,21 @@ public class GUI extends JFrame{
 				repaint();
 			}
 		});
-		fileExit = new JMenuItem("Exit");
+		JMenuItem fileExit = new JMenuItem("Exit");
 		fileExit.addActionListener(new ExitButtonHandler());
 		men1.add(fileExportAG);
 		men1.add(fileExportPerson);
 		men1.add(fileReload);
 		men1.add(fileExit);
 		up.add(men1);
-		men2 = new JMenu("Zeige");
-		showAG = new JMenuItem("AGs");
+		JMenu men2 = new JMenu("Zeige");
+		JMenuItem showAG = new JMenuItem("AGs");
 		showAG.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				showAGSelection();
 			}
 		});
-		showPerson = new JMenuItem("Schüler");
+		JMenuItem showPerson = new JMenuItem("Schüler");
 		showPerson.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				showPersonenList();
@@ -397,8 +391,8 @@ public class GUI extends JFrame{
 		men2.add(showAG);
 		men2.add(showPerson);
 		up.add(men2);
-		men3 = new JMenu("Auswerten");
-		runVerteile = new JMenuItem("Ausführen");
+		JMenu men3 = new JMenu("Auswerten");
+		JMenuItem runVerteile = new JMenuItem("Ausführen");
 		runVerteile.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				Algorithmus.Verteilungsalgorithmus.verteile();
@@ -409,7 +403,6 @@ public class GUI extends JFrame{
 		men3.add(runVerteile);
 		up.add(men3);
 		setJMenuBar(up);
-		login = new JDialog(this, "Server Login", true);
 		showLogin();
 		connect("agent77326.tk", 3306, "fabi", "4ma9vJdZUH7J70Wh", "fabi");
 	}
@@ -432,9 +425,10 @@ public class GUI extends JFrame{
 	}
 	
 	protected void showLogin(){
-		login.getContentPane().setLayout(new GridLayout(6,1));
-		login.setSize(300, 150);
-		login.setLocationRelativeTo(null);
+		loginDialog = new JDialog(this, "Server Login", true);
+		loginDialog.getContentPane().setLayout(new GridLayout(6,1));
+		loginDialog.setSize(300, 150);
+		loginDialog.setLocationRelativeTo(null);
 		// Server-IP
 		JPanel rowPane = new JPanel(new GridLayout(1, 2));
 		JPanel grid1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -445,7 +439,7 @@ public class GUI extends JFrame{
 		loginServerField.addActionListener(new LoginButtonHandler());
 		grid2.add(loginServerField);
 		rowPane.add(grid2);
-		login.add(rowPane);
+		loginDialog.add(rowPane);
 		// Server-Port
 		rowPane = new JPanel(new GridLayout(1, 2));
 		grid1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -456,7 +450,7 @@ public class GUI extends JFrame{
 		loginServerPortField.addActionListener(new LoginButtonHandler());
 		grid2.add(loginServerPortField);
 		rowPane.add(grid2);
-		login.add(rowPane);
+		loginDialog.add(rowPane);
 		// User-Acc
 		rowPane = new JPanel(new GridLayout(1, 2));
 		grid1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -467,7 +461,7 @@ public class GUI extends JFrame{
 		loginUserField.addActionListener(new LoginButtonHandler());
 		grid2.add(loginUserField);
 		rowPane.add(grid2);
-		login.add(rowPane);
+		loginDialog.add(rowPane);
 		// User-Password
 		rowPane = new JPanel(new GridLayout(1, 2));
 		grid1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -478,7 +472,7 @@ public class GUI extends JFrame{
 		loginPasswordField.addActionListener(new LoginButtonHandler());
 		grid2.add(loginPasswordField);
 		rowPane.add(grid2);
-		login.add(rowPane);
+		loginDialog.add(rowPane);
 		// Database
 		rowPane = new JPanel(new GridLayout(1, 2));
 		grid1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -489,7 +483,7 @@ public class GUI extends JFrame{
 		loginDatabaseField.addActionListener(new LoginButtonHandler());
 		grid2.add(loginDatabaseField);
 		rowPane.add(grid2);
-		login.add(rowPane);
+		loginDialog.add(rowPane);
 		// Buttons
 		JPanel loginButtons = new JPanel();
 		loginButton = new JButton("Login");
@@ -498,14 +492,14 @@ public class GUI extends JFrame{
 		exitButton = new JButton("Exit");
 		exitButton.addActionListener(new ExitButtonHandler());
 		loginButtons.add(exitButton);
-		login.add(loginButtons, BorderLayout.CENTER);
+		loginDialog.add(loginButtons, BorderLayout.CENTER);
 		// Close all windows when login-frame is closed
-		login.addWindowListener(new WindowAdapter(){
+		loginDialog.addWindowListener(new WindowAdapter(){
 			public void windowClosing(WindowEvent e){
 				System.exit(0);
 			}
 		});
-		login.pack();
+		loginDialog.pack();
 		//login.setVisible(true);
 	}
 	
@@ -588,14 +582,14 @@ public class GUI extends JFrame{
 	}
 	
 	protected void showError(String msg, String title){
-	    error = new JDialog(this, title, true);
+		JDialog error = new JDialog(this, title, true);
 	    error.setSize(300, 120);
 	    error.setLocationRelativeTo(null);
 	    error.getContentPane().setLayout(new GridLayout(2, 1));
 	    JPanel grid = new JPanel(new FlowLayout(FlowLayout.CENTER));
 	    grid.add(new JLabel(msg));
 	    error.add(grid);
-	    errorCloseButton = new JButton("OK");
+	    JButton errorCloseButton = new JButton("OK");
 	    errorCloseButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				error.dispatchEvent(new WindowEvent(error, WindowEvent.WINDOW_CLOSING));
@@ -626,7 +620,7 @@ public class GUI extends JFrame{
 		dbm.connect(server, port, user, password, database);
 		if(dbm.isConnected()){
 			dbm.initializeJavaObjectsFromDB();
-			login.dispose();
+			loginDialog.dispose();
 			getContentPane().setLayout(new GridLayout(5, 2));
 			add(new JLabel("In der Datenbank gefunden"));
 			add(new JLabel(""));
@@ -648,74 +642,112 @@ public class GUI extends JFrame{
 	}
 	
 	protected void showAGSelection(){
-		ags = new JDialog(this, "AG zum Anzeigen auswählen", true);
+		JDialog ags = new JDialog(this, "AG zum Anzeigen auswählen", false);
 		String[] labels = new String[Algorithmus.Verteilungsalgorithmus.ag.size() + 1];
 		labels[0] = "Alle";
 		for(int i = 0; i < Algorithmus.Verteilungsalgorithmus.ag.size(); i++){
 			labels[i + 1] = Algorithmus.Verteilungsalgorithmus.ag.get(i).getName();
 		}
-		selectAG = new JList<String>(labels);
-		ags.getContentPane().setLayout(new FlowLayout());
-		ags.getContentPane().add(selectAG, BorderLayout.CENTER);
+	    selectAG = new JComboBox<String>(labels);
+	    selectAG.setKeySelectionManager(new JComboBox.KeySelectionManager(){
+		  	long lastKeyTime = 0;
+			String pattern = "";
+			public int selectionForKey(char aKey, @SuppressWarnings("rawtypes") ComboBoxModel model){
+				int selIx = 01;
+				Object sel = model.getSelectedItem();
+				if(sel != null){
+					for(int i = 0; i < model.getSize(); i++){
+						if(sel.equals(model.getElementAt(i))){
+							selIx = i;
+							break;
+						}
+					}
+				}
+				long curTime = System.currentTimeMillis();
+				if(curTime - lastKeyTime < 300){
+					pattern += ("" + aKey).toLowerCase();
+				}
+				else{
+					pattern = ("" + aKey).toLowerCase();
+				}
+				lastKeyTime = curTime;
+				for(int i = selIx + 1; i < model.getSize(); i++){
+					String s = model.getElementAt(i).toString().toLowerCase();
+					if(s.startsWith(pattern)){
+						return i;
+					}
+				}
+				for(int i = 0; i < selIx; i++){
+					if(model.getElementAt(i) != null){
+						String s = model.getElementAt(i).toString().toLowerCase();
+						if(s.startsWith(pattern)){
+							return i;
+						}
+					}
+				}
+				return -1;
+			}
+	    });
+		ags.getContentPane().setLayout(new FlowLayout(FlowLayout.CENTER));
+		ags.getContentPane().add(selectAG);
 		JButton button = new JButton("OK");
 		button.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				for(String sel: selectAG.getSelectedValuesList()){
-					if(sel.equals("Alle")){
-						showAGList();
-					}
-					else{
-						for(AG a: Algorithmus.Verteilungsalgorithmus.ag){
-							if(!sel.equals(a.getName())){
-								continue;
-							}
-							String[][] persList = new String[a.getTeilnehmer().size()][5];
-							int i = 0;
-							String ags = null;
-							String[] sort = new String[a.getTeilnehmer().size()];
-							for(Person p: a.getTeilnehmer()){
-								sort[i++] = p.getName() + p.getId();
-							}
-							Arrays.sort(sort);
-							i = 0;
-							for(String name: sort){
-								for(Person p: a.getTeilnehmer()){
-									if(!name.equals(p.getName() + p.getId())){
-										continue;
-									}
-									persList[i][0] = "" + p.getId();
-									persList[i][1] = p.getName();
-									if(p.getBesuchteAG()==null){
-										persList[i][2] = "";
-									}
-									else{
-										persList[i][2] = "" + p.getBesuchteAG().getName();
-									}
-									if(p.getRatingAL()==null){
-										persList[i][3] = "";
-									}
-									else{
-										ags = "";
-										int j = 0;
-										for(Rating r: p.getRatingAL()){
-											ags += r.getAG().getName() + ": " + r.getRatingValue() + (j++ < p.getRatingAL().size() ? ", " : "");
-										}
-										persList[i][3] = ags;
-									}
-								}
-								i++;
-							}
-							String[] persListHead = new String[]{"ID", "Name", "Aktuelle AG", "Gewählte AGs"};
-							showTable(persListHead, persList, "Teilnehmer der AG: " + sel);
+				String sel = selectAG.getSelectedItem().toString();
+				if(sel.equals("Alle")){
+					showAGList();
+				}
+				else{
+					for(AG a: Algorithmus.Verteilungsalgorithmus.ag){
+						if(!sel.equals(a.getName())){
+							continue;
 						}
+						String[][] persList = new String[a.getTeilnehmer().size()][5];
+						int i = 0;
+						String ags = null;
+						String[] sort = new String[a.getTeilnehmer().size()];
+						for(Person p: a.getTeilnehmer()){
+							sort[i++] = p.getName() + p.getId();
+						}
+						Arrays.sort(sort);
+						i = 0;
+						for(String name: sort){
+							for(Person p: a.getTeilnehmer()){
+								if(!name.equals(p.getName() + p.getId())){
+									continue;
+								}
+								persList[i][0] = "" + p.getId();
+								persList[i][1] = p.getName();
+								if(p.getBesuchteAG()==null){
+									persList[i][2] = "";
+								}
+								else{
+									persList[i][2] = "" + p.getBesuchteAG().getName();
+								}
+								if(p.getRatingAL()==null){
+									persList[i][3] = "";
+								}
+								else{
+									ags = "";
+									int j = 0;
+									for(Rating r: p.getRatingAL()){
+										ags += r.getAG().getName() + ": " + r.getRatingValue() + (j++ < p.getRatingAL().size() ? ", " : "");
+									}
+									persList[i][3] = ags;
+								}
+							}
+							i++;
+						}
+						String[] persListHead = new String[]{"ID", "Name", "Aktuelle AG", "Gewählte AGs"};
+						showTable(persListHead, persList, "Teilnehmer der AG: " + sel);
 					}
 				}
 			}
 		});
 		ags.getContentPane().add(button, BorderLayout.CENTER);
-		ags.pack();
 		ags.setSize(400, 150);
-		login.setLocationRelativeTo(null);
+		ags.pack();
+		ags.setLocationRelativeTo(null);
 		ags.setVisible(true);
 	}
 	
