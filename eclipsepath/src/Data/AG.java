@@ -441,6 +441,7 @@ public class AG {
 		p =  teilnehmer.toArray();
 		String ret = "{Class:AG, "
 				+ "id:" + id + ", "
+				+"Bewertung: "+beliebtheit+","
 				+ "name:" + name + ", "
 				+ "min:" + mindestanzahl + ", "
 				+ "max:" + hoechstanzahl + ", "
