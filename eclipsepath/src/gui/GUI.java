@@ -526,10 +526,15 @@ public class GUI extends JFrame{
 				if(!name.equals(ag.getName() + ag.getId())){
 					continue;
 				}
-				agList[i][0] = "" + ag.getId();
-				agList[i][1] = ag.getName();
-				agList[i][2] = "" + ag.getMindestanzahl();
-				agList[i][3] = "" + ag.getHoechstanzahl();
+				agList[i][0] = ag.getName();
+				agList[i][1] = "" + ag.getMindestanzahl();
+				agList[i][2] = "" + ag.getHoechstanzahl();
+				String tmp = "";
+				int n = 0;
+				for(int jahrg: ag.getJahrgang()){
+					tmp += jahrg + (n++<ag.getJahrgang().size() ? ", " : "");
+				}
+				agList[i][3] = "" + tmp;
 				if(ag.getTeilnehmer()==null){
 					agList[i][4] = "";
 				}
@@ -544,35 +549,32 @@ public class GUI extends JFrame{
 			}
 			i++;
 		}
-		String[] agListHead = new String[]{"ID", "Name", "Mindestanzahl", "Höchstanzahl", "Teilnehmer"};
+		String[] agListHead = new String[]{"Name", "Mindestanzahl", "Höchstanzahl", "Erlaubte Jahrgänge", "Teilnehmer"};
 		showTable(agListHead, agList, "Alle AGs");
 	}
 	
 	protected void showPersonenList(){
-		String[][] persList = new String[Algorithmus.Verteilungsalgorithmus.personen.size()][5];
+		String[][] persList = new String[Algorithmus.Verteilungsalgorithmus.personen.size()][6];
 		int i = 0;
 		String ags = null;
 		String[] sort = new String[Algorithmus.Verteilungsalgorithmus.personen.size()];
 		for(Person p: Algorithmus.Verteilungsalgorithmus.personen){
-			sort[i++] = p.getName() + p.getId();
+			sort[i++] = p.getJahrgang() + p.getKlasse() + p.getName() + p.getId();
 		}
 		Arrays.sort(sort);
 		i = 0;
 		for(String name: sort){
 			for(Person p: Algorithmus.Verteilungsalgorithmus.personen){
-				if(!name.equals(p.getName() + p.getId())){
+				if(!name.equals(p.getJahrgang() + p.getKlasse() + p.getName() + p.getId())){
 					continue;
 				}
-				persList[i][0] = "" + p.getId();
+				persList[i][0] = p.getJahrgang() + (p.getKlasse()==null ? "" : p.getKlasse());
 				persList[i][1] = p.getName();
-				if(p.getBesuchteAG()==null){
-					persList[i][2] = "";
-				}
-				else{
-					persList[i][2] = "" + p.getBesuchteAG().getName();
-				}
+				persList[i][2] = p.getGeschlecht();
+				persList[i][3] = (p.getGeburtsdatum()==null ? "" : p.getGeburtsdatum().toString());
+				persList[i][4] = (p.getBesuchteAG()==null ? "" : "" + p.getBesuchteAG().getName());
 				if(p.getRatingAL()==null){
-					persList[i][3] = "";
+					persList[i][5] = "";
 				}
 				else{
 					ags = "";
@@ -580,12 +582,12 @@ public class GUI extends JFrame{
 					for(Rating r: p.getRatingAL()){
 						ags += r.getAG().getName() + ": " + r.getRatingValue() + (j++ < p.getRatingAL().size() ? ", " : "");
 					}
-					persList[i][3] = ags;
+					persList[i][5] = ags;
 				}
 			}
 			i++;
 		}
-		String[] persListHead = new String[]{"ID", "Name", "Aktuelle AG", "Gewählte AGs"};
+		String[] persListHead = new String[]{"Klasse", "Name", "Geschlecht", "Geburtsdatum", "Aktuelle AG", "Gewählte AGs"};
 		showTable(persListHead, persList, "Schüler-Liste");
 	}
 	
@@ -676,25 +678,22 @@ public class GUI extends JFrame{
 						String ags = null;
 						String[] sort = new String[a.getTeilnehmer().size()];
 						for(Person p: a.getTeilnehmer()){
-							sort[i++] = p.getName() + p.getId();
+							sort[i++] = p.getJahrgang() + p.getKlasse() + p.getName() + p.getId();
 						}
 						Arrays.sort(sort);
 						i = 0;
 						for(String name: sort){
 							for(Person p: a.getTeilnehmer()){
-								if(!name.equals(p.getName() + p.getId())){
+								if(!name.equals(p.getJahrgang() + p.getKlasse() + p.getName() + p.getId())){
 									continue;
 								}
-								persList[i][0] = "" + p.getId();
+								persList[i][0] = p.getJahrgang() + (p.getKlasse()==null ? "" : p.getKlasse());
 								persList[i][1] = p.getName();
-								if(p.getBesuchteAG()==null){
-									persList[i][2] = "";
-								}
-								else{
-									persList[i][2] = "" + p.getBesuchteAG().getName();
-								}
+								persList[i][2] = p.getGeschlecht();
+								persList[i][3] = (p.getGeburtsdatum()==null ? "" : p.getGeburtsdatum().toString());
+								persList[i][4] = (p.getBesuchteAG()==null ? "" : "" + p.getBesuchteAG().getName());
 								if(p.getRatingAL()==null){
-									persList[i][3] = "";
+									persList[i][5] = "";
 								}
 								else{
 									ags = "";
@@ -702,12 +701,12 @@ public class GUI extends JFrame{
 									for(Rating r: p.getRatingAL()){
 										ags += r.getAG().getName() + ": " + r.getRatingValue() + (j++ < p.getRatingAL().size() ? ", " : "");
 									}
-									persList[i][3] = ags;
+									persList[i][5] = ags;
 								}
 							}
 							i++;
 						}
-						String[] persListHead = new String[]{"ID", "Name", "Aktuelle AG", "Gewählte AGs"};
+						String[] persListHead = new String[]{"Klasse", "Name", "Geschlecht", "Geburtsdatum", "Aktuelle AG", "Gewählte AGs"};
 						showTable(persListHead, persList, "Teilnehmer der AG: " + sel);
 					}
 				}

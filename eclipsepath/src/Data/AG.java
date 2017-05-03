@@ -412,7 +412,7 @@ public class AG {
 	 * Returnt erlaubte Jahrgänge
 	 * @return Jahrgänge
 	 */
-	public ArrayList<Integer> getJahrgang() throws Exception{
+	public ArrayList<Integer> getJahrgang(){
 		return this.erlaubteJahrgang;
 	}
 	
