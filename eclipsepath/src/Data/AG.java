@@ -470,9 +470,9 @@ public class AG {
 		if (erlaubteJahrgang == null) {
 			return true;
 		}
-		if (p.getJahrgang() == 0) {
-			throw new Exception(
-					"Die Person: " + p.toString() + " hat keinen Jahrgang zugewiesen und wurde daruf überprüft");
+
+		if(p.getJahrgang()==0){
+			throw new Exception("Die Person: " + p.toString() + " hat keinen Jahrgang zugewiesen und wurde darauf überprüft");
 		}
 		return erlaubteJahrgang.contains(p.getJahrgang());
 	}
