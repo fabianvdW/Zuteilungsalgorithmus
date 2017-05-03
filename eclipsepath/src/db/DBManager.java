@@ -225,7 +225,7 @@ public class DBManager {
 	}
 	
 	/**
-	 * @param profileNumber Das Profil, das vom Server gelesen werden soll z.B. Unterschiedliche Profile für jedes Jahr, daher gibt es auch jedes Jahr neue Tabellen
+	 * @param profileNumber Das Profil, das vom Server gelesen werden soll z.B. Unterschiedliche Profile für jedes Jahr -> jedes Jahr neue Tabellen
 	 */
 	public DBManager(int profileNumber){
 		profile = profileNumber;
@@ -332,6 +332,18 @@ public class DBManager {
 	 * @return Person das Objekt
 	 */
 	public Person getPerson(int id){
+		for(Person p: Algorithmus.Verteilungsalgorithmus.personen){
+			if(p.getId()==id){
+				return p;
+			}
+		}
+		for(AG a: Algorithmus.Verteilungsalgorithmus.ag){
+			for(Person p: a.getTeilnehmer()){
+				if(p.getId()==id){
+					return p;
+				}
+			}
+		}
 		String[][] p = db.query("SELECT * FROM `Personen" + profile + "` WHERE `id`='" + id + "'");
 		
 		// get Rating
@@ -436,19 +448,6 @@ public class DBManager {
 				break;
 			}
 		}
-		
-		int score=0;
-		for(int i=0;i<rating.size();i++){
-			score+=rating.get(i).getRatingValue();
-		}
-		try{
-			if(score!=0){
-				throw new Exception("Der Schüler " + name + " hat kein ingesamtes Rating von 0, sondern " + score + ".");
-			}
-		}catch(Exception e){
-			Logger lgr = Logger.getLogger(DB.class.getName());
-			lgr.log(Level.WARNING, e.getMessage(), e);
-		}
 		return new Person(id, name, rating, curAG, jahrgang, klasse, geburtsdatum, geschlecht);
 	}
 	
@@ -458,11 +457,9 @@ public class DBManager {
 	 */
 	public void addPerson(Person p){
 		String tmp = "";
-		Rating[] t = new Rating[p.getRatingAL().size()];
-		t = p.getRatingAL().toArray(t);
 		int i = 0;
-		for(Rating n: t){
-			tmp += n.getAG().getId() + (i++ < t.length ? "," : "");
+		for(Rating n: p.getRatingAL()){
+			tmp += n.getAG().getId() + (i++ < p.getRatingAL().size() ? "," : "");
 		}
 		db.query("INSERT INTO `Personen" + profile + "` "
 				+ "(`id`, `name`, `ratings`, `curAG`, `jahrgang`, `klasse`, `geschlecht`, `geburtsdatum`) "
@@ -481,29 +478,83 @@ public class DBManager {
 	 * @return AG das Objekt
 	 */
 	public AG getAG(int id){
+		for(AG a: Algorithmus.Verteilungsalgorithmus.ag){
+			if(a.getId()==id){
+				return a;
+			}
+		}
 		String[][] p = db.query("SELECT * FROM `AG" + profile + "` WHERE `id`='" + id + "'");
-		int pName = -1;
+		// Name
+		String name = null;
 		for(int i = 0; i < p[1].length; i++){
 			if(p[0][i].equals("name")){
-				pName = i;
+				name = p[1][i];
 				break;
 			}
 		}
-		int pMinAnzahl = -1;
+		
+		// Min.-Anzahl
+		int minAnzahl = -1;
 		for(int i = 0; i < p[1].length; i++){
 			if(p[0][i].equals("minAnzahl")){
-				pMinAnzahl = i;
+				if(!p[1][i].equals("") && p[1][i]!=null){
+					minAnzahl = Integer.parseInt(p[1][i]);
+				}
 				break;
 			}
 		}
-		int pMaxAnzahl = -1;
+		
+		// Max.-Anzahl
+		int maxAnzahl = -1;
 		for(int i = 0; i < p[1].length; i++){
 			if(p[0][i].equals("maxAnzahl")){
-				pMaxAnzahl = i;
+				if(!p[1][i].equals("") && p[1][i]!=null){
+					maxAnzahl = Integer.parseInt(p[1][i]);
+				}
 				break;
 			}
 		}
-		return new AG(id, p[1][pName], Integer.parseInt(p[1][pMinAnzahl]), Integer.parseInt(p[1][pMaxAnzahl]));
+		
+		// Teilnehmer
+		ArrayList<Person> teilnehmer = new ArrayList<Person>();
+		int pers = -1;
+		for(int i = 0; i < p[1].length; i++){
+			if(p[0][i].equals("erlaubteJahrgang")){
+				if(!p[1][i].equals("") && p[1][i]!=null){
+					pers = i;
+				}
+				break;
+			}
+		}
+		if(pers!=-1){
+			for(String n: p[1][pers].split(",")){
+				if(n==null || n.equals("")){
+					continue;
+				}
+				teilnehmer.add(getPerson(Integer.parseInt(n)));
+			}
+		}
+		
+		// Erlaubte Jahrgänge
+		ArrayList<Integer> jahrgang = new ArrayList<Integer>();
+		int jahrg = -1;
+		for(int i = 0; i < p[1].length; i++){
+			if(p[0][i].equals("erlaubteJahrgang")){
+				if(!p[1][i].equals("") && p[1][i]!=null){
+					jahrg = i;
+				}
+				break;
+			}
+		}
+		if(jahrg!=-1){
+			for(String n: p[1][jahrg].split(",")){
+				if(n==null || n.equals("")){
+					continue;
+				}
+				jahrgang.add(Integer.parseInt(n));
+			}
+		}
+		return new AG(id, name, minAnzahl, maxAnzahl, teilnehmer, jahrgang);
 	}
 	
 	/**
@@ -511,9 +562,14 @@ public class DBManager {
 	 * @param ag Die AG die hinzuzufügen ist
 	 */
 	public void addAG(AG ag){
+		String tmp = "";
+		int i = 0;
+		for(Person p: ag.getTeilnehmer()){
+			tmp += p.getId() + (i++ < ag.getTeilnehmer().size() ? "," : "");
+		}
 		db.query("INSERT INTO `AG" + profile + "` "
 				+ "(`id`, `name`, `minAnzahl`, `maxAnzahl`, `member`) "
-				+ "VALUES (NULL, '" + ag.getName() + "', '" + ag.getMindestanzahl() + "', '" + ag.getHoechstanzahl() + "', '')");
+				+ "VALUES (NULL, '" + ag.getName() + "', '" + ag.getMindestanzahl() + "', '" + ag.getHoechstanzahl() + "', '" + tmp + "')");
 	}
 	
 	/**
