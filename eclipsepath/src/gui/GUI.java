@@ -231,6 +231,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
+import Algorithmus.Verteilungsalgorithmus;
 import Data.AG;
 import Data.Person;
 import Data.Rating;
@@ -364,6 +365,7 @@ public class GUI extends JFrame{
 		menItem.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				dbm.initializeJavaObjectsFromDB();
+				System.out.println(Verteilungsalgorithmus.statusCheck());
 				agField.setText("" + Algorithmus.Verteilungsalgorithmus.ag.size());
 				pField.setText("" + Algorithmus.Verteilungsalgorithmus.personen.size());
 				repaint();
