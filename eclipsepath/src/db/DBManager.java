@@ -214,7 +214,7 @@ import Data.Rating;
 
 public class DBManager {
 	private DB db;
-
+	private boolean klassenstufen;
 	private int profile;
 	
 	/**
@@ -296,6 +296,7 @@ public class DBManager {
 	 *
 	 */
 	public void initializeJavaObjectsFromDB(){
+		klassenstufen=false;
 		Algorithmus.Verteilungsalgorithmus.ag = new ArrayList<AG>();
 		Algorithmus.Verteilungsalgorithmus.personen = new ArrayList<Person>();
 		String[][]ids = db.query("SELECT `id` FROM `AG" + profile + "`");
@@ -323,6 +324,17 @@ public class DBManager {
 		}catch(Exception e){
 			Logger lgr = Logger.getLogger(DB.class.getName());
 			lgr.log(Level.WARNING, e.getMessage(),e);
+		}
+		if(klassenstufen){
+			System.out.println("Die Jahrgänge wurden nicht richtig angegeben!");
+			for(Person p: Verteilungsalgorithmus.personen){
+				p.setJahrgang(-1);
+			}
+			for(AG ag: Verteilungsalgorithmus.ag){
+				ag.getJahrgang().clear();
+				ag.addJahrgang(-1);
+		
+			}
 		}
 	}
 	
@@ -459,6 +471,9 @@ public class DBManager {
 				break;
 			}
 		}
+		if(jahrgang==0){
+			klassenstufen=true;
+		}
 		return new Person(id, name, rating, curAG, jahrgang, klasse, geburtsdatum, geschlecht);
 	}
 	
@@ -564,6 +579,9 @@ public class DBManager {
 				}
 				jahrgang.add(Integer.parseInt(n));
 			}
+		}
+		if(jahrgang.size()==0){
+			klassenstufen=true;
 		}
 		return new AG(id, name, minAnzahl, maxAnzahl, teilnehmer, jahrgang);
 	}
