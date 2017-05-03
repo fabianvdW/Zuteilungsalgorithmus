@@ -63,6 +63,57 @@ Person mit niedrigster Varianz gefunden:
 Status AG: 2/4
 
 Momentane AG: 
+{Class:AG, id:1, Bewertung: 0,name:Schach, min:4, max:12, istVoll:false, findetStatt:false, Teilnehmer:[]}
+
+
+Personen, die noch keine AG haben und die Ag mit Score 3 bewertet haben:
+
+
+{Class:Person, id:8, name:ZylP7Un1, ag:null, gewählt:[{Class:Rating, [Schach], Rating: 3}{Class:Rating, [Backen], Rating: -2}{Class:Rating, [Boxen], Rating: -1}]}
+
+{Class:Person, id:14, name:X4ds5KpZ, ag:null, gewählt:[{Class:Rating, [Schach], Rating: 3}{Class:Rating, [Backen], Rating: -3}{Class:Rating, [Boxen], Rating: 0}]}
+
+{Class:Person, id:6, name:UQEtdK+n, ag:null, gewählt:[{Class:Rating, [Schach], Rating: 3}{Class:Rating, [Backen], Rating: 0}{Class:Rating, [Boxen], Rating: -3}]}
+
+{Class:Person, id:12, name:8A#pemK/, ag:null, gewählt:[{Class:Rating, [Schach], Rating: 3}{Class:Rating, [Backen], Rating: -1}{Class:Rating, [Boxen], Rating: -2}]}
+
+
+Zuweisungsschleife
+
+
+
+Person mit niedrigster Varianz gefunden:
+{Class:Person, id:8, name:ZylP7Un1, ag:null, gewählt:[{Class:Rating, [Schach], Rating: 3}{Class:Rating, [Backen], Rating: -2}{Class:Rating, [Boxen], Rating: -1}]}
+ Person eingefügt
+
+
+Status AG: 1/12
+
+
+Person mit niedrigster Varianz gefunden:
+{Class:Person, id:14, name:X4ds5KpZ, ag:null, gewählt:[{Class:Rating, [Schach], Rating: 3}{Class:Rating, [Backen], Rating: -3}{Class:Rating, [Boxen], Rating: 0}]}
+ Person eingefügt
+
+
+Status AG: 2/12
+
+
+Person mit niedrigster Varianz gefunden:
+{Class:Person, id:6, name:UQEtdK+n, ag:null, gewählt:[{Class:Rating, [Schach], Rating: 3}{Class:Rating, [Backen], Rating: 0}{Class:Rating, [Boxen], Rating: -3}]}
+ Person eingefügt
+
+
+Status AG: 3/12
+
+
+Person mit niedrigster Varianz gefunden:
+{Class:Person, id:12, name:8A#pemK/, ag:null, gewählt:[{Class:Rating, [Schach], Rating: 3}{Class:Rating, [Backen], Rating: -1}{Class:Rating, [Boxen], Rating: -2}]}
+ Person eingefügt
+
+
+Status AG: 4/12
+
+Momentane AG: 
 {Class:AG, id:2, Bewertung: 0,name:Backen, min:2, max:12, istVoll:false, findetStatt:false, Teilnehmer:[]}
 
 
@@ -93,57 +144,6 @@ Person mit niedrigster Varianz gefunden:
 
 Status AG: 2/12
 
-Momentane AG: 
-{Class:AG, id:1, Bewertung: 0,name:Schach, min:4, max:12, istVoll:false, findetStatt:false, Teilnehmer:[]}
-
-
-Personen, die noch keine AG haben und die Ag mit Score 3 bewertet haben:
-
-
-{Class:Person, id:14, name:X4ds5KpZ, ag:null, gewählt:[{Class:Rating, [Schach], Rating: 3}{Class:Rating, [Backen], Rating: -3}{Class:Rating, [Boxen], Rating: 0}]}
-
-{Class:Person, id:8, name:ZylP7Un1, ag:null, gewählt:[{Class:Rating, [Schach], Rating: 3}{Class:Rating, [Backen], Rating: -2}{Class:Rating, [Boxen], Rating: -1}]}
-
-{Class:Person, id:6, name:UQEtdK+n, ag:null, gewählt:[{Class:Rating, [Schach], Rating: 3}{Class:Rating, [Backen], Rating: 0}{Class:Rating, [Boxen], Rating: -3}]}
-
-{Class:Person, id:12, name:8A#pemK/, ag:null, gewählt:[{Class:Rating, [Schach], Rating: 3}{Class:Rating, [Backen], Rating: -1}{Class:Rating, [Boxen], Rating: -2}]}
-
-
-Zuweisungsschleife
-
-
-
-Person mit niedrigster Varianz gefunden:
-{Class:Person, id:14, name:X4ds5KpZ, ag:null, gewählt:[{Class:Rating, [Schach], Rating: 3}{Class:Rating, [Backen], Rating: -3}{Class:Rating, [Boxen], Rating: 0}]}
- Person eingefügt
-
-
-Status AG: 1/12
-
-
-Person mit niedrigster Varianz gefunden:
-{Class:Person, id:8, name:ZylP7Un1, ag:null, gewählt:[{Class:Rating, [Schach], Rating: 3}{Class:Rating, [Backen], Rating: -2}{Class:Rating, [Boxen], Rating: -1}]}
- Person eingefügt
-
-
-Status AG: 2/12
-
-
-Person mit niedrigster Varianz gefunden:
-{Class:Person, id:6, name:UQEtdK+n, ag:null, gewählt:[{Class:Rating, [Schach], Rating: 3}{Class:Rating, [Backen], Rating: 0}{Class:Rating, [Boxen], Rating: -3}]}
- Person eingefügt
-
-
-Status AG: 3/12
-
-
-Person mit niedrigster Varianz gefunden:
-{Class:Person, id:12, name:8A#pemK/, ag:null, gewählt:[{Class:Rating, [Schach], Rating: 3}{Class:Rating, [Backen], Rating: -1}{Class:Rating, [Boxen], Rating: -2}]}
- Person eingefügt
-
-
-Status AG: 4/12
-
 Hauptschleife, Score: 2
 
 Die AGen werden nach Beliebtheitsrang durchgelaufen:
@@ -170,6 +170,27 @@ Person mit niedrigster Varianz gefunden:
 Status AG: 3/4
 
 Momentane AG: 
+{Class:AG, id:1, Bewertung: 0,name:Schach, min:4, max:12, istVoll:false, findetStatt:true, Teilnehmer:[ZylP7Un1, X4ds5KpZ, UQEtdK+n, 8A#pemK/, ]}
+
+
+Personen, die noch keine AG haben und die Ag mit Score 2 bewertet haben:
+
+
+{Class:Person, id:2, name:1_z9qh1v, ag:null, gewählt:[{Class:Rating, [Schach], Rating: 2}{Class:Rating, [Backen], Rating: 1}{Class:Rating, [Boxen], Rating: -3}]}
+
+
+Zuweisungsschleife
+
+
+
+Person mit niedrigster Varianz gefunden:
+{Class:Person, id:2, name:1_z9qh1v, ag:null, gewählt:[{Class:Rating, [Schach], Rating: 2}{Class:Rating, [Backen], Rating: 1}{Class:Rating, [Boxen], Rating: -3}]}
+ Person eingefügt
+
+
+Status AG: 5/12
+
+Momentane AG: 
 {Class:AG, id:2, Bewertung: 0,name:Backen, min:2, max:12, istVoll:false, findetStatt:true, Teilnehmer:[64c=9i6l, Yo55xWl#, ]}
 
 
@@ -189,27 +210,6 @@ Person mit niedrigster Varianz gefunden:
 
 
 Status AG: 3/12
-
-Momentane AG: 
-{Class:AG, id:1, Bewertung: 0,name:Schach, min:4, max:12, istVoll:false, findetStatt:true, Teilnehmer:[X4ds5KpZ, ZylP7Un1, UQEtdK+n, 8A#pemK/, ]}
-
-
-Personen, die noch keine AG haben und die Ag mit Score 2 bewertet haben:
-
-
-{Class:Person, id:2, name:1_z9qh1v, ag:null, gewählt:[{Class:Rating, [Schach], Rating: 2}{Class:Rating, [Backen], Rating: 1}{Class:Rating, [Boxen], Rating: -3}]}
-
-
-Zuweisungsschleife
-
-
-
-Person mit niedrigster Varianz gefunden:
-{Class:Person, id:2, name:1_z9qh1v, ag:null, gewählt:[{Class:Rating, [Schach], Rating: 2}{Class:Rating, [Backen], Rating: 1}{Class:Rating, [Boxen], Rating: -3}]}
- Person eingefügt
-
-
-Status AG: 5/12
 
 Hauptschleife, Score: 1
 
@@ -237,14 +237,7 @@ Person mit niedrigster Varianz gefunden:
 Status AG: 4/4
 
 Momentane AG: 
-{Class:AG, id:2, Bewertung: 0,name:Backen, min:2, max:12, istVoll:false, findetStatt:true, Teilnehmer:[64c=9i6l, Yo55xWl#, tsr&FQC5, ]}
-
-
-Personen, die noch keine AG haben und die Ag mit Score 1 bewertet haben:
-
-
-Momentane AG: 
-{Class:AG, id:1, Bewertung: 0,name:Schach, min:4, max:12, istVoll:false, findetStatt:true, Teilnehmer:[X4ds5KpZ, ZylP7Un1, UQEtdK+n, 8A#pemK/, 1_z9qh1v, ]}
+{Class:AG, id:1, Bewertung: 0,name:Schach, min:4, max:12, istVoll:false, findetStatt:true, Teilnehmer:[ZylP7Un1, X4ds5KpZ, UQEtdK+n, 8A#pemK/, 1_z9qh1v, ]}
 
 
 Personen, die noch keine AG haben und die Ag mit Score 1 bewertet haben:
@@ -264,6 +257,13 @@ Person mit niedrigster Varianz gefunden:
 
 Status AG: 6/12
 
+Momentane AG: 
+{Class:AG, id:2, Bewertung: 0,name:Backen, min:2, max:12, istVoll:false, findetStatt:true, Teilnehmer:[64c=9i6l, Yo55xWl#, tsr&FQC5, ]}
+
+
+Personen, die noch keine AG haben und die Ag mit Score 1 bewertet haben:
+
+
 Hauptschleife, Score: 0
 
 Die AGen werden nach Beliebtheitsrang durchgelaufen:
@@ -271,14 +271,14 @@ Die AGen werden nach Beliebtheitsrang durchgelaufen:
 AG ist voll, continue!
 
 Momentane AG: 
-{Class:AG, id:2, Bewertung: 0,name:Backen, min:2, max:12, istVoll:false, findetStatt:true, Teilnehmer:[64c=9i6l, Yo55xWl#, tsr&FQC5, ]}
+{Class:AG, id:1, Bewertung: 0,name:Schach, min:4, max:12, istVoll:false, findetStatt:true, Teilnehmer:[ZylP7Un1, X4ds5KpZ, UQEtdK+n, 8A#pemK/, 1_z9qh1v, 9YXEQruS, ]}
 
 
 Personen, die noch keine AG haben und die Ag mit Score 0 bewertet haben:
 
 
 Momentane AG: 
-{Class:AG, id:1, Bewertung: 0,name:Schach, min:4, max:12, istVoll:false, findetStatt:true, Teilnehmer:[X4ds5KpZ, ZylP7Un1, UQEtdK+n, 8A#pemK/, 1_z9qh1v, 9YXEQruS, ]}
+{Class:AG, id:2, Bewertung: 0,name:Backen, min:2, max:12, istVoll:false, findetStatt:true, Teilnehmer:[64c=9i6l, Yo55xWl#, tsr&FQC5, ]}
 
 
 Personen, die noch keine AG haben und die Ag mit Score 0 bewertet haben:
@@ -291,14 +291,14 @@ Die AGen werden nach Beliebtheitsrang durchgelaufen:
 AG ist voll, continue!
 
 Momentane AG: 
-{Class:AG, id:2, Bewertung: 0,name:Backen, min:2, max:12, istVoll:false, findetStatt:true, Teilnehmer:[64c=9i6l, Yo55xWl#, tsr&FQC5, ]}
+{Class:AG, id:1, Bewertung: 0,name:Schach, min:4, max:12, istVoll:false, findetStatt:true, Teilnehmer:[ZylP7Un1, X4ds5KpZ, UQEtdK+n, 8A#pemK/, 1_z9qh1v, 9YXEQruS, ]}
 
 
 Personen, die noch keine AG haben und die Ag mit Score -1 bewertet haben:
 
 
 Momentane AG: 
-{Class:AG, id:1, Bewertung: 0,name:Schach, min:4, max:12, istVoll:false, findetStatt:true, Teilnehmer:[X4ds5KpZ, ZylP7Un1, UQEtdK+n, 8A#pemK/, 1_z9qh1v, 9YXEQruS, ]}
+{Class:AG, id:2, Bewertung: 0,name:Backen, min:2, max:12, istVoll:false, findetStatt:true, Teilnehmer:[64c=9i6l, Yo55xWl#, tsr&FQC5, ]}
 
 
 Personen, die noch keine AG haben und die Ag mit Score -1 bewertet haben:
@@ -311,14 +311,14 @@ Die AGen werden nach Beliebtheitsrang durchgelaufen:
 AG ist voll, continue!
 
 Momentane AG: 
-{Class:AG, id:2, Bewertung: 0,name:Backen, min:2, max:12, istVoll:false, findetStatt:true, Teilnehmer:[64c=9i6l, Yo55xWl#, tsr&FQC5, ]}
+{Class:AG, id:1, Bewertung: 0,name:Schach, min:4, max:12, istVoll:false, findetStatt:true, Teilnehmer:[ZylP7Un1, X4ds5KpZ, UQEtdK+n, 8A#pemK/, 1_z9qh1v, 9YXEQruS, ]}
 
 
 Personen, die noch keine AG haben und die Ag mit Score -2 bewertet haben:
 
 
 Momentane AG: 
-{Class:AG, id:1, Bewertung: 0,name:Schach, min:4, max:12, istVoll:false, findetStatt:true, Teilnehmer:[X4ds5KpZ, ZylP7Un1, UQEtdK+n, 8A#pemK/, 1_z9qh1v, 9YXEQruS, ]}
+{Class:AG, id:2, Bewertung: 0,name:Backen, min:2, max:12, istVoll:false, findetStatt:true, Teilnehmer:[64c=9i6l, Yo55xWl#, tsr&FQC5, ]}
 
 
 Personen, die noch keine AG haben und die Ag mit Score -2 bewertet haben:
@@ -331,7 +331,7 @@ Die AGen werden nach Beliebtheitsrang durchgelaufen:
 AG ist voll, continue!
 
 Momentane AG: 
-{Class:AG, id:2, Bewertung: 0,name:Backen, min:2, max:12, istVoll:false, findetStatt:true, Teilnehmer:[64c=9i6l, Yo55xWl#, tsr&FQC5, ]}
+{Class:AG, id:1, Bewertung: 0,name:Schach, min:4, max:12, istVoll:false, findetStatt:true, Teilnehmer:[ZylP7Un1, X4ds5KpZ, UQEtdK+n, 8A#pemK/, 1_z9qh1v, 9YXEQruS, ]}
 
 
 Personen, die noch keine AG haben und die Ag mit Score -3 bewertet haben:
@@ -349,10 +349,10 @@ Person mit niedrigster Varianz gefunden:
  Person eingefügt
 
 
-Status AG: 4/12
+Status AG: 7/12
 
 Momentane AG: 
-{Class:AG, id:1, Bewertung: 0,name:Schach, min:4, max:12, istVoll:false, findetStatt:true, Teilnehmer:[X4ds5KpZ, ZylP7Un1, UQEtdK+n, 8A#pemK/, 1_z9qh1v, 9YXEQruS, ]}
+{Class:AG, id:2, Bewertung: 0,name:Backen, min:2, max:12, istVoll:false, findetStatt:true, Teilnehmer:[64c=9i6l, Yo55xWl#, tsr&FQC5, ]}
 
 
 Personen, die noch keine AG haben und die Ag mit Score -3 bewertet haben:
