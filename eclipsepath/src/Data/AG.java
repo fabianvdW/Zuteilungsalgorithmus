@@ -456,7 +456,7 @@ public class AG {
 	 * 
 	 * @return Jahrgänge
 	 */
-	public ArrayList<Integer> getJahrgang()  {
+	public ArrayList<Integer> getJahrgang(){
 		return this.erlaubteJahrgang;
 	}
 
