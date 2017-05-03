@@ -227,7 +227,7 @@ public class Verteilungsalgorithmus {
 		ag = new ArrayList<AG>();
 		personen = new ArrayList<Person>();
 		log = new ArrayList<String>();
-		int durchlaeufe = 1;
+		int durchlaeufe = 10000;
 		Test.laufeTestsAufVerteilung(durchlaeufe);
 		// verteile();
 		// macheAusgabe();
@@ -334,7 +334,7 @@ public class Verteilungsalgorithmus {
 																														// schleifenkopf)
 																														// bewertet
 																														// haben
-					log.add("\nPersonen, die noch keine AG haben und die Ag bewertet haben:\n");
+					log.add("\nPersonen, die noch keine AG haben und die Ag mit Score "+score+" bewertet haben:\n");
 					for (Person p : ps) {
 						log.add(p.toString());
 					}
@@ -527,6 +527,9 @@ public class Verteilungsalgorithmus {
 														// auftritt,
 					// System.out.println("MindestanzahlFehler");
 					ArrayList<AG> nichtStatt = getAgDieNichtStattFinden();
+					if(nichtStatt.size()>1){
+						System.out.println("ja");
+					}
 					for (AG ags : nichtStatt) {// Leute werden aus andren AGen
 												// in diese AG gezogen.
 						for (int i = 0; i < checkObDieAgenMindestzahlFehlerDifferenz(ags); i++) {

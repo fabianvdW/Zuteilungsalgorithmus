@@ -288,7 +288,7 @@ public class Test {
 
 			}
 			long pos1 = System.currentTimeMillis();
-			Verteilungsalgorithmus.verteile(true);
+			Verteilungsalgorithmus.verteile(false);
 			long pos2 = System.currentTimeMillis();
 			ms += pos2 - pos1;
 			// Verteilungsalgorithmus.statusCheck();
