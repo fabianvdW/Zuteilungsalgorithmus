@@ -377,6 +377,17 @@ public class DBManager {
 			}
 			
 		}
+		for(AG ag: Verteilungsalgorithmus.ag){
+			boolean contains=false;
+			for(Rating r: rating){
+				if(r.getAG().equals(ag)){
+					contains=true;
+				}
+			}
+			if(!contains){
+				rating.add(new Rating(ag, -3));
+			}
+		}
 		
 		// Name
 		String name = null;
