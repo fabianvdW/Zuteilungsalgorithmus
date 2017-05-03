@@ -213,7 +213,8 @@ public class AG {
 	private boolean istVoll;
 	private boolean kannStattFinden;
 	private ArrayList<Person> teilnehmer;
-	private ArrayList<ArrayList<Person>> bewertungen ;
+	private ArrayList<ArrayList<Person>> bewertungen;
+	private ArrayList<Integer> erlaubteJahrgang;
 	private int id;
 
 	/**
@@ -241,9 +242,38 @@ public class AG {
 	 * @param hoechstanzahl Hoechste Anzahl an Personen, die die AG besuchen dürfen
 	 */
 	public AG(int id, String name, int mindestanzahl, int hoechstanzahl){
-		this(name,mindestanzahl,hoechstanzahl);
+		this(name, mindestanzahl, hoechstanzahl);
 		this.id=id;
 	}
+	
+	/**
+	 * Klasse AG, Verwaltet die Daten einer AG
+	 * @param id ID der AG
+	 * @param name Name der AG
+	 * @param mindestanzahl Mindestanzahl, damit die AG stattfinden kann
+	 * @param hoechstanzahl Hoechste Anzahl an Personen, die die AG besuchen dürfen
+	 * @param teilnehmer falls personen von beginn an dabei sind
+	 */
+	public AG(int id, String name, int mindestanzahl, int hoechstanzahl, ArrayList<Person> teilnehmer){
+		this(id,name,mindestanzahl,hoechstanzahl);
+		this.teilnehmer= teilnehmer;
+	}
+	
+	/**
+	 * Klasse AG, Verwaltet die Daten einer AG
+	 * @param id ID der AG
+	 * @param name Name der AG
+	 * @param mindestanzahl Mindestanzahl, damit die AG stattfinden kann
+	 * @param hoechstanzahl Hoechste Anzahl an Personen, die die AG besuchen dürfen
+	 * @param teilnehmer falls personen von beginn an dabei sind
+	 * @param jahrgang null wenn alle erlaubt sind und liste von int der erlaubten Stufen
+	 */
+	public AG(int id, String name, int mindestanzahl, int hoechstanzahl, ArrayList<Person> teilnehmer, ArrayList<Integer> jahrgang){
+		this(id,name,mindestanzahl,hoechstanzahl);
+		this.erlaubteJahrgang = jahrgang;
+		this.teilnehmer= teilnehmer;
+	}
+	
 	/**
 	 * Berechnet die beliebtheit der AG
 	 */
@@ -280,18 +310,6 @@ public class AG {
 	 */
 	public ArrayList<ArrayList<Person>> getBewertungen(){
 		return this.bewertungen;
-	}
-	/**
-	 * Klasse AG, Verwaltet die Daten einer AG
-	 * @param id ID der AG
-	 * @param name Name der AG
-	 * @param mindestanzahl Mindestanzahl, damit die AG stattfinden kann
-	 * @param hoechstanzahl Hoechste Anzahl an Personen, die die AG besuchen dürfen
-	 * @param teilnehmer falls personen von beginn an dabei sind
-	 */
-	public AG(int id, String name, int mindestanzahl, int hoechstanzahl, ArrayList<Person> teilnehmer){
-		this(id,name,mindestanzahl,hoechstanzahl);
-		this.teilnehmer= teilnehmer;
 	}
 	
 	/**
@@ -357,6 +375,60 @@ public class AG {
 	 */
 	public ArrayList<Person> getTeilnehmer(){
 		return this.teilnehmer;
+	}
+	
+	/**
+	 * Fügt einen erlaubten Jahrgang hinzu
+	 * @param stufe
+	 */
+	public void addJahrgang(int stufe){
+		if(erlaubteJahrgang==null){
+			erlaubteJahrgang = new ArrayList<Integer>();
+		}
+		if(!erlaubteJahrgang.contains(stufe)){
+			this.erlaubteJahrgang.add(stufe);
+		}
+	}
+	
+	/**
+	 * entfernt einen erlaubten Jahrgang
+	 * @param stufe
+	 */
+	public void removeJahrgang(int stufe) throws Exception{
+		if(erlaubteJahrgang!=null){
+			if(erlaubteJahrgang.contains(stufe)){
+				this.erlaubteJahrgang.remove(stufe);
+			}
+			if(erlaubteJahrgang.size()<1){
+				erlaubteJahrgang = null;
+			}
+		}
+		else{
+			throw new Exception("Es kann kein Jahrgang von einer nicht existenten Liste entfernt werden");
+		}
+	}
+	
+	/**
+	 * Returnt erlaubte Jahrgänge
+	 * @return Jahrgänge
+	 */
+	public ArrayList<Integer> getJahrgang() throws Exception{
+		return this.erlaubteJahrgang;
+	}
+	
+	/**
+	 * Checkt ob die Person in den erlaubten Jahrgängen ist oder nicht
+	 * @param Person
+	 * @return ist drinnen oder nicht
+	 */
+	public boolean istImJahrgang(Person p) throws Exception{
+		if(erlaubteJahrgang==null){
+			return true;
+		}
+		if(p.getJahrgang()==0){
+			throw new Exception("Die Person: " + p.toString() + " hat keinen Jahrgang zugewiesen und wurde daruf überprüft");
+		}
+		return erlaubteJahrgang.contains(p.getJahrgang());
 	}
 	
 	/**

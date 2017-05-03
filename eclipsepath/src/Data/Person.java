@@ -203,6 +203,7 @@
 package Data;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import Algorithmus.Verteilungsalgorithmus;
 
@@ -211,6 +212,10 @@ public class Person {
 	private ArrayList<Rating> ratings;
 	private AG besuchtAG;
 	private int id;
+	private int jahrgang;
+	private String klasse;
+	private Date geburtsdatum;
+	private String geschlecht;
 	private double[] varianz;
 
 	/**
@@ -233,7 +238,20 @@ public class Person {
 	public Person(int id, String name, ArrayList<Rating> ratings){
 		this(name,ratings);
 		this.id=id;
-		
+	}
+
+	/**
+	 * Objekt zum speichern einer Person
+	 * @param id Die eindeutige ID einer Person (wird von der DB zugewiesen)
+	 * @param name Der Name der Person
+	 * @param ratings Seine AGs bewertet, 0.Element die beste AG, 1.Element die zweit beste usw.
+	 */
+	public Person(int id, String name, ArrayList<Rating> ratings, int jahrgang, String klasse, Date geburtsdatum, String geschlecht){
+		this(id, name,ratings);
+		this.jahrgang = jahrgang;
+		this.klasse = klasse;
+		this.geburtsdatum = geburtsdatum;
+		this.geschlecht = geschlecht;
 	}
 	/**
 	 * Initialisiert das Attribut Varianz
@@ -264,11 +282,92 @@ public class Person {
 	}
 	
 	/**
+	 * Setzt die ID
+	 * @param id
+	 */
+	public void setId(int id){
+		this.id = id;
+	}
+	
+	/**
 	 * 
 	 * @return Name der Person
 	 */
 	public String getName(){
 		return this.name;
+	}
+	
+	/**
+	 * Ändert den Namen
+	 * @param name
+	 */
+	public void setName(String name){
+		this.name = name;
+	}
+	
+	/**
+	 * 
+	 * @return jahrgang
+	 */
+	public int getJahrgang(){
+		return this.jahrgang;
+	}
+	
+	/**
+	 * Setzt die Person in die Stufe
+	 * @param stufe
+	 */
+	public void setJahrgang(int stufe){
+		this.jahrgang = stufe;
+	}
+	
+	/**
+	 * 
+	 * @return klasse
+	 */
+	public String getKlasse(){
+		return this.klasse;
+	}
+	
+	/**
+	 * Setzt die Person in die Klasse z.B: a,b oder c
+	 * zusammen mit Jahrgang würde dann z.B: 5B entstehen
+	 * @param klasse
+	 */
+	public void setKlasse(String klasse){
+		this.klasse = klasse;
+	}
+	
+	/**
+	 * 
+	 * @return Geschlecht
+	 */
+	public String getGeschlecht(){
+		return this.geschlecht;
+	}
+	
+	/**
+	 * Setzt das Geschlecht
+	 * @param geschlecht
+	 */
+	public void setGeschlecht(String geschlecht){
+		this.geschlecht = geschlecht;
+	}
+	
+	/**
+	 * 
+	 * @return geburtsdatum
+	 */
+	public Date getGeburtsdatum(){
+		return this.geburtsdatum;
+	}
+	
+	/**
+	 * Setzt das Geburtsdatum
+	 * @param geburt
+	 */
+	public void setGeburtsdatum(Date geburt){
+		this.geburtsdatum = geburt;
 	}
 	
 	/**
