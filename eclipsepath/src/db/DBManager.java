@@ -249,12 +249,18 @@ public class DBManager {
 				+ "( `id` INT NOT NULL AUTO_INCREMENT ,"
 				+ " `name` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT 'Name des Schülers' ,"
 				+ " `ratings` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NULL COMMENT 'Wahl der AGs mit Wertung' ,"
+				+ " `curAG` INT NULL COMMENT 'Aktuelle AG' ,"
+				+ " `jahrgang` INT NULL COMMENT 'Jahrgangsstufe des Schülers' ,"
+				+ " `klasse` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NULL COMMENT 'Klasse des Schülers' ,"
+				+ " `geschlecht` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NULL COMMENT 'Geschlecht des Schülers' ,"
+				+ " `geburtsdatum` date NULL COMMENT 'Geburtsdatum des Schülers' ,"
 				+ " PRIMARY KEY (`id`)) ENGINE = InnoDB");
 		db.update("CREATE TABLE IF NOT EXISTS`" + database + "`.`AG" + profile + "` "
 				+ "( `id` INT NOT NULL AUTO_INCREMENT , "
 				+ "`name` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT 'Name der AG' , "
 				+ "`minAnzahl` INT NOT NULL COMMENT 'Mindest-Anzahl der Teilnehmer' , "
 				+ "`maxAnzahl` INT NOT NULL COMMENT 'Maximale-Anzahl der Teilnehmer' , "
+				+ "`erlaubteJahrgang` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT 'Erlaubte Jahrgänge' , "
 				+ "`member` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT 'Schüler die an dieser AG teilnehmen' , "
 				+ "PRIMARY KEY (`id`)) ENGINE = InnoDB");
 	}
