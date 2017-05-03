@@ -241,7 +241,7 @@ import db.DBManager;
 public class GUI extends JFrame{
 	// -> why the f*** do we need this?
 	private static final long serialVersionUID = 1L;
-	
+	 
 	// Main-Frame
 	private JTextField agField, pField;
 	
@@ -270,6 +270,14 @@ public class GUI extends JFrame{
 		setSize(500, 400);
 		setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+		showLogin();
+		connect("agent77326.tk", 3306, "fabi", "4ma9vJdZUH7J70Wh", "fabi");
+		updateMainFrame();
+	}
+	
+	protected void updateMainFrame(){
+		getContentPane().removeAll();
+		getContentPane().revalidate();
 		JMenuBar up = new JMenuBar();
 		JMenu men = new JMenu("File");
 		// Menu Nr. 1
@@ -402,6 +410,7 @@ public class GUI extends JFrame{
 		menItem.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				Test.generiereTestSet();
+				updateMainFrame();
 			}
 		});
 		menItem = new JMenuItem("Ausführen");
@@ -420,8 +429,20 @@ public class GUI extends JFrame{
 		men.add(menItem);
 		up.add(men);
 		setJMenuBar(up);
-		showLogin();
-		connect("agent77326.tk", 3306, "fabi", "4ma9vJdZUH7J70Wh", "fabi");
+		getContentPane().setLayout(new GridLayout(5, 2));
+		add(new JLabel("In der Datenbank gefunden"));
+		add(new JLabel(""));
+		add(new JLabel("AGs:"));
+		agField = new JTextField();
+		agField.setEditable(false);
+		agField.setText("" + Algorithmus.Verteilungsalgorithmus.ag.size());
+		add(agField);
+		add(new JLabel("Personen:"));
+		pField = new JTextField();
+		pField.setEditable(false);
+		pField.setText("" + Algorithmus.Verteilungsalgorithmus.personen.size());
+		add(pField);
+		setVisible(true);
 	}
 	
 	protected void showTable(String[] colName, String[][] data, String title){
@@ -642,20 +663,7 @@ public class GUI extends JFrame{
 		if(dbm.isConnected()){
 			dbm.initializeJavaObjectsFromDB();
 			loginDialog.dispose();
-			getContentPane().setLayout(new GridLayout(5, 2));
-			add(new JLabel("In der Datenbank gefunden"));
-			add(new JLabel(""));
-			add(new JLabel("AGs:"));
-			agField = new JTextField();
-			agField.setEditable(false);
-			agField.setText("" + Algorithmus.Verteilungsalgorithmus.ag.size());
-			add(agField);
-			add(new JLabel("Personen:"));
-			pField = new JTextField();
-			pField.setEditable(false);
-			pField.setText("" + Algorithmus.Verteilungsalgorithmus.personen.size());
-			add(pField);
-			setVisible(true);
+			updateMainFrame();
 		}
 		else{
 			showError("Es konnte keine Verbindung zur Datenbank hergestellt werden", "Verbindungsfehler");
