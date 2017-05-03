@@ -247,7 +247,7 @@ public class Test {
 		System.out.println("highest: "+highestScore);
 		System.out.println("Lowest: "+lowestScore);
 	}
-	private static void generiereTestSet(){
+	public static void generiereTestSet(){
 		Verteilungsalgorithmus.ag.clear();
 		Verteilungsalgorithmus.personen.clear();
 		String uuid = "";

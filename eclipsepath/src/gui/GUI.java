@@ -397,12 +397,19 @@ public class GUI extends JFrame{
 		
 		// Menu Nr. 3
 		men = new JMenu("Auswerten");
+		menItem = new JMenuItem("Generiere TestSet");
+		men.add(menItem);
+		menItem.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				Test.generiereTestSet();
+			}
+		});
 		menItem = new JMenuItem("Ausführen");
 		menItem.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				Algorithmus.Verteilungsalgorithmus.verteile(true);
 				try{
-				Test.writeFile(Algorithmus.Verteilungsalgorithmus.log);
+					Test.writeFile(Algorithmus.Verteilungsalgorithmus.log);
 				}catch(Exception ei){
 					ei.printStackTrace();
 				}
@@ -532,11 +539,13 @@ public class GUI extends JFrame{
 				agList[i][1] = "" + ag.getMindestanzahl();
 				agList[i][2] = "" + ag.getHoechstanzahl();
 				String tmp = "";
-				int n = 0;
-				for(int jahrg: ag.getJahrgang()){
-					tmp += jahrg + (n++<ag.getJahrgang().size() ? ", " : "");
+				if(ag.getJahrgang()!=null){
+					int n = 0;
+					for(int jahrg: ag.getJahrgang()){
+						tmp += jahrg + (n++<ag.getJahrgang().size() ? ", " : "");
+					}
 				}
-				agList[i][3] = "" + tmp;
+				agList[i][3] = tmp;
 				if(ag.getTeilnehmer()==null){
 					agList[i][4] = "";
 				}
