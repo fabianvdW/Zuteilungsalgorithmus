@@ -201,6 +201,7 @@
    limitations under the License.
 */
 package Data;
+
 import java.util.ArrayList;
 
 import Algorithmus.Verteilungsalgorithmus;
@@ -219,313 +220,359 @@ public class AG {
 
 	/**
 	 * Klasse AG, Verwaltet die Daten einer AG
-	 * @param name Name der AG
-	 * @param mindestanzahl Mindestanzahl, damit die AG stattfinden kann
-	 * @param hoechstanzahl Hoechste Anzahl an Personen, die die AG besuchen dürfen
+	 * 
+	 * @param name
+	 *            Name der AG
+	 * @param mindestanzahl
+	 *            Mindestanzahl, damit die AG stattfinden kann
+	 * @param hoechstanzahl
+	 *            Hoechste Anzahl an Personen, die die AG besuchen dürfen
 	 */
-	public AG(String name, int mindestanzahl, int hoechstanzahl){
-		this.name=name;
-		this.mindestanzahl=mindestanzahl;
-		teilnehmer= new ArrayList<Person>();
+	public AG(String name, int mindestanzahl, int hoechstanzahl) {
+		this.name = name;
+		this.mindestanzahl = mindestanzahl;
+		teilnehmer = new ArrayList<Person>();
 		bewertungen = new ArrayList<ArrayList<Person>>();
-		for(int i=0;i<7;i++){
+		for (int i = 0; i < 7; i++) {
 			bewertungen.add(new ArrayList<Person>());
 		}
-		this.hoechstanzahl=hoechstanzahl;
+		this.hoechstanzahl = hoechstanzahl;
 	}
-	
+	public void clearTeilnehmer(){
+		this.teilnehmer.clear();
+		this.kannStattFinden=false;
+		this.istVoll=false;
+	}
 	/**
 	 * Klasse AG, Verwaltet die Daten einer AG
-	 * @param id ID der AG
-	 * @param name Name der AG
-	 * @param mindestanzahl Mindestanzahl, damit die AG stattfinden kann
-	 * @param hoechstanzahl Hoechste Anzahl an Personen, die die AG besuchen dürfen
+	 * 
+	 * @param id
+	 *            ID der AG
+	 * @param name
+	 *            Name der AG
+	 * @param mindestanzahl
+	 *            Mindestanzahl, damit die AG stattfinden kann
+	 * @param hoechstanzahl
+	 *            Hoechste Anzahl an Personen, die die AG besuchen dürfen
 	 */
-	public AG(int id, String name, int mindestanzahl, int hoechstanzahl){
+	public AG(int id, String name, int mindestanzahl, int hoechstanzahl) {
 		this(name, mindestanzahl, hoechstanzahl);
-		this.id=id;
+		this.id = id;
 	}
-	
+
 	/**
 	 * Klasse AG, Verwaltet die Daten einer AG
-	 * @param id ID der AG
-	 * @param name Name der AG
-	 * @param mindestanzahl Mindestanzahl, damit die AG stattfinden kann
-	 * @param hoechstanzahl Hoechste Anzahl an Personen, die die AG besuchen dürfen
-	 * @param teilnehmer falls personen von beginn an dabei sind
+	 * 
+	 * @param id
+	 *            ID der AG
+	 * @param name
+	 *            Name der AG
+	 * @param mindestanzahl
+	 *            Mindestanzahl, damit die AG stattfinden kann
+	 * @param hoechstanzahl
+	 *            Hoechste Anzahl an Personen, die die AG besuchen dürfen
+	 * @param teilnehmer
+	 *            falls personen von beginn an dabei sind
 	 */
-	public AG(int id, String name, int mindestanzahl, int hoechstanzahl, ArrayList<Person> teilnehmer){
-		this(id,name,mindestanzahl,hoechstanzahl);
-		this.teilnehmer= teilnehmer;
+	public AG(int id, String name, int mindestanzahl, int hoechstanzahl, ArrayList<Person> teilnehmer) {
+		this(id, name, mindestanzahl, hoechstanzahl);
+		this.teilnehmer = teilnehmer;
 	}
-	
+
 	/**
 	 * Klasse AG, Verwaltet die Daten einer AG
-	 * @param id ID der AG
-	 * @param name Name der AG
-	 * @param mindestanzahl Mindestanzahl, damit die AG stattfinden kann
-	 * @param hoechstanzahl Hoechste Anzahl an Personen, die die AG besuchen dürfen
-	 * @param teilnehmer falls personen von beginn an dabei sind
-	 * @param jahrgang null wenn alle erlaubt sind und liste von int der erlaubten Stufen
+	 * 
+	 * @param id
+	 *            ID der AG
+	 * @param name
+	 *            Name der AG
+	 * @param mindestanzahl
+	 *            Mindestanzahl, damit die AG stattfinden kann
+	 * @param hoechstanzahl
+	 *            Hoechste Anzahl an Personen, die die AG besuchen dürfen
+	 * @param teilnehmer
+	 *            falls personen von beginn an dabei sind
+	 * @param jahrgang
+	 *            null wenn alle erlaubt sind und liste von int der erlaubten
+	 *            Stufen
 	 */
-	public AG(int id, String name, int mindestanzahl, int hoechstanzahl, ArrayList<Person> teilnehmer, ArrayList<Integer> jahrgang){
-		this(id,name,mindestanzahl,hoechstanzahl);
+	public AG(int id, String name, int mindestanzahl, int hoechstanzahl, ArrayList<Person> teilnehmer,
+			ArrayList<Integer> jahrgang) {
+		this(id, name, mindestanzahl, hoechstanzahl);
 		this.erlaubteJahrgang = jahrgang;
-		this.teilnehmer= teilnehmer;
+		this.teilnehmer = teilnehmer;
 	}
-	
+
 	/**
 	 * Berechnet die beliebtheit der AG
 	 */
-	public void berechneBeliebtheit(){
-		beliebtheit=0;
-		for(Person p: Verteilungsalgorithmus.personen){
-			Rating a=null;
-			ArrayList<Rating> ratings= p.getRatingAL();
-			for(int k=0;k<ratings.size();k++){
-				Rating getK= ratings.get(k);
-				if(getK.getAG().equals(this)){
-					a=getK;
+	public void berechneBeliebtheit() {
+		beliebtheit = 0;
+		for (Person p : Verteilungsalgorithmus.personen) {
+			Rating a = null;
+			ArrayList<Rating> ratings = p.getRatingAL();
+			for (int k = 0; k < ratings.size(); k++) {
+				Rating getK = ratings.get(k);
+				if (getK.getAG().equals(this)) {
+					a = getK;
 				}
 			}
-			beliebtheit+=a.getRatingValue();
+			beliebtheit += a.getRatingValue();
 		}
 	}
+
 	/**
 	 * Intialisiert die Bewertungen einer AG.
 	 */
-	public void initBewertungen(){
-		for(Person p: Verteilungsalgorithmus.personen){
-			ArrayList<Rating> ratings= p.getRatingAL();
-			for(Rating r: ratings){
-				if(r.getAG().equals(this)){
-					bewertungen.get(3-r.getRatingValue()).add(p);
+	public void initBewertungen() {
+		for (Person p : Verteilungsalgorithmus.personen) {
+			ArrayList<Rating> ratings = p.getRatingAL();
+			for (Rating r : ratings) {
+				if (r.getAG().equals(this)) {
+					bewertungen.get(3 - r.getRatingValue()).add(p);
 				}
 			}
 		}
 	}
+
 	/**
 	 * Rückgabe der bewertungen
+	 * 
 	 * @return die Arraylist der Arraylist an Personen
 	 */
-	public ArrayList<ArrayList<Person>> getBewertungen(){
+	public ArrayList<ArrayList<Person>> getBewertungen() {
 		return this.bewertungen;
 	}
-	
+
 	/**
 	 * Gibt die ID der AG zurück
+	 * 
 	 * @return ID
 	 */
-	public int getId(){
+	public int getId() {
 		return id;
 	}
-	
+
 	/**
-	 * Ein Teilnehmer wird einer AG zugewiesen. Dabei wird auch die Referenz in Person geändert, welche AG der Teilnehmer besucht.
-	 * @param perso Die Person die die AG besuchen soll
-	 * @throws Exception Throws Exception wenn die AG bereits voll ist, oder wenn die Person bereits in der AG ist.
+	 * Ein Teilnehmer wird einer AG zugewiesen. Dabei wird auch die Referenz in
+	 * Person geändert, welche AG der Teilnehmer besucht.
+	 * 
+	 * @param perso
+	 *            Die Person die die AG besuchen soll
+	 * @throws Exception
+	 *             Throws Exception wenn die AG bereits voll ist, oder wenn die
+	 *             Person bereits in der AG ist.
 	 * 
 	 */
-	public void addTeilnehmer(Person perso) throws Exception{
-		if(!istVoll){
-			if(!teilnehmer.contains(perso)){
-				if(perso.getBesuchteAG()!=null){
+	public void addTeilnehmer(Person perso) throws Exception {
+		if (!istVoll) {
+			if (!teilnehmer.contains(perso)) {
+				if (perso.getBesuchteAG() != null) {
 					perso.getBesuchteAG().removeTeilnehmer(perso);
 				}
 				teilnehmer.add(perso);
 				perso.teileAGZu(this);
-			}else{
+			} else {
 				throw new Exception("Diese Person ist bereits in der AG!");
 			}
-		}else{
+		} else {
 			throw new Exception("Diese Ag ist bereits voll!");
 		}
-		if(this.teilnehmer.size()==hoechstanzahl){
-			istVoll=true;
+		if (this.teilnehmer.size() == hoechstanzahl) {
+			istVoll = true;
 		}
-		
-		if(this.teilnehmer.size()>=mindestanzahl){
-			kannStattFinden=true;
+
+		if (this.teilnehmer.size() >= mindestanzahl) {
+			kannStattFinden = true;
 		}
 	}
-	
+
 	/**
 	 * Removet ein Teilnehmer von einer AG.
-	 * @param perso Die Person, die die AG nicht mehr besuchen soll
-	 * @throws Exception Wenn die Person, die removt werden soll nicht die AG besucht.
+	 * 
+	 * @param perso
+	 *            Die Person, die die AG nicht mehr besuchen soll
+	 * @throws Exception
+	 *             Wenn die Person, die removt werden soll nicht die AG besucht.
 	 */
-	public void removeTeilnehmer(Person perso) throws Exception{
-		if(teilnehmer.contains(perso)){
+	public void removeTeilnehmer(Person perso) throws Exception {
+		if (teilnehmer.contains(perso)) {
 			teilnehmer.remove(perso);
 			perso.teileAGZu(null);
-			if(teilnehmer.size()<hoechstanzahl){
-				istVoll=false;
+			if (teilnehmer.size() < hoechstanzahl) {
+				istVoll = false;
 			}
-			if(teilnehmer.size()<mindestanzahl){
-				kannStattFinden=false;
+			if (teilnehmer.size() < mindestanzahl) {
+				kannStattFinden = false;
 			}
-		}else{
+		} else {
 			throw new Exception("Dieser Teilnehmer ist nicht in der AG!");
 		}
 	}
-	
+
 	/**
 	 * Returnt Teilnehmer
+	 * 
 	 * @return Teilnehmer
 	 */
-	public ArrayList<Person> getTeilnehmer(){
+	public ArrayList<Person> getTeilnehmer() {
 		return this.teilnehmer;
 	}
-	
+
 	/**
 	 * Fügt einen erlaubten Jahrgang hinzu
+	 * 
 	 * @param stufe
 	 */
-	public void addJahrgang(int stufe){
-		if(erlaubteJahrgang==null){
+	public void addJahrgang(int stufe) {
+		if (erlaubteJahrgang == null) {
 			erlaubteJahrgang = new ArrayList<Integer>();
 		}
-		if(!erlaubteJahrgang.contains(stufe)){
+		if (!erlaubteJahrgang.contains(stufe)) {
 			this.erlaubteJahrgang.add(stufe);
 		}
 	}
-	
+
 	/**
 	 * entfernt einen erlaubten Jahrgang
+	 * 
 	 * @param stufe
 	 */
-	public void removeJahrgang(int stufe) throws Exception{
-		if(erlaubteJahrgang!=null){
-			if(erlaubteJahrgang.contains(stufe)){
+	public void removeJahrgang(int stufe) throws Exception {
+		if (erlaubteJahrgang != null) {
+			if (erlaubteJahrgang.contains(stufe)) {
 				this.erlaubteJahrgang.remove(stufe);
 			}
-			if(erlaubteJahrgang.size()<1){
+			if (erlaubteJahrgang.size() < 1) {
 				erlaubteJahrgang = null;
 			}
-		}
-		else{
+		} else {
 			throw new Exception("Es kann kein Jahrgang von einer nicht existenten Liste entfernt werden");
 		}
 	}
-	
+
 	/**
 	 * Returnt erlaubte Jahrgänge
+	 * 
 	 * @return Jahrgänge
 	 */
-	public ArrayList<Integer> getJahrgang() throws Exception{
+	public ArrayList<Integer> getJahrgang()  {
 		return this.erlaubteJahrgang;
 	}
-	
+
 	/**
 	 * Checkt ob die Person in den erlaubten Jahrgängen ist oder nicht
+	 * 
 	 * @param Person
 	 * @return ist drinnen oder nicht
 	 */
-	public boolean istImJahrgang(Person p) throws Exception{
-		if(erlaubteJahrgang==null){
+	public boolean istImJahrgang(Person p) throws Exception {
+		if (erlaubteJahrgang == null) {
 			return true;
 		}
+
 		if(p.getJahrgang()==0){
 			throw new Exception("Die Person: " + p.toString() + " hat keinen Jahrgang zugewiesen und wurde darauf überprüft");
 		}
 		return erlaubteJahrgang.contains(p.getJahrgang());
 	}
-	
+
 	/**
 	 * Return Name
+	 * 
 	 * @return Name
 	 */
-	public String getName(){
+	public String getName() {
 		return this.name;
 	}
-	
+
 	/**
 	 * Return Mindestanzahl an Teilnehmern, damit die AG stattfinden kann.
+	 * 
 	 * @return Mindestanzahl an Teilnehmern
 	 */
-	public int getMindestanzahl(){
+	public int getMindestanzahl() {
 		return this.mindestanzahl;
 	}
-	
+
 	/**
 	 * Return hoechste Anzahl an Teilnehmern
+	 * 
 	 * @return Höchstanzahl
 	 */
-	public int getHoechstanzahl(){
+	public int getHoechstanzahl() {
 		return this.hoechstanzahl;
 	}
-	
+
 	/**
-	 *Return beliebtheit (Quotient der bewertungen aller personen in dieser AG)
-	 *@return BeliebtheitsQuotient
+	 * Return beliebtheit (Quotient der bewertungen aller personen in dieser AG)
+	 * 
+	 * @return BeliebtheitsQuotient
 	 */
-	public int getBeliebtheit(){
+	public int getBeliebtheit() {
 		return this.beliebtheit;
 	}
-	
+
 	/**
 	 * 
 	 */
-	public void setBeliebtheit(int b){
+	public void setBeliebtheit(int b) {
 		this.beliebtheit = b;
 	}
-	
+
 	/**
 	 * 
 	 * @return Return ob die AG bereits voll ist.
 	 */
-	public boolean istVoll(){
+	public boolean istVoll() {
 		return this.istVoll;
 	}
-	
+
 	/**
 	 * 
 	 * @return Ob die AG statt finden kann.
 	 */
-	public boolean kannStattFinden(){
+	public boolean kannStattFinden() {
 		return this.kannStattFinden;
-		
+
 	}
-	
+
 	/**
-	 * Beendet die Eintragung. Wenn die AG nicht stattfinden kann, werden alle Teilnehmer removet.
+	 * Beendet die Eintragung. Wenn die AG nicht stattfinden kann, werden alle
+	 * Teilnehmer removet.
+	 * 
 	 * @return alle Teilnehmer die von der AG removt werden.
 	 */
-	public ArrayList<Person> finishEintragung(){
-		ArrayList<Person> austragung= new ArrayList<Person>();
-		if(!kannStattFinden){
-			for(Person p: teilnehmer){
+	public ArrayList<Person> finishEintragung() {
+		ArrayList<Person> austragung = new ArrayList<Person>();
+		if (!kannStattFinden) {
+			for (Person p : teilnehmer) {
 				p.teileAGZu(null);
 				austragung.add(p);
-				
+
 			}
 			teilnehmer.clear();
 		}
 		return austragung;
 	}
-	
+
 	/**
 	 * Gibt das Objekt mit allen Attributen als String zur�ck
+	 * 
 	 * @return Objekt als String
 	 */
-	public String toString(){
+	public String toString() {
 		Object[] p = null;
-		p =  teilnehmer.toArray();
-		String ret = "{Class:AG, "
-				+ "id:" + id + ", "
-				+"Bewertung: "+beliebtheit+","
-				+ "name:" + name + ", "
-				+ "min:" + mindestanzahl + ", "
-				+ "max:" + hoechstanzahl + ", "
-				+ "istVoll:" + istVoll + ", "
-				+ "findetStatt:" + kannStattFinden + ", "
-				+ "Teilnehmer:[";
-		for(Object a: p){
-			Person b=null;
-			if(a instanceof Person){
-				b=(Person) a;
+		p = teilnehmer.toArray();
+		String ret = "{Class:AG, " + "id:" + id + ", " + "Bewertung: " + beliebtheit + "," + "name:" + name + ", "
+				+ "min:" + mindestanzahl + ", " + "max:" + hoechstanzahl + ", " + "istVoll:" + istVoll + ", "
+				+ "findetStatt:" + kannStattFinden + ", " + "Teilnehmer:[";
+		for (Object a : p) {
+			Person b = null;
+			if (a instanceof Person) {
+				b = (Person) a;
 			}
-			ret += b.getName()+", ";
+			ret += b.getName() + ", ";
 		}
 		return ret + "]}";
 	}
