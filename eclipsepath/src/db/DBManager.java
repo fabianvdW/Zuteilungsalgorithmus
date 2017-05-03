@@ -202,6 +202,7 @@
 */
 package db;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -332,6 +333,8 @@ public class DBManager {
 	 */
 	public Person getPerson(int id){
 		String[][] p = db.query("SELECT * FROM `Personen" + profile + "` WHERE `id`='" + id + "'");
+		
+		// get Rating
 		int pRating = -1;
 		for(int i = 0; i < p[1].length; i++){
 			if(p[0][i].equals("ratings")){
@@ -340,7 +343,6 @@ public class DBManager {
 			}
 		}
 		ArrayList<Rating> rating = new ArrayList<Rating>();
-		
 		for(String n: p[1][pRating].split(",")){
 			if(n==null || n.equals("")){
 				continue;
@@ -363,26 +365,91 @@ public class DBManager {
 			}
 			
 		}
-		int pName = -1;
+		
+		// Name
+		String name = null;
 		for(int i = 0; i < p[1].length; i++){
 			if(p[0][i].equals("name")){
-				pName = i;
+				name = p[1][i];
 				break;
 			}
 		}
+		
+		// Aktuelle AG
+		AG curAG = null;
+		int pCurAG = -1;
+		for(int i = 0; i < p[1].length; i++){
+			if(p[0][i].equals("curAG")){
+				if(!p[1][i].equals("") && p[1][i] != null){
+					pCurAG = Integer.parseInt(p[1][i]);
+				}
+				break;
+			}
+		}
+		if(pCurAG!=-1){
+			for(AG a: Algorithmus.Verteilungsalgorithmus.ag){
+				if(a.getId()==pCurAG){
+					curAG = a;
+					break;
+				}
+			}
+		}
+		
+		// Jahrgang
+		int jahrgang = 0;
+		for(int i = 0; i < p[1].length; i++){
+			if(p[0][i].equals("jahrgang")){
+				if(!p[1][i].equals("") && p[1][i] != null){
+					jahrgang = Integer.parseInt(p[1][i]);
+				}
+				break;
+			}
+		}
+		
+		// Klasse
+		String klasse = null;
+		for(int i = 0; i < p[1].length; i++){
+			if(p[0][i].equals("klasse")){
+				klasse = p[1][i];
+				break;
+			}
+		}
+		
+		// Geburtsdatum
+		Date geburtsdatum = null;
+		for(int i = 0; i < p[1].length; i++){
+			if(p[0][i].equals("geburtsdatum")){
+				if(!p[1][i].equals("") && p[1][i] != null){
+					geburtsdatum = Date.valueOf(p[1][i]);
+				}
+				break;
+			}
+		}
+		
+		// Geschlecht
+		String geschlecht = null;
+		for(int i = 0; i < p[1].length; i++){
+			if(p[0][i].equals("geschlecht")){
+				if(!p[1][i].equals("") && p[1][i] != null){
+					geschlecht = p[1][i];
+				}
+				break;
+			}
+		}
+		
 		int score=0;
 		for(int i=0;i<rating.size();i++){
 			score+=rating.get(i).getRatingValue();
 		}
 		try{
 			if(score!=0){
-				throw new Exception("Der Schüler "+p[1][pName]+" hat kein ingesamtes Rating von 0, sondern " +score+".");
+				throw new Exception("Der Schüler " + name + " hat kein ingesamtes Rating von 0, sondern " + score + ".");
 			}
 		}catch(Exception e){
 			Logger lgr = Logger.getLogger(DB.class.getName());
-			lgr.log(Level.WARNING, e.getMessage(),e);
+			lgr.log(Level.WARNING, e.getMessage(), e);
 		}
-		return new Person(id, p[1][pName], rating);
+		return new Person(id, name, rating, curAG, jahrgang, klasse, geburtsdatum, geschlecht);
 	}
 	
 	/**
@@ -398,8 +465,14 @@ public class DBManager {
 			tmp += n.getAG().getId() + (i++ < t.length ? "," : "");
 		}
 		db.query("INSERT INTO `Personen" + profile + "` "
-				+ "(`id`, `name`, `ratings`) "
-				+ "VALUES (NULL, '" + p.getName() + "', '" + tmp + "')");
+				+ "(`id`, `name`, `ratings`, `curAG`, `jahrgang`, `klasse`, `geschlecht`, `geburtsdatum`) "
+				+ "VALUES (" + p.getId() + ", "
+				+ "'" + p.getName() + "', "
+				+ "'" + tmp + "', "
+				+ "'" + p.getJahrgang() + "', "
+				+ "'" + p.getKlasse() + "', "
+				+ "'" + p.getGeschlecht() + "', "
+				+ "'" + p.getGeburtsdatum().toString() + "')");
 	}
 	
 	/**

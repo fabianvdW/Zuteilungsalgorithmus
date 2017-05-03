@@ -245,9 +245,15 @@ public class Person {
 	 * @param id Die eindeutige ID einer Person (wird von der DB zugewiesen)
 	 * @param name Der Name der Person
 	 * @param ratings Seine AGs bewertet, 0.Element die beste AG, 1.Element die zweit beste usw.
+	 * @param curAG Aktuelle AG
+	 * @param jahrgang Jahrgang der Person
+	 * @param klasse Klasse der Person
+	 * @param geburtsdatum Geburtsdatum der Person
+	 * @param geschlecht Geschlecht der Person
 	 */
-	public Person(int id, String name, ArrayList<Rating> ratings, int jahrgang, String klasse, Date geburtsdatum, String geschlecht){
+	public Person(int id, String name, ArrayList<Rating> ratings, AG curAG, int jahrgang, String klasse, Date geburtsdatum, String geschlecht){
 		this(id, name,ratings);
+		this.besuchtAG = curAG;
 		this.jahrgang = jahrgang;
 		this.klasse = klasse;
 		this.geburtsdatum = geburtsdatum;
