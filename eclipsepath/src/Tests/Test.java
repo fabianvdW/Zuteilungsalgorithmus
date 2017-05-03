@@ -201,6 +201,7 @@
    limitations under the License.
 */
 package Tests;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -211,164 +212,173 @@ import Algorithmus.Verteilungsalgorithmus;
 import Data.AG;
 import Data.Person;
 import Data.Rating;
+
 public class Test {
 	/**
-	 *  Erstellt TestSets für den Verteilungsalgorithmus und testet diesen.
-	 * @param anzTests Die Anzahl an TestsSets, die erstellt werden sollen
+	 * Erstellt TestSets für den Verteilungsalgorithmus und testet diesen.
+	 * 
+	 * @param anzTests
+	 *            Die Anzahl an TestsSets, die erstellt werden sollen
 	 */
 	public static void laufeTestsAufVerteilung(int anzTests) {
-		long ms=0;
-		ArrayList<AG> highest= new ArrayList<AG>();
-		ArrayList<Person> highest2= new ArrayList<Person>();
-		ArrayList<String> highestLog= new ArrayList<String>();
-		double highestscore=-3;
-		double score=0;
+		long ms = 0;
+		ArrayList<AG> highest = new ArrayList<AG>();
+		ArrayList<Person> highest2 = new ArrayList<Person>();
+		ArrayList<String> highestLog = new ArrayList<String>();
+		double highestscore = -3;
+		double score = 0;
 		double lowestScore = 1000.0;
-		for(int i=1;i<=anzTests;i++){
-			if(i%10000==0){
-			System.out.println(i);
+		for (int i = 1; i <= anzTests; i++) {
+			if (i % 10000 == 0) {
+				System.out.println(i);
 			}
 			Verteilungsalgorithmus.ag.clear();
 			Verteilungsalgorithmus.personen.clear();
-			String uuid= "";
-			//int random=(int)(Math.random()*50+15);
-			int random=50;
-			uuid=UUID.randomUUID().toString();
-			int agTeilnehmer=0;
-			while(agTeilnehmer<random+0.1*random){	
-				
-				int hoechstanzahl= (int) (Math.random()*(0.2*(double)random)+1);
-				hoechstanzahl= (hoechstanzahl==0||hoechstanzahl==1? 2: hoechstanzahl);
-				int mindestanzahl=0;
-				do{
-					
-					mindestanzahl=(int) (Math.random()*0.6*(double) hoechstanzahl);
-				}while(mindestanzahl==0);
-				AG ag = new AG(agTeilnehmer,uuid,mindestanzahl,hoechstanzahl);
-				uuid=new String("");
-				uuid=UUID.randomUUID().toString();
+			String uuid = "";
+			// int random=(int)(Math.random()*50+15);
+			int random = 50;
+			uuid = UUID.randomUUID().toString();
+			int agTeilnehmer = 0;
+			while (agTeilnehmer < random + 0.1 * random) {
+
+				int hoechstanzahl = (int) (Math.random() * (0.2 * (double) random) + 1);
+				hoechstanzahl = (hoechstanzahl == 0 || hoechstanzahl == 1 ? 2 : hoechstanzahl);
+				int mindestanzahl = 0;
+				do {
+
+					mindestanzahl = (int) (Math.random() * 0.6 * (double) hoechstanzahl);
+				} while (mindestanzahl == 0);
+				AG ag = new AG(agTeilnehmer, uuid, mindestanzahl, hoechstanzahl);
+				uuid = new String("");
+				uuid = UUID.randomUUID().toString();
 				Verteilungsalgorithmus.ag.add(ag);
-				agTeilnehmer+=hoechstanzahl;
+				agTeilnehmer += hoechstanzahl;
 			}
-			for(int k=0;k<random;k++){
+			for (int k = 0; k < random; k++) {
 				ArrayList<Rating> ratings = new ArrayList<Rating>();
-				int sum=0;
-				for(int j=0;j<Verteilungsalgorithmus.ag.size();j++){
-					if(j==0){
-						int rand= (int) (Math.random()*7-3);
-						
-						sum+=rand;
+				int sum = 0;
+				for (int j = 0; j < Verteilungsalgorithmus.ag.size(); j++) {
+					if (j == 0) {
+						int rand = (int) (Math.random() * 7 - 3);
+
+						sum += rand;
 						Rating r = new Rating(Verteilungsalgorithmus.ag.get(j), rand);
 						ratings.add(r);
-					}else{
-						int rand=0;
-						if(j!=Verteilungsalgorithmus.ag.size()-1){
-							if(sum>0){
-								rand= (int) (Math.random()*3-3);
-							}else{
-								rand=(int) (Math.random()*4);
-							}						}
-						else{
-								rand=-sum;
-							
+					} else {
+						int rand = 0;
+						if (j != Verteilungsalgorithmus.ag.size() - 1) {
+							if (sum > 0) {
+								rand = (int) (Math.random() * 3 - 3);
+							} else {
+								rand = (int) (Math.random() * 4);
+							}
+						} else {
+							rand = -sum;
+
 						}
-						sum+=rand;
-						Rating r= new Rating(Verteilungsalgorithmus.ag.get(j),rand);
+						sum += rand;
+						Rating r = new Rating(Verteilungsalgorithmus.ag.get(j), rand);
 						ratings.add(r);
 					}
 				}
-				Person p= new Person(k, uuid,ratings );
+				Person p = new Person(k, uuid, ratings);
 				Verteilungsalgorithmus.personen.add(p);
-				uuid=new String("");
-				uuid=UUID.randomUUID().toString();
-				
+				uuid = new String("");
+				uuid = UUID.randomUUID().toString();
+
 			}
-			long pos1= System.currentTimeMillis();
+			long pos1 = System.currentTimeMillis();
 			Verteilungsalgorithmus.verteile(true);
-			long pos2= System.currentTimeMillis();
-			ms+=pos2-pos1;
-			//Verteilungsalgorithmus.statusCheck();
-			for(AG ags: Verteilungsalgorithmus.ag){
+			long pos2 = System.currentTimeMillis();
+			ms += pos2 - pos1;
+			// Verteilungsalgorithmus.statusCheck();
+			for (AG ags : Verteilungsalgorithmus.ag) {
 				ags.finishEintragung();
 			}
-			if(!Verteilungsalgorithmus.allAllocated()){
+			if (!Verteilungsalgorithmus.allAllocated()) {
 				Verteilungsalgorithmus.macheAusgabe();
 				System.out.println("LUL");
 				System.exit(0);
 			}
-			try{
-				if(lowestScore > Verteilungsalgorithmus.checkScore()){
-						lowestScore = Verteilungsalgorithmus.checkScore();
+			try {
+				if (lowestScore > Verteilungsalgorithmus.checkScore()) {
+					lowestScore = Verteilungsalgorithmus.checkScore();
 				}
-				if(Verteilungsalgorithmus.checkScore()>highestscore){
-					highestscore=Verteilungsalgorithmus.checkScore();
+				if (Verteilungsalgorithmus.checkScore() > highestscore) {
+					highestscore = Verteilungsalgorithmus.checkScore();
 					highest.clear();
 					highest2.clear();
-					for(AG ags:Verteilungsalgorithmus.ag){
+					for (AG ags : Verteilungsalgorithmus.ag) {
 						highest.add(ags);
 					}
-					for(Person p: Verteilungsalgorithmus.personen){
+					for (Person p : Verteilungsalgorithmus.personen) {
 						highest2.add(p);
 					}
 					highestLog.clear();
-					for(String s: Verteilungsalgorithmus.log){
+					for (String s : Verteilungsalgorithmus.log) {
 						highestLog.add(s);
 					}
 				}
-				
-			}catch(Exception e){
+
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			try{
-				score+=Verteilungsalgorithmus.checkScore();
-				
-				//if(Verteilungsalgorithmus.checkScore()==0){
-					//Verteilungsalgorithmus.macheAusgabe();
-					//int counter=0;
-					//for(Person p: Verteilungsalgorithmus.personen){
-					//	int max=-4;
-					//	for(Rating r: p.getRatingAL()){
-					//		if(r.getRatingValue()>max){
-					///			max=r.getRatingValue();
-					//		}
-					//	}
-					//	if(!p.getBesuchteAG().getBewertungen().get(3-max).contains(p)){
-					//		counter++;
-					//	}
-					//}
-				//	System.out.println("Leute die nicht beste AG haben: "+counter);
-					//System.exit(0);
-				//}
-			}catch(Exception e){
+			try {
+				score += Verteilungsalgorithmus.checkScore();
+
+				// if(Verteilungsalgorithmus.checkScore()==0){
+				// Verteilungsalgorithmus.macheAusgabe();
+				// int counter=0;
+				// for(Person p: Verteilungsalgorithmus.personen){
+				// int max=-4;
+				// for(Rating r: p.getRatingAL()){
+				// if(r.getRatingValue()>max){
+				/// max=r.getRatingValue();
+				// }
+				// }
+				// if(!p.getBesuchteAG().getBewertungen().get(3-max).contains(p)){
+				// counter++;
+				// }
+				// }
+				// System.out.println("Leute die nicht beste AG haben:
+				// "+counter);
+				// System.exit(0);
+				// }
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
-			if(Verteilungsalgorithmus.checkScore()>=10){
+
+			if (Verteilungsalgorithmus.checkScore() >= 10) {
 				Verteilungsalgorithmus.macheAusgabe();
 			}
 		}
-		System.out.println("Nach "+anzTests+" Versuchen erhält der Algorithmus eine durschnittliche Punktzahl von " +score/anzTests);
-		System.out.println("Nach "+anzTests+" Versuchen erhält der Algorithmus eine Bestpunktzahl von " +lowestScore);
-		System.out.println("Nach "+anzTests+" Versuchen erhält der Algorithmus eine Schlechteste Punktzahl von " +highestscore);
-		System.out.println("Insgesamte Laufzeit: "+ms+"ms \n Relative Laufzeit: "+(double)ms/(double)anzTests+"ms");
-		try{
-		writeFile(highestLog);
-		}catch(Exception e){
+		System.out.println("Nach " + anzTests + " Versuchen erhält der Algorithmus eine durschnittliche Punktzahl von "
+				+ score / anzTests);
+		System.out.println(
+				"Nach " + anzTests + " Versuchen erhält der Algorithmus eine Bestpunktzahl von " + lowestScore);
+		System.out.println("Nach " + anzTests + " Versuchen erhält der Algorithmus eine Schlechteste Punktzahl von "
+				+ highestscore);
+		System.out.println(
+				"Insgesamte Laufzeit: " + ms + "ms \n Relative Laufzeit: " + (double) ms / (double) anzTests + "ms");
+		try {
+			writeFile(highestLog);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		Verteilungsalgorithmus.ag=highest;
-		Verteilungsalgorithmus.personen=highest2;
-		//Verteilungsalgorithmus.macheAusgabe();
+		Verteilungsalgorithmus.ag = highest;
+		Verteilungsalgorithmus.personen = highest2;
+		// Verteilungsalgorithmus.macheAusgabe();
 	}
-	public static void writeFile(ArrayList<String> toWrite) throws IOException{
+
+	public static void writeFile(ArrayList<String> toWrite) throws IOException {
 		FileWriter fw = new FileWriter("log.txt");
-	    BufferedWriter bw = new BufferedWriter(fw);
-	    for(String s: toWrite){
-	    	s+=System.lineSeparator();
-	    	bw.write(s);
-	    	bw.newLine();
-	    }
-	    bw.close();
-	    fw.close();
+		BufferedWriter bw = new BufferedWriter(fw);
+		for (String s : toWrite) {
+			s += System.lineSeparator();
+			bw.write(s);
+			bw.newLine();
+		}
+		bw.close();
+		fw.close();
 	}
 }
