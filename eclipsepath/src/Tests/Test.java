@@ -214,6 +214,96 @@ import Data.Person;
 import Data.Rating;
 
 public class Test {
+	public static void lasseGleichesSetLaufen(int anzTests){
+		generiereTestSet();
+		double lowestScore=1000;
+		double highestScore=-1;
+		double insScore=0;
+		for(int i=0;i<anzTests;i++){
+			//System.out.println(i);
+			for(Person p: Verteilungsalgorithmus.personen){
+				p.teileAGZu(null);
+			}
+			for(AG ag: Verteilungsalgorithmus.ag){
+				ag.clearTeilnehmer();
+				ag.finishEintragung();
+				ag.setBeliebtheit(0);
+				for(int k=0;k<7;k++){
+					ag.getBewertungen().get(k).clear();
+				}
+			}
+			//System.out.println(Verteilungsalgorithmus.statusCheck());
+			Verteilungsalgorithmus.verteile(false);
+			double score=Verteilungsalgorithmus.checkScore();
+			insScore+=score;
+			if(score<lowestScore){
+				lowestScore=score;
+			}
+			if(score>highestScore){
+				highestScore=score;
+			}
+		}
+		System.out.println("Durschnitt: "+insScore/anzTests);
+		System.out.println("highest: "+highestScore);
+		System.out.println("Lowest: "+lowestScore);
+	}
+	private static void generiereTestSet(){
+		Verteilungsalgorithmus.ag.clear();
+		Verteilungsalgorithmus.personen.clear();
+		String uuid = "";
+		// int random=(int)(Math.random()*50+15);
+		int random = 50;
+		uuid = UUID.randomUUID().toString();
+		int agTeilnehmer = 0;
+		while (agTeilnehmer < random + 0.1 * random) {
+
+			int hoechstanzahl = (int) (Math.random() * (0.2 * (double) random) + 1);
+			hoechstanzahl = (hoechstanzahl == 0 || hoechstanzahl == 1 ? 2 : hoechstanzahl);
+			int mindestanzahl = 0;
+			do {
+
+				mindestanzahl = (int) (Math.random() * 0.6 * (double) hoechstanzahl);
+			} while (mindestanzahl == 0);
+			AG ag = new AG(agTeilnehmer, uuid, mindestanzahl, hoechstanzahl);
+			uuid = new String("");
+			uuid = UUID.randomUUID().toString();
+			Verteilungsalgorithmus.ag.add(ag);
+			agTeilnehmer += hoechstanzahl;
+		}
+		for (int k = 0; k < random; k++) {
+			ArrayList<Rating> ratings = new ArrayList<Rating>();
+			int sum = 0;
+			for (int j = 0; j < Verteilungsalgorithmus.ag.size(); j++) {
+				if (j == 0) {
+					int rand = (int) (Math.random() * 7 - 3);
+
+					sum += rand;
+					Rating r = new Rating(Verteilungsalgorithmus.ag.get(j), rand);
+					ratings.add(r);
+				} else {
+					int rand = 0;
+					if (j != Verteilungsalgorithmus.ag.size() - 1) {
+						if (sum > 0) {
+							rand = (int) (Math.random() * 3 - 3);
+						} else {
+							rand = (int) (Math.random() * 4);
+						}
+					} else {
+						rand = -sum;
+
+					}
+					sum += rand;
+					Rating r = new Rating(Verteilungsalgorithmus.ag.get(j), rand);
+					ratings.add(r);
+				}
+			}
+			Person p = new Person(k, uuid, ratings);
+			Verteilungsalgorithmus.personen.add(p);
+			uuid = new String("");
+			uuid = UUID.randomUUID().toString();
+
+		}
+	}
 	/**
 	 * Erstellt TestSets für den Verteilungsalgorithmus und testet diesen.
 	 * 
@@ -232,61 +322,7 @@ public class Test {
 			if (i % 10000 == 0) {
 				System.out.println(i);
 			}
-			Verteilungsalgorithmus.ag.clear();
-			Verteilungsalgorithmus.personen.clear();
-			String uuid = "";
-			// int random=(int)(Math.random()*50+15);
-			int random = 50;
-			uuid = UUID.randomUUID().toString();
-			int agTeilnehmer = 0;
-			while (agTeilnehmer < random + 0.1 * random) {
-
-				int hoechstanzahl = (int) (Math.random() * (0.2 * (double) random) + 1);
-				hoechstanzahl = (hoechstanzahl == 0 || hoechstanzahl == 1 ? 2 : hoechstanzahl);
-				int mindestanzahl = 0;
-				do {
-
-					mindestanzahl = (int) (Math.random() * 0.6 * (double) hoechstanzahl);
-				} while (mindestanzahl == 0);
-				AG ag = new AG(agTeilnehmer, uuid, mindestanzahl, hoechstanzahl);
-				uuid = new String("");
-				uuid = UUID.randomUUID().toString();
-				Verteilungsalgorithmus.ag.add(ag);
-				agTeilnehmer += hoechstanzahl;
-			}
-			for (int k = 0; k < random; k++) {
-				ArrayList<Rating> ratings = new ArrayList<Rating>();
-				int sum = 0;
-				for (int j = 0; j < Verteilungsalgorithmus.ag.size(); j++) {
-					if (j == 0) {
-						int rand = (int) (Math.random() * 7 - 3);
-
-						sum += rand;
-						Rating r = new Rating(Verteilungsalgorithmus.ag.get(j), rand);
-						ratings.add(r);
-					} else {
-						int rand = 0;
-						if (j != Verteilungsalgorithmus.ag.size() - 1) {
-							if (sum > 0) {
-								rand = (int) (Math.random() * 3 - 3);
-							} else {
-								rand = (int) (Math.random() * 4);
-							}
-						} else {
-							rand = -sum;
-
-						}
-						sum += rand;
-						Rating r = new Rating(Verteilungsalgorithmus.ag.get(j), rand);
-						ratings.add(r);
-					}
-				}
-				Person p = new Person(k, uuid, ratings);
-				Verteilungsalgorithmus.personen.add(p);
-				uuid = new String("");
-				uuid = UUID.randomUUID().toString();
-
-			}
+			generiereTestSet();
 			long pos1 = System.currentTimeMillis();
 			Verteilungsalgorithmus.verteile(false);
 			long pos2 = System.currentTimeMillis();
@@ -295,11 +331,7 @@ public class Test {
 			for (AG ags : Verteilungsalgorithmus.ag) {
 				ags.finishEintragung();
 			}
-			if (!Verteilungsalgorithmus.allAllocated()) {
-				Verteilungsalgorithmus.macheAusgabe();
-				System.out.println("LUL");
-				System.exit(0);
-			}
+			
 			try {
 				if (lowestScore > Verteilungsalgorithmus.checkScore()) {
 					lowestScore = Verteilungsalgorithmus.checkScore();

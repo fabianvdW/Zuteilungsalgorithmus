@@ -238,7 +238,11 @@ public class AG {
 		}
 		this.hoechstanzahl = hoechstanzahl;
 	}
-
+	public void clearTeilnehmer(){
+		this.teilnehmer.clear();
+		this.kannStattFinden=false;
+		this.istVoll=false;
+	}
 	/**
 	 * Klasse AG, Verwaltet die Daten einer AG
 	 * 
@@ -452,7 +456,7 @@ public class AG {
 	 * 
 	 * @return Jahrgänge
 	 */
-	public ArrayList<Integer> getJahrgang() throws Exception {
+	public ArrayList<Integer> getJahrgang()  {
 		return this.erlaubteJahrgang;
 	}
 

@@ -227,8 +227,9 @@ public class Verteilungsalgorithmus {
 		ag = new ArrayList<AG>();
 		personen = new ArrayList<Person>();
 		log = new ArrayList<String>();
-		int durchlaeufe = 10000;
-		Test.laufeTestsAufVerteilung(durchlaeufe);
+		int durchlaeufe = 100000;
+		Test.lasseGleichesSetLaufen(durchlaeufe);
+		//Test.laufeTestsAufVerteilung(durchlaeufe);
 		// verteile();
 		// macheAusgabe();
 	}
@@ -316,6 +317,10 @@ public class Verteilungsalgorithmus {
 																			// von
 																			// dem
 																			// BeliebtheitsRang
+					if(ags.istVoll()){
+						log.add("AG ist voll, continue!");
+							continue;
+					}
 					log.add("Momentane AG: \n" + ags.toString());
 					ArrayList<Person> ps = getUnAllocatedPersonenDieAGParamMitBewertungParamBewertertHaben(score, ags); // Alle
 																														// Personen,
@@ -446,9 +451,10 @@ public class Verteilungsalgorithmus {
 			System.out.println("Die Agen können die Personen nicht aufnehmen. Exit");
 			System.exit(0);
 		}
+		
 		int score = 3;
 		while (!allAllocated() || score != -4) {// Geht jeden Score von 3 bis -3
-												// durch
+											// durch
 			if (score == -4) {
 				score = 3;
 			}
@@ -468,6 +474,7 @@ public class Verteilungsalgorithmus {
 																		// von
 																		// dem
 																		// BeliebtheitsRang
+				if(ags.istVoll())continue;
 				ArrayList<Person> ps = getUnAllocatedPersonenDieAGParamMitBewertungParamBewertertHaben(score, ags); // Alle
 																													// Personen,
 																													// die
@@ -527,9 +534,6 @@ public class Verteilungsalgorithmus {
 														// auftritt,
 					// System.out.println("MindestanzahlFehler");
 					ArrayList<AG> nichtStatt = getAgDieNichtStattFinden();
-					if(nichtStatt.size()>1){
-						System.out.println("ja");
-					}
 					for (AG ags : nichtStatt) {// Leute werden aus andren AGen
 												// in diese AG gezogen.
 						for (int i = 0; i < checkObDieAgenMindestzahlFehlerDifferenz(ags); i++) {
@@ -645,14 +649,7 @@ public class Verteilungsalgorithmus {
 	 *         können.
 	 */
 	public static int checkObDieAgenMindestzahlFehlerDifferenz(AG age) {
-		int anzP = getUnAllocatedPersons().size();
-		int anzAg = 0;
-		for (AG ags : ag) {
-			if (!ags.kannStattFinden() && ags.equals(age)) {
-				anzAg += ags.getMindestanzahl();
-			}
-		}
-		return anzAg - anzP;
+		return age.getMindestanzahl() - getUnAllocatedPersons().size();
 	}
 
 	/**
