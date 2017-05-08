@@ -412,6 +412,7 @@ public class DB {
 		if(con!=null){
 			try{
 				con.close();
+				isConnected = false;
 			}
 			catch(SQLException e){
 				Logger lgr = Logger.getLogger(DB.class.getName());
