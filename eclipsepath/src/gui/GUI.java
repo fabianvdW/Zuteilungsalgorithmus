@@ -282,7 +282,48 @@ public class GUI extends JFrame{
 		JMenuBar up = new JMenuBar();
 		JMenu men = new JMenu("File");
 		// Menu Nr. 1
-		JMenuItem menItem = new JMenuItem("Export AGs");
+		JMenuItem menItem = new JMenuItem("Import Schüler");
+		menItem.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				JFileChooser fileChooser = new JFileChooser();
+				fileChooser.setAcceptAllFileFilterUsed(false);
+				fileChooser.setDialogTitle("Tabellen-Impoer: Schüler");
+				fileChooser.setFileFilter(new CSVFileFilter());
+				int userSelection = fileChooser.showOpenDialog(GUI.this);
+				 
+				if(userSelection==JFileChooser.APPROVE_OPTION){
+				    File fh = fileChooser.getSelectedFile();
+				    if(CSVFileFilter.getExtension(fh)==null || !CSVFileFilter.getExtension(fh).equals("csv")){
+				    	fh = new File(fh.toString() + ".csv");
+				    }
+				    if(!fh.canRead()){
+				    	showError("Fehlende Berechtigung zum schreiben auf die ausgewählte Datei", "Zugriff verweigert");
+				    }
+				    else{
+				    	showError("Die Datei würde theoretisch jetzt eingelesen werden", "Datei Import");
+				    	// import needed
+				    	/*
+				    	String txt = "ID,Name,Mindestanzahl,Höchstanzahl,Teilnehmer" + System.lineSeparator();
+				    	for(AG ag: Algorithmus.Verteilungsalgorithmus.ag){
+				    		txt += ag.getId() + "," + ag.getName() + "," + ag.getMindestanzahl() + "," + ag.getHoechstanzahl() + ",";
+							if(ag.getTeilnehmer()==null){
+								txt += ",";
+							}
+							else{
+								int j = 0;
+								for(Person p: ag.getTeilnehmer()){
+									txt += p.getName() + (j++ < ag.getTeilnehmer().size() ? ";" : "");
+								}
+							}
+				    		txt += System.lineSeparator();
+				    	}
+				    	RWFile.write(fh, txt);*/
+				    }
+				}
+			}
+		});
+		men.add(menItem);
+		menItem = new JMenuItem("Export AGs");
 		menItem.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				JFileChooser fileChooser = new JFileChooser();
@@ -296,7 +337,6 @@ public class GUI extends JFrame{
 				    if(CSVFileFilter.getExtension(fh)==null || !CSVFileFilter.getExtension(fh).equals("csv")){
 				    	fh = new File(fh.toString() + ".csv");
 				    }
-				    System.out.println("Save as file: " + fh.getAbsolutePath());
 				    try{
 						fh.createNewFile();
 					}
@@ -491,7 +531,7 @@ public class GUI extends JFrame{
 	    table.setLocationRelativeTo(null);
 	    JTable t = new JTable(data, colName){
 			private static final long serialVersionUID = 1L;
-			public boolean isCellEditable(int rowIndex, int colIndex) {
+			public boolean isCellEditable(int rowIndex, int colIndex){
 	    		return false;
     		}
 		};
