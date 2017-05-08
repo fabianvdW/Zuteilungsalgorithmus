@@ -62,6 +62,7 @@ Status:
 {Class:Person, id:48, name:b2f2a428-7343-49c8-96c1-7e294aaeb487, ag:null, gewählt:[{Class:Rating, [8607bfbf-0768-4802-b157-f9d6068d7273], Rating: 1}{Class:Rating, [c69e1b01-09c0-4cba-9f87-47009583e823], Rating: 0}{Class:Rating, [d3a40064-a37b-4117-80d1-b4631defc432], Rating: -2}{Class:Rating, [36c82587-df90-4e0c-8976-7926118bc00f], Rating: 0}{Class:Rating, [87768ee1-707c-4a4a-9bf3-eefd8c4390fb], Rating: 1}{Class:Rating, [6bb72737-fdbf-4892-bf03-6d4c5c9d4319], Rating: 1}{Class:Rating, [5c2e8852-529b-4f28-bd80-74f455f433f6], Rating: -2}{Class:Rating, [a549dd3f-4728-41db-a6c3-eda01694d1d4], Rating: 3}{Class:Rating, [28a465b0-932b-41fb-a1ea-6003d8923e90], Rating: -2}{Class:Rating, [eb269ad3-414e-46b0-be07-9d7764628e99], Rating: 0}]}
 {Class:Person, id:49, name:c818d5b1-225a-4d9e-a1d9-ce0c2f27e28d, ag:null, gewählt:[{Class:Rating, [8607bfbf-0768-4802-b157-f9d6068d7273], Rating: 0}{Class:Rating, [c69e1b01-09c0-4cba-9f87-47009583e823], Rating: 0}{Class:Rating, [d3a40064-a37b-4117-80d1-b4631defc432], Rating: 0}{Class:Rating, [36c82587-df90-4e0c-8976-7926118bc00f], Rating: 2}{Class:Rating, [87768ee1-707c-4a4a-9bf3-eefd8c4390fb], Rating: 0}{Class:Rating, [6bb72737-fdbf-4892-bf03-6d4c5c9d4319], Rating: -1}{Class:Rating, [5c2e8852-529b-4f28-bd80-74f455f433f6], Rating: 0}{Class:Rating, [a549dd3f-4728-41db-a6c3-eda01694d1d4], Rating: -1}{Class:Rating, [28a465b0-932b-41fb-a1ea-6003d8923e90], Rating: 1}{Class:Rating, [eb269ad3-414e-46b0-be07-9d7764628e99], Rating: -1}]}
 
+
 Daten geshuffelt
 
 Beliebtheit berechnet
@@ -93,6 +94,7 @@ Personen, die noch keine AG haben und die Ag mit Score 3 bewertet haben:
 {Class:Person, id:29, name:7e916463-ba4d-42cc-a887-f3f2d60099bd, ag:null, gewählt:[{Class:Rating, [8607bfbf-0768-4802-b157-f9d6068d7273], Rating: -1}{Class:Rating, [c69e1b01-09c0-4cba-9f87-47009583e823], Rating: 2}{Class:Rating, [d3a40064-a37b-4117-80d1-b4631defc432], Rating: 0}{Class:Rating, [36c82587-df90-4e0c-8976-7926118bc00f], Rating: -2}{Class:Rating, [87768ee1-707c-4a4a-9bf3-eefd8c4390fb], Rating: 3}{Class:Rating, [6bb72737-fdbf-4892-bf03-6d4c5c9d4319], Rating: -2}{Class:Rating, [5c2e8852-529b-4f28-bd80-74f455f433f6], Rating: 0}{Class:Rating, [a549dd3f-4728-41db-a6c3-eda01694d1d4], Rating: 3}{Class:Rating, [28a465b0-932b-41fb-a1ea-6003d8923e90], Rating: 0}{Class:Rating, [eb269ad3-414e-46b0-be07-9d7764628e99], Rating: -3}]}
 
 {Class:Person, id:18, name:5a23a331-7f3f-46f9-91f1-8cb2cf7c6448, ag:null, gewählt:[{Class:Rating, [8607bfbf-0768-4802-b157-f9d6068d7273], Rating: 0}{Class:Rating, [c69e1b01-09c0-4cba-9f87-47009583e823], Rating: 1}{Class:Rating, [d3a40064-a37b-4117-80d1-b4631defc432], Rating: 0}{Class:Rating, [36c82587-df90-4e0c-8976-7926118bc00f], Rating: -1}{Class:Rating, [87768ee1-707c-4a4a-9bf3-eefd8c4390fb], Rating: 3}{Class:Rating, [6bb72737-fdbf-4892-bf03-6d4c5c9d4319], Rating: -1}{Class:Rating, [5c2e8852-529b-4f28-bd80-74f455f433f6], Rating: 0}{Class:Rating, [a549dd3f-4728-41db-a6c3-eda01694d1d4], Rating: -1}{Class:Rating, [28a465b0-932b-41fb-a1ea-6003d8923e90], Rating: -2}{Class:Rating, [eb269ad3-414e-46b0-be07-9d7764628e99], Rating: 1}]}
+
 
 
 Zuweisungsschleife
@@ -164,7 +166,6 @@ Person mit niedrigster Varianz gefunden:
 
 
 Status AG: 3/10
-
 
 Person mit niedrigster Varianz gefunden:
 {Class:Person, id:34, name:bc13b3e4-22c5-4c44-9a33-9c1a4ceef9af, ag:null, gewählt:[{Class:Rating, [8607bfbf-0768-4802-b157-f9d6068d7273], Rating: 1}{Class:Rating, [c69e1b01-09c0-4cba-9f87-47009583e823], Rating: -2}{Class:Rating, [d3a40064-a37b-4117-80d1-b4631defc432], Rating: 0}{Class:Rating, [36c82587-df90-4e0c-8976-7926118bc00f], Rating: 0}{Class:Rating, [87768ee1-707c-4a4a-9bf3-eefd8c4390fb], Rating: 0}{Class:Rating, [6bb72737-fdbf-4892-bf03-6d4c5c9d4319], Rating: 3}{Class:Rating, [5c2e8852-529b-4f28-bd80-74f455f433f6], Rating: -1}{Class:Rating, [a549dd3f-4728-41db-a6c3-eda01694d1d4], Rating: -1}{Class:Rating, [28a465b0-932b-41fb-a1ea-6003d8923e90], Rating: 3}{Class:Rating, [eb269ad3-414e-46b0-be07-9d7764628e99], Rating: -3}]}
@@ -247,7 +248,6 @@ Status AG: 3/7
 
 Momentane AG: 
 {Class:AG, id:35, Bewertung: 2,name:a549dd3f-4728-41db-a6c3-eda01694d1d4, min:1, max:3, istVoll:false, findetStatt:false, Teilnehmer:[]}
-
 
 Personen, die noch keine AG haben und die Ag mit Score 3 bewertet haben:
 
@@ -582,6 +582,7 @@ Status AG: 4/10
 
 Person mit niedrigster Varianz gefunden:
 {Class:Person, id:5, name:fdde5d0a-9682-4d40-ae20-49bfb46931bf, ag:null, gewählt:[{Class:Rating, [8607bfbf-0768-4802-b157-f9d6068d7273], Rating: -1}{Class:Rating, [c69e1b01-09c0-4cba-9f87-47009583e823], Rating: 0}{Class:Rating, [d3a40064-a37b-4117-80d1-b4631defc432], Rating: 2}{Class:Rating, [36c82587-df90-4e0c-8976-7926118bc00f], Rating: -2}{Class:Rating, [87768ee1-707c-4a4a-9bf3-eefd8c4390fb], Rating: 0}{Class:Rating, [6bb72737-fdbf-4892-bf03-6d4c5c9d4319], Rating: 1}{Class:Rating, [5c2e8852-529b-4f28-bd80-74f455f433f6], Rating: 2}{Class:Rating, [a549dd3f-4728-41db-a6c3-eda01694d1d4], Rating: -2}{Class:Rating, [28a465b0-932b-41fb-a1ea-6003d8923e90], Rating: 0}{Class:Rating, [eb269ad3-414e-46b0-be07-9d7764628e99], Rating: 0}]}
+
  Person eingefügt
 
 
@@ -733,7 +734,6 @@ AG ist voll, continue!
 
 Momentane AG: 
 {Class:AG, id:38, Bewertung: -7,name:28a465b0-932b-41fb-a1ea-6003d8923e90, min:4, max:10, istVoll:false, findetStatt:true, Teilnehmer:[28640c0a-6c63-4a10-8af6-5a9c9b551e1e, 44fb54cf-9136-4096-8483-a71a23f6bcfd, 391defe6-398a-46fc-9842-c8ec50c39691, bc13b3e4-22c5-4c44-9a33-9c1a4ceef9af, 52c620c5-038f-4fe0-afda-1141dcc2b84a, 139b4ace-b7ad-472f-b305-bbd2c1d23ce4, ]}
-
 
 Personen, die noch keine AG haben und die Ag mit Score 1 bewertet haben:
 
@@ -976,7 +976,6 @@ AG ist voll, continue!
 AG ist voll, continue!
 
 AG ist voll, continue!
-
 AG ist voll, continue!
 
 Hauptschleife, Score: -3
