@@ -339,6 +339,13 @@ public class DBManager {
 	}
 	
 	/**
+	 * speichert alle Daten in der Datenbank
+	 */
+	public void saveJavaObjectsToDB(){
+		
+	}
+	
+	/**
 	 * Gibt ein Person-Objekt zurück mit allen Daten die es in der DB gibt
 	 * @param id des Schülers
 	 * @return Person das Objekt
@@ -605,6 +612,6 @@ public class DBManager {
 	 * Gibt zurück, ob die Datenbank verbunden ist
 	 */
 	public boolean isConnected(){
-		return (db==null ? false: db.isConnected());
+		return (db==null ? false : db.isConnected());
 	}
 }

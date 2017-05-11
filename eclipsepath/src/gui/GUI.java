@@ -208,10 +208,10 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import javax.swing.AbstractAction;
@@ -243,7 +243,8 @@ public class GUI extends JFrame{
 	private static final long serialVersionUID = 1L;
 	 
 	// Main-Frame
-	private JTextField agField, pField;
+	private JMenuItem conDB, impDB, expDB, exDB;
+	private JTextField isConnField, agField, pField;
 	
 	// Login-Frame
 	private JDialog loginDialog;
@@ -266,22 +267,63 @@ public class GUI extends JFrame{
 	 */
 	protected GUI(){
 		dbm = new DBManager();
+		Algorithmus.Verteilungsalgorithmus.ag = new ArrayList<AG>();
+		Algorithmus.Verteilungsalgorithmus.personen = new ArrayList<Person>();
 		setTitle("Verteilungsalgorithmus");
 		setSize(500, 400);
 		setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-		showLogin();
-		connect("agent77326.tk", 3306, "fabi", "4ma9vJdZUH7J70Wh", "fabi");
-		updateMainFrame();
+		mainFrame();
 	}
 	
-	protected void updateMainFrame(){
+	protected void mainFrame(){
 		getContentPane().removeAll();
 		getContentPane().revalidate();
 		JMenuBar up = new JMenuBar();
 		JMenu men = new JMenu("File");
 		// Menu Nr. 1
-		JMenuItem menItem = new JMenuItem("Export AGs");
+		JMenuItem menItem = new JMenuItem("Import Schüler");
+		menItem.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				JFileChooser fileChooser = new JFileChooser();
+				fileChooser.setAcceptAllFileFilterUsed(false);
+				fileChooser.setDialogTitle("Tabellen-Impoer: Schüler");
+				fileChooser.setFileFilter(new CSVFileFilter());
+				int userSelection = fileChooser.showOpenDialog(GUI.this);
+				 
+				if(userSelection==JFileChooser.APPROVE_OPTION){
+				    File fh = fileChooser.getSelectedFile();
+				    if(CSVFileFilter.getExtension(fh)==null || !CSVFileFilter.getExtension(fh).equals("csv")){
+				    	fh = new File(fh.toString() + ".csv");
+				    }
+				    if(!fh.canRead()){
+				    	showError("Fehlende Berechtigung zum schreiben auf die ausgewählte Datei", "Zugriff verweigert");
+				    }
+				    else{
+				    	showError("Die Datei würde theoretisch jetzt eingelesen werden", "Datei Import");
+				    	// import needed
+				    	/*
+				    	String txt = "ID,Name,Mindestanzahl,Höchstanzahl,Teilnehmer" + System.lineSeparator();
+				    	for(AG ag: Algorithmus.Verteilungsalgorithmus.ag){
+				    		txt += ag.getId() + "," + ag.getName() + "," + ag.getMindestanzahl() + "," + ag.getHoechstanzahl() + ",";
+							if(ag.getTeilnehmer()==null){
+								txt += ",";
+							}
+							else{
+								int j = 0;
+								for(Person p: ag.getTeilnehmer()){
+									txt += p.getName() + (j++ < ag.getTeilnehmer().size() ? ";" : "");
+								}
+							}
+				    		txt += System.lineSeparator();
+				    	}
+				    	RWFile.write(fh, txt);*/
+				    }
+				}
+			}
+		});
+		men.add(menItem);
+		menItem = new JMenuItem("Export AGs");
 		menItem.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				JFileChooser fileChooser = new JFileChooser();
@@ -295,7 +337,6 @@ public class GUI extends JFrame{
 				    if(CSVFileFilter.getExtension(fh)==null || !CSVFileFilter.getExtension(fh).equals("csv")){
 				    	fh = new File(fh.toString() + ".csv");
 				    }
-				    System.out.println("Save as file: " + fh.getAbsolutePath());
 				    try{
 						fh.createNewFile();
 					}
@@ -341,7 +382,6 @@ public class GUI extends JFrame{
 				    if(CSVFileFilter.getExtension(fh)==null || !CSVFileFilter.getExtension(fh).equals("csv")){
 				    	fh = new File(fh.toString() + ".csv");
 				    }
-				    System.out.println("Save as file: " + fh.getAbsolutePath());
 				    try{
 						fh.createNewFile();
 					}
@@ -369,17 +409,52 @@ public class GUI extends JFrame{
 			}
 		});
 		men.add(menItem);
-		menItem = new JMenuItem("Reload Database");
-		menItem.addActionListener(new ActionListener(){
+		conDB = new JMenuItem("Verbinde Datenbank");
+		conDB.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				showLogin();
+			}
+		});
+		if(dbm.isConnected()){
+			conDB.setEnabled(false);
+		}
+		men.add(conDB);
+		impDB = new JMenuItem("Import Datenbank");
+		impDB.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				dbm.initializeJavaObjectsFromDB();
 				System.out.println(Verteilungsalgorithmus.statusCheck());
-				agField.setText("" + Algorithmus.Verteilungsalgorithmus.ag.size());
-				pField.setText("" + Algorithmus.Verteilungsalgorithmus.personen.size());
+				showError("Alle Daten wurden vom Server geladen", "Datentransfer abgeschlossen");
 				repaint();
 			}
 		});
-		men.add(menItem);
+		if(!dbm.isConnected()){
+			impDB.setEnabled(false);
+		}
+		men.add(impDB);
+		expDB = new JMenuItem("Export Datenbank");
+		expDB.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				dbm.saveJavaObjectsToDB();
+				showError("Alle Daten wurden auf dem Server abgespeichert", "Datentransfer abgeschlossen");
+			}
+		});
+		if(!dbm.isConnected()){
+			expDB.setEnabled(false);
+		}
+		men.add(expDB);
+		exDB = new JMenuItem("Schließe Datenbank");
+		exDB.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				dbm.close();
+				showError("Die Verbindung zum Server wurde geschlossen", "Verbindung getrennt");
+				repaint();
+			}
+		});
+		if(!dbm.isConnected()){
+			exDB.setEnabled(false);
+		}
+		men.add(exDB);
 		menItem = new JMenuItem("Exit");
 		menItem.addActionListener(new ExitButtonHandler());
 		men.add(menItem);
@@ -410,7 +485,7 @@ public class GUI extends JFrame{
 		menItem.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				Test.generiereTestSet();
-				updateMainFrame();
+				repaint();
 			}
 		});
 		menItem = new JMenuItem("Ausführen");
@@ -430,8 +505,11 @@ public class GUI extends JFrame{
 		up.add(men);
 		setJMenuBar(up);
 		getContentPane().setLayout(new GridLayout(5, 2));
-		add(new JLabel("In der Datenbank gefunden"));
-		add(new JLabel(""));
+		add(new JLabel("Mit einer Datenbank verbunden"));
+		isConnField = new JTextField();
+		isConnField.setEditable(false);
+		isConnField.setText((dbm.isConnected() ? "Ja": "Nein"));
+		add(isConnField);
 		add(new JLabel("AGs:"));
 		agField = new JTextField();
 		agField.setEditable(false);
@@ -453,7 +531,7 @@ public class GUI extends JFrame{
 	    table.setLocationRelativeTo(null);
 	    JTable t = new JTable(data, colName){
 			private static final long serialVersionUID = 1L;
-			public boolean isCellEditable(int rowIndex, int colIndex) {
+			public boolean isCellEditable(int rowIndex, int colIndex){
 	    		return false;
     		}
 		};
@@ -530,15 +608,9 @@ public class GUI extends JFrame{
 		JButton exitButton = new JButton("Exit");
 		exitButton.addActionListener(new ExitButtonHandler());
 		loginButtons.add(exitButton);
-		loginDialog.add(loginButtons, BorderLayout.CENTER);
-		// Close all windows when login-frame is closed
-		loginDialog.addWindowListener(new WindowAdapter(){
-			public void windowClosing(WindowEvent e){
-				System.exit(0);
-			}
-		});
+		loginDialog.add(loginButtons);
 		loginDialog.pack();
-		//login.setVisible(true);
+		loginDialog.setVisible(true);
 	}
 	
 	protected void showAGList(){
@@ -560,11 +632,14 @@ public class GUI extends JFrame{
 				agList[i][1] = "" + ag.getMindestanzahl();
 				agList[i][2] = "" + ag.getHoechstanzahl();
 				String tmp = "";
-				if(ag.getJahrgang()!=null){
+				if(ag.getJahrgang()!=null && ag.getJahrgang().isEmpty()){
 					int n = 0;
 					for(int jahrg: ag.getJahrgang()){
 						tmp += jahrg + (n++<ag.getJahrgang().size() ? ", " : "");
 					}
+				}
+				else{
+					tmp = "Alle";
 				}
 				agList[i][3] = tmp;
 				if(ag.getTeilnehmer()==null){
@@ -661,13 +736,31 @@ public class GUI extends JFrame{
 	protected void connect(String server, int port, String user, String password, String database){
 		dbm.connect(server, port, user, password, database);
 		if(dbm.isConnected()){
-			dbm.initializeJavaObjectsFromDB();
 			loginDialog.dispose();
-			updateMainFrame();
+			repaint();
 		}
 		else{
 			showError("Es konnte keine Verbindung zur Datenbank hergestellt werden", "Verbindungsfehler");
 		}
+	}
+	
+	public void repaint(){
+		isConnField.setText((dbm.isConnected() ? "Ja": "Nein"));
+		agField.setText("" + Algorithmus.Verteilungsalgorithmus.ag.size());
+		pField.setText("" + Algorithmus.Verteilungsalgorithmus.personen.size());
+		if(dbm.isConnected()){
+			conDB.setEnabled(false);
+			impDB.setEnabled(true);
+			expDB.setEnabled(true);
+			exDB.setEnabled(true);
+		}
+		else{
+			conDB.setEnabled(true);
+			impDB.setEnabled(false);
+			expDB.setEnabled(false);
+			exDB.setEnabled(false);
+		}
+		super.repaint();
 	}
 	
 	protected void showAGSelection(){
@@ -692,7 +785,7 @@ public class GUI extends JFrame{
 						if(!sel.equals(a.getName())){
 							continue;
 						}
-						String[][] persList = new String[a.getTeilnehmer().size()][5];
+						String[][] persList = new String[a.getTeilnehmer().size()][6];
 						int i = 0;
 						String ags = null;
 						String[] sort = new String[a.getTeilnehmer().size()];
