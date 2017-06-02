@@ -211,6 +211,7 @@ public class Maths{
 	
 	// für test-zwecke
 	public static void main(String[] args){
+		/*
 		MNIST test = new MNIST("", "");
 		int n;
 		double number;
@@ -229,21 +230,21 @@ public class Maths{
 				number = number/100;
 				tmp += number + ", ";
 			}
-		}
+		}*/
 		
 		// Test gradient
 		double[] aktuellerWert = new double[]{3, 1};
-		int duration = 0;
+		int duration = 10;
 		double tmp;
 		for(int i = 0; i < duration; i++){
 			tmp = f(aktuellerWert[0], aktuellerWert[1]);
-			System.out.println("x=" + aktuellerWert[0] + ", y=" + aktuellerWert[1] + " -> " + tmp + " Epoch: " + (i + 1) + "/" + duration);
+			System.out.println("x=" + aktuellerWert[0] + ",	y=" + aktuellerWert[1] + "	-> " + tmp + "	Epoch: " + (i + 1) + "/" + duration);
 			if(tmp<0){
-				System.out.println("Die Funktion hat nun einen negativen Wert erreicht, was nicht sein kann...");
-				System.exit(0);
+				//System.out.println("Die Funktion hat nun einen negativen Wert erreicht, was nicht sein kann...");
+				//System.exit(0);
 			}
 			else if(tmp == 0){
-				System.out.println("Yay, got minimum!");
+				System.out.println("Yay, got total minimum!");
 			}
 			aktuellerWert = gradientDescent(aktuellerWert);
 		}
