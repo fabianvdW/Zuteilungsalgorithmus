@@ -239,7 +239,7 @@ import Tests.Test;
 import db.DBManager;
 
 public class GUI extends JFrame{
-	// -> why the f*** do we need this?
+	// -
 	private static final long serialVersionUID = 1L;
 	 
 	// Main-Frame
