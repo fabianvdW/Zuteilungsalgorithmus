@@ -201,7 +201,7 @@
    limitations under the License.
 */
 package Neuro;
-
+import Neuro.Network;
 public class Maths{
 	protected static double learnRate = 0.1;
 	// mit h und der learnRate muss noch etwas herum experimentiert werden, dazu wird aber das komplette neuro-netz benötigt...
@@ -211,8 +211,8 @@ public class Maths{
 	
 	// für test-zwecke
 	public static void main(String[] args){
-		/*
-		MNIST test = new MNIST("", "");
+		
+		/*MNIST test = new MNIST("", "");
 		int n;
 		double number;
 		// Test MNIST data-loader
@@ -221,42 +221,72 @@ public class Maths{
 			n = 0;
 			System.out.println("\n" + d.solution);
 			for(int i = 0; i < d.img.length; i++){
+				
+				number = Math.round(d.img[i] * 100);
+				number = number/100;
+				tmp += number + ", ";
 				if(n++ >= test.nCols){
 					n = 0;
 					System.out.println("	" + tmp);
 					tmp = "";
 				}
-				number = Math.round(d.img[i] * 100);
-				number = number/100;
-				tmp += number + ", ";
 			}
-		}*/
-		
+		}
+		*/
 		// Test gradient
-		double[] aktuellerWert = new double[]{3, 1};
-		int duration = 10;
+		/*double[] aktuellerWert = new double[]{3, 1};
+		int duration = 100;
 		double tmp;
 		for(int i = 0; i < duration; i++){
 			tmp = f(aktuellerWert[0], aktuellerWert[1]);
 			System.out.println("x=" + aktuellerWert[0] + ",	y=" + aktuellerWert[1] + "	-> " + tmp + "	Epoch: " + (i + 1) + "/" + duration);
-			if(tmp<0){
-				//System.out.println("Die Funktion hat nun einen negativen Wert erreicht, was nicht sein kann...");
-				//System.exit(0);
-			}
-			else if(tmp == 0){
+			if(tmp == 0){
 				System.out.println("Yay, got total minimum!");
 			}
 			aktuellerWert = gradientDescent(aktuellerWert);
 		}
+		*/
+		//TEST NEtwork
+		int[] layers={784,30,10};
+		Network n= new Network(layers);
+		/*
+		System.out.println("Biases:");
+		for(int i=0;i<n.biases.size();i++){
+			for(int k=0;k<n.biases.get(i).length;k++){
+				System.out.print(n.biases.get(i)[k]+"   ");
+			}
+			System.out.println("\n");
+		}*/
+		/*System.out.println("Weights:");
+		for(int i=0;i<n.weights.size();i++){
+			for(int k=0;k<n.weights.get(i).length;k++){
+				for(int j=0;j<n.weights.get(i)[k].length;j++){
+					System.out.print(n.weights.get(i)[k][j]+"     ");
+				}
+				System.out.println("\n");
+			}
+			System.out.println("\n\n\n");
+		}
+		*/
+		System.out.println("Outputs: ");
+		double[] input= new double[n.startLayers[0]];
+		for(int i=0;i<input.length;i++){
+			input[i]=Math.random();
+		}
+		double[] outputs= n.getOutput(input);
+		for(int i=0;i<outputs.length;i++){
+			System.out.print(outputs[i]+"    ");
+		}
 	}
-	
+	protected static double random(){
+		return ( Math.random()*((Math.random()*8)-4));
+	}
 	protected static double sigmoid(double z){
 		return 1/(1 + Math.pow(e, -z));
 	}
 	
 	protected static double[] gradientDescent(double[] aktuellerWert){
-		double[] tmp;
-		tmp = gradient(aktuellerWert);
+		double[] tmp= gradient(aktuellerWert);
 		aktuellerWert = new double[]{aktuellerWert[0] - learnRate * tmp[0], aktuellerWert[1] - learnRate * tmp[1]};
 		return aktuellerWert;
 	}
@@ -264,8 +294,8 @@ public class Maths{
 	protected static double[] gradient(double[] input){
 		double[] result = new double[2];
 		// je größer h ist, desto schneller verringert sich das ergebnis, aber nur bis 2, danach hat es den gegenteiligen Effekt
-		result[0] = (f(input[0] + h, input[1]) - f(input[0] - h, input[1])) / 2*h;
-		result[1] = (f(input[0], input[1] + h) - f(input[0], input[1] - h)) / 2*h;
+		result[0] = (f(input[0] + h, input[1]) - f(input[0] - h, input[1])) / (2*h);
+		result[1] = (f(input[0], input[1] + h) - f(input[0], input[1] - h)) / (2*h);
 		return result;
 	}
 	

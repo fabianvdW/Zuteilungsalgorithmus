@@ -202,11 +202,74 @@
 */
 package Neuro;
 
+import java.util.ArrayList;
+
 public class Network{
-	private int[] startLayers;
-	
+	protected int[] startLayers;
+	protected ArrayList<double[]> biases;
+	protected ArrayList<double[][]>weights;
 	public Network(int[] layers){
-		// ähm hab noch nicht weiter gedacht als bis hier...
 		startLayers = layers;
+		biases= new ArrayList<double[]>();
+		for(int i=1;i<startLayers.length;i++){
+			double[] biasrow= new double[startLayers[i]];
+			for(int k=0;k<biasrow.length;k++){
+				biasrow[k]=Maths.random();
+			}
+			biases.add(biasrow);
+		}
+		weights= new ArrayList<double[][]>();
+		for(int i=0;i+1<layers.length;i++){
+			double[][] weightsrow= new double[layers[i]][layers[i+1]];
+			for(int k=0;k<weightsrow.length;k++){
+				for(int j=0;j<weightsrow[k].length;j++){
+					weightsrow[k][j]=Maths.random();
+				}
+			}
+			weights.add(weightsrow);
+		}
+	}
+	protected double[] getOutput(double[] inputs){
+		if(inputs.length!=startLayers[0]){
+			System.out.println("Ungültige Inputs! Returnt Null");
+			return null;
+		}
+		//Leere Output Liste mit 0.0 als Outputs und der input liste als ersten output wird erzeugt
+		ArrayList<double[]> outputs= new ArrayList<double[]>();
+		outputs.add(inputs);
+		for(int i=1;i<startLayers.length;i++){
+			double[] layerk= new double[startLayers[i]];
+			for(int k=0;k<startLayers[i];k++){
+				layerk[k]=0;
+			}
+			outputs.add(layerk);
+		}
+		//Output Liste wird vervollständigt, die letzte Spalte ist nun der wirkliche Output
+		for(int i=1;i<outputs.size();i++){
+			double[] rowk= outputs.get(i);
+			for(int k=0;k<outputs.get(i).length;k++){
+				rowk[k]=output(outputs,i,k);
+			}
+			outputs.remove(i);
+			outputs.add(i, rowk);
+		}
+		//DEBUG
+		/*
+		for(int i=0;i<outputs.size();i++){
+			for(int k=0;k<outputs.get(i).length;k++){
+				System.out.print(outputs.get(i)[k]+"   ");
+			}
+			System.out.println("\n\n");
+		}
+		System.out.println("Fertig");*/
+		return outputs.get(outputs.size()-1);
+	}
+	protected double output(ArrayList<double[]> outputs,int i,int k){
+		double x=0;
+		for(int m=0;m<outputs.get(i-1).length;m++){
+			x+=outputs.get(i-1)[m]* weights.get(i-1)[m][k];
+		}
+		x+=biases.get(i-1)[k];
+		return Maths.sigmoid(x);
 	}
 }
