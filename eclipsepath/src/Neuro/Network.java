@@ -381,7 +381,7 @@ public class Network{
 			for(int i = 0; i < 9; i++){
 				output[i] = 0;
 				if(data.solution == i){
-					output[i] = data.solution;
+					output[i] = 1;
 				}
 			}
 			backpropagation(input, output);
@@ -399,9 +399,9 @@ public class Network{
 		activations.add(input);
 		double z;
 		ArrayList<Double> zs = new ArrayList<Double>();
-		for(int i = 0; i < biases.size(); i++){
+		for(int i = 0; i < startLayers.length; i++){
 			double[] newActivation = new double[biases.get(i).length];
-			for(int n = 0; n < biases.get(i).length; n++){
+			for(int n = 0; n < startLayers[i]; n++){
 				z = Maths.dot(weights.get(i)[n], input) + biases.get(i)[n];
 				zs.add(z);
 				newActivation[n] = Maths.sigmoid(z);
