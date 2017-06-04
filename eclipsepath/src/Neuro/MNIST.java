@@ -206,9 +206,6 @@ import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-// TODO: Test byte to int conversion
-// sollte das bild [][] oder [] sein???? für das neuro-netz sollte es irrelevant sein...
-
 /**
  * Handler to read MNIST-datasets
  * @author Leo Jung
@@ -288,5 +285,19 @@ public class MNIST{
 		}catch(IOException e){
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * returns readed data as MNISTdata[]
+	 */
+	protected MNISTdata[] getData(){
+		return data;
+	}
+	
+	/**
+	 * gibt die Bildauflösung an als produkt von X*Y
+	 */
+	protected int imgSize(){
+		return nCols * nRows;
 	}
 }

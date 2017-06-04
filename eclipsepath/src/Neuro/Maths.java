@@ -211,11 +211,12 @@ public class Maths{
 	
 	// für test-zwecke
 	public static void main(String[] args){
-		
 		MNIST test = new MNIST("", "");
+		
+		// Test MNIST data-loader
+		/*
 		int n;
 		double number;
-		// Test MNIST data-loader
 		for(MNISTdata d: test.data){
 			String tmp = "";
 			n = 0;
@@ -232,8 +233,11 @@ public class Maths{
 				}
 			}
 		}
+		*/
+		
 		// Test gradient
-		/*double[] aktuellerWert = new double[]{3, 1};
+		/*
+		 * double[] aktuellerWert = new double[]{3, 1};
 		int duration = 100;
 		double tmp;
 		for(int i = 0; i < duration; i++){
@@ -245,8 +249,9 @@ public class Maths{
 			aktuellerWert = gradientDescent(aktuellerWert);
 		}
 		*/
+		
 		//TEST Network
-		int[] layers={784,30,10};
+		int[] layers={test.imgSize(), 30, 10};
 		Network net = new Network(layers);
 		/*
 		System.out.println("Biases:");
@@ -268,18 +273,21 @@ public class Maths{
 		}
 		*/
 		System.out.println("Outputs: ");
-		double[] input= new double[net.startLayers[0]];
-		for(int i=0;i<input.length;i++){
-			input[i]=Math.random();
-		}
-		double[] outputs= net.getOutput(input);
-		for(int i=0;i<outputs.length;i++){
-			System.out.print(outputs[i]+"    ");
+		// input from MNISTdata-set
+		double[] outputs;
+		for(MNISTdata dat : test.getData()){
+			System.out.println("\n\nExpected Output: " + dat.solution);
+			outputs = net.getOutput(dat.img);
+			for(int i=0;i<outputs.length;i++){
+				System.out.print("\n" + i + "	->	" + outputs[i]);
+			}
 		}
 	}
+	
 	protected static double random(){
 		return ( Math.random()*((Math.random()*8)-4));
 	}
+	
 	protected static double sigmoid(double z){
 		return 1/(1 + Math.pow(e, -z));
 	}
