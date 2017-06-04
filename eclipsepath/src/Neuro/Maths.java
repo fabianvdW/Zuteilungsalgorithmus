@@ -324,6 +324,10 @@ public class Maths{
 		return 1 / (1 + Math.pow(e, -z));
 	}
 	
+	protected static double sigmoidPrime(double z){
+		return sigmoid(z) * (1 - sigmoid(z));
+	}
+	
 	/**
 	 * Berechnet den gradient vom aktuellen Wert und gibt den veränderten zurück
 	 * @param aktuellerWert
