@@ -260,23 +260,23 @@ public class Maths{
 		Network n = new Network(layers);
 		/*
 		System.out.println("Biases:");
-		for(int i=0;i<n.biases.size();i++){
-			for(int k=0;k<n.biases.get(i).length;k++){
-				System.out.print(n.biases.get(i)[k]+"   ");
+		for(int i = 0; i < n.biases.size(); i++){
+			for(int k = 0; k < n.biases.get(i).length; k++){
+				System.out.print("B" + i + "," + k + "=" + n.biases.get(i)[k] + "   ");
 			}
 			System.out.println("\n");
-		}*/
-		/*System.out.println("Weights:");
-		for(int i=0;i<n.weights.size();i++){
-			for(int k=0;k<n.weights.get(i).length;k++){
-				for(int j=0;j<n.weights.get(i)[k].length;j++){
-					System.out.print(n.weights.get(i)[k][j]+"     ");
+		}
+		*/
+		System.out.println("Weights:");
+		for(int i = 0; i < n.weights.size(); i++){
+			for(int k = 0; k < n.weights.get(i).length; k++){
+				for(int j = 0; j < n.weights.get(i)[k].length; j++){
+					System.out.print("W" + i + "," + k + "->" + j + "=" + n.weights.get(i)[k][j] + "     ");
 				}
 				System.out.println("\n");
 			}
 			System.out.println("\n\n\n");
 		}
-		*/
 		/*
 		System.out.println("Outputs: ");
 		// input from MNISTdata-set
@@ -294,19 +294,52 @@ public class Maths{
 	
 	protected static double random(){
 		Random r= new Random();
-		return(r.nextGaussian());
+		return r.nextGaussian();
 	}
 	
+	/**
+	 * Multiplikation of 2 Matrixes with 1 Dimension-depth
+	 * @param a
+	 * @param b
+	 * @return sum
+	 */
+	protected static double dot(double[] a, double[] b){
+		if(a.length != b.length){
+			System.out.println("a.length: " + a.length + "	b.length:" + b.length);
+			throw new IllegalArgumentException("Die Dimensionen sind nicht gleich");
+		}
+		double sum = 0;
+		for(int i = 0; i < a.length; i++){
+			sum += a[i] * b[i];
+		}
+		return sum;
+	}
+	
+	/**
+	 * sigmoid-function
+	 * @param z
+	 * @return
+	 */
 	protected static double sigmoid(double z){
-		return 1/(1 + Math.pow(e, -z));
+		return 1 / (1 + Math.pow(e, -z));
 	}
 	
+	/**
+	 * Berechnet den gradient vom aktuellen Wert und gibt den veränderten zurück
+	 * @param aktuellerWert
+	 * @return
+	 */
 	protected static double[] gradientDescent(double[] aktuellerWert){
-		double[] tmp= gradient(aktuellerWert);
+		double[] tmp = gradient(aktuellerWert);
 		aktuellerWert = new double[]{aktuellerWert[0] - learnRate * tmp[0], aktuellerWert[1] - learnRate * tmp[1]};
 		return aktuellerWert;
 	}
 	
+	/**
+	 * berechnet den gradient von x und y für die function f(x, y)
+	 * @param input
+	 * @return
+	 */
 	protected static double[] gradient(double[] input){
 		double[] result = new double[2];
 		// je größer h ist, desto schneller verringert sich das ergebnis, aber nur bis 2, danach hat es den gegenteiligen Effekt

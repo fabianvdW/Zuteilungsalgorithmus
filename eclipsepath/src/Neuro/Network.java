@@ -205,6 +205,48 @@ package Neuro;
 import java.util.ArrayList;
 
 public class Network{
+	/**
+	 * Datenklasse zum zwischenspeichern von Weigths und Biases
+	 */
+	class WBSet{
+		ArrayList<double[]> b;
+		ArrayList<double[][]> w;
+		
+		public WBSet(){
+			zeros();
+		}
+		
+		public WBSet(ArrayList<double[]> biases, ArrayList<double[][]> weights){
+			b = biases;
+			w = weights;
+		}
+		
+		// Equivalent to numpy.zeros (ref.: https://docs.scipy.org/doc/numpy/reference/generated/numpy.zeros.html)
+		void zeros(){
+			b = new ArrayList<double[]>();
+			w = new ArrayList<double[][]>();
+			for(int i = 0; i < weights.size(); i++){
+				double[][] wLayer = new double[weights.get(i).length][];
+				for(int m = 0; m < weights.get(i).length; m++){
+					double[] wRow = new double[weights.get(i)[m].length];
+					for(int n = 0; n < weights.get(i)[m].length; n++){
+						wRow[n] = 0;
+					}
+					wLayer[m] = wRow;
+				}
+				w.add(wLayer);
+			}
+			for(int i = 0; i < biases.size(); i++){
+				double[] bLayer = new double[biases.get(i).length];
+				for(int m = 0; m < biases.get(i).length; m++){
+					bLayer[m] = 0;
+				}
+				b.add(bLayer);
+			}
+		}
+	}
+	
+	
 	protected int[] startLayers;
 	protected ArrayList<double[]> biases;
 	protected ArrayList<double[][]> weights;
@@ -305,7 +347,7 @@ public class Network{
 	 * @param learnrate
 	 * @param test_data
 	 */
-	protected void stochastic_gradient_descent(MNISTdata[] train_data, int epochs, int batch_size, int learnrate, MNISTdata[] test_data){
+	protected void stochastic_gradient_descent(MNISTdata[] train_data, int epochs, int batch_size, double learnrate, MNISTdata[] test_data){
 		for(int i = 0; i < epochs; i++){
 			this.shuffleTrainData(train_data);
 			ArrayList<MNISTdata[]> batches = new ArrayList<MNISTdata[]>();
@@ -317,14 +359,56 @@ public class Network{
 				batches.add(minibatch);
 			}
 			for(MNISTdata[] batch: batches){
-				updateBatch(batch);
+				updateBatch(batch, learnrate);
 			}
 			System.out.println("Epoch " + i + " beendet!  " + evaluateData(test_data) + "/" + test_data.length);
 		}
 	}
 	
-	protected void updateBatch(MNISTdata[] batch){
+	/**
+	 * Verändert die weights und biases des netzwerks (zu hoffentlich besseren Ergebnissen)
+	 * @param batch
+	 * @param learnrate
+	 */
+	protected void updateBatch(MNISTdata[] batch, double learnrate){
+		WBSet nabla = new WBSet();
 		
+		double[] input;
+		double[] output;
+		for(MNISTdata data: batch){
+			input = data.img;
+			output = new double[10];
+			for(int i = 0; i < 9; i++){
+				output[i] = 0;
+				if(data.solution == i){
+					output[i] = data.solution;
+				}
+			}
+			backpropagation(input, output);
+		}
+	}
+	
+	/**
+	 * Verändert die weights und biases des netzwerks anhand von dem input und der Lösung
+	 * @param input
+	 * @param output
+	 */
+	protected void backpropagation(double[] input, double[] output){
+		WBSet nabla = new WBSet();
+		ArrayList<double[]> activations = new ArrayList<double[]>();
+		activations.add(input);
+		double z;
+		ArrayList<Double> zs = new ArrayList<Double>();
+		for(int i = 0; i < biases.size(); i++){
+			double[] newActivation = new double[biases.get(i).length];
+			for(int n = 0; n < biases.get(i).length; n++){
+				z = Maths.dot(weights.get(i)[n], input) + biases.get(i)[n];
+				zs.add(z);
+				newActivation[n] = Maths.sigmoid(z);
+			}
+			activations.add(newActivation);
+			input = newActivation;
+		}
 	}
 	
 	/**
