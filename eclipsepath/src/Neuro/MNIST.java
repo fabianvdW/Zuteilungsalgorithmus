@@ -206,9 +206,6 @@ import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-// TODO: Test byte to int conversion
-// sollte das bild [][] oder [] sein???? für das neuro-netz sollte es irrelevant sein...
-
 /**
  * Handler to read MNIST-datasets
  * @author Leo Jung
@@ -230,13 +227,15 @@ public class MNIST{
 		/*
 		 * Bsp. für Dateiangabe, wird später noch irgendwie übergeben oder relativ angegeben
 		 */
-		//imgFilename = "C:/Users/Fabian/Documents/GitHub/Zuteilungsalgorithmus/MNIST_TestData/train-images.idx3-ubyte";
-		//labelFilename = "C:/Users/Fabian/Documents/GitHub/Zuteilungsalgorithmus/MNIST_TestData/train-labels.idx1-ubyte";
-		
+
+		//imgFilename = System.getProperty("user.home") + "/documents/GitHub/Zuteilungsalgorithmus/MNIST_TestData/train-images.idx3-ubyte";
+		//labelFilename = System.getProperty("user.home") + "/documents/GitHub/Zuteilungsalgorithmus/MNIST_TestData/train-labels.idx1-ubyte";
+		imgFilename = System.getProperty("user.home") + imgFilename;
+		labelFilename = System.getProperty("user.home") + labelFilename;
 		//fck this try catch blocks
 		try{
-			DataInputStream labels = new DataInputStream(new FileInputStream(labelFilename));
 			DataInputStream images = new DataInputStream(new FileInputStream(imgFilename));
+			DataInputStream labels = new DataInputStream(new FileInputStream(labelFilename));
 			
 			// check magic numbers -> make sure right files...
 			int magicN = labels.readInt();
@@ -288,5 +287,19 @@ public class MNIST{
 		}catch(IOException e){
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * returns readed data as MNISTdata[]
+	 */
+	protected MNISTdata[] getData(){
+		return data;
+	}
+	
+	/**
+	 * gibt die Bildauflösung an als produkt von X*Y
+	 */
+	protected int imgSize(){
+		return nCols * nRows;
 	}
 }

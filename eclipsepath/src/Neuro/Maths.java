@@ -202,6 +202,7 @@
 */
 package Neuro;
 import java.util.Random;
+
 public class Maths{
 	protected static double learnRate = 0.1;
 	// mit h und der learnRate muss noch etwas herum experimentiert werden, dazu wird aber das komplette neuro-netz benötigt...
@@ -212,12 +213,14 @@ public class Maths{
 	// für test-zwecke
 	public static void main(String[] args){
 		
-		MNIST train = new MNIST("C:/Users/Fabian/Documents/GitHub/Zuteilungsalgorithmus/MNIST_TestData/train-labels.idx1-ubyte", "C:/Users/Fabian/Documents/GitHub/Zuteilungsalgorithmus/MNIST_TestData/train-images.idx3-ubyte");
-		MNIST test= new MNIST("C:/Users/Fabian/Documents/GitHub/Zuteilungsalgorithmus/MNIST_TestData/t10k-labels.idx1-ubyte","C:/Users/Fabian/Documents/GitHub/Zuteilungsalgorithmus/MNIST_TestData/t10k-images.idx3-ubyte");
+		MNIST train = new MNIST("/Documents/GitHub/Zuteilungsalgorithmus/MNIST_TestData/train-labels.idx1-ubyte", "/Documents/GitHub/Zuteilungsalgorithmus/MNIST_TestData/train-images.idx3-ubyte");
+		MNIST test= new MNIST("/Documents/GitHub/Zuteilungsalgorithmus/MNIST_TestData/t10k-labels.idx1-ubyte","/Documents/GitHub/Zuteilungsalgorithmus/MNIST_TestData/t10k-images.idx3-ubyte");
 		/*
 		 * int n;
-		double number;
 		// Test MNIST data-loader
+		/*
+		int n;
+		double number;
 		for(MNISTdata d: test.data){
 			String tmp = "";
 			n = 0;
@@ -235,8 +238,10 @@ public class Maths{
 			}
 		}
 		*/
+		
 		// Test gradient
-		/*double[] aktuellerWert = new double[]{3, 1};
+		/*
+		 * double[] aktuellerWert = new double[]{3, 1};
 		int duration = 100;
 		double tmp;
 		for(int i = 0; i < duration; i++){
@@ -248,9 +253,10 @@ public class Maths{
 			aktuellerWert = gradientDescent(aktuellerWert);
 		}
 		*/
-		//TEST NEtwork
-		int[] layers={784,30,10};
-		Network n= new Network(layers);
+		
+		//TEST Network
+		int[] layers={test.imgSize(), 30, 10};
+		Network n = new Network(layers);
 		/*
 		System.out.println("Biases:");
 		for(int i=0;i<n.biases.size();i++){
@@ -270,21 +276,26 @@ public class Maths{
 			System.out.println("\n\n\n");
 		}
 		*/
+		/*
 		System.out.println("Outputs: ");
-		double[] input= new double[n.startLayers[0]];
-		for(int i=0;i<input.length;i++){
-			input[i]=Math.random();
+		// input from MNISTdata-set
+		double[] outputs;
+		for(MNISTdata dat : test.getData()){
+			System.out.println("\n\nExpected Output: " + dat.solution);
+			outputs = n.getOutput(dat.img);
+			for(int i=0;i<outputs.length;i++){
+				System.out.print("\n" + i + "	->	" + outputs[i]);
+			}
 		}
-		double[] outputs= n.getOutput(input);
-		for(int i=0;i<outputs.length;i++){
-			System.out.print(outputs[i]+"    ");
-		}
+		*/
 		n.stochastic_gradient_descent(train.data,30,10,3,test.data);
 	}
+	
 	protected static double random(){
 		Random r= new Random();
 		return ( r.nextGaussian());
 	}
+	
 	protected static double sigmoid(double z){
 		return 1/(1 + Math.pow(e, -z));
 	}
