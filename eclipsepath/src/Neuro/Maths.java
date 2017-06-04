@@ -212,8 +212,10 @@ public class Maths{
 	// für test-zwecke
 	public static void main(String[] args){
 		
-		/*MNIST test = new MNIST("", "");
-		int n;
+		MNIST train = new MNIST("C:/Users/Fabian/Documents/GitHub/Zuteilungsalgorithmus/MNIST_TestData/train-labels.idx1-ubyte", "C:/Users/Fabian/Documents/GitHub/Zuteilungsalgorithmus/MNIST_TestData/train-images.idx3-ubyte");
+		MNIST test= new MNIST("C:/Users/Fabian/Documents/GitHub/Zuteilungsalgorithmus/MNIST_TestData/t10k-labels.idx1-ubyte","C:/Users/Fabian/Documents/GitHub/Zuteilungsalgorithmus/MNIST_TestData/t10k-images.idx3-ubyte");
+		/*
+		 * int n;
 		double number;
 		// Test MNIST data-loader
 		for(MNISTdata d: test.data){
@@ -277,6 +279,7 @@ public class Maths{
 		for(int i=0;i<outputs.length;i++){
 			System.out.print(outputs[i]+"    ");
 		}
+		n.stochastic_gradient_descent(train.data,30,10,3,test.data);
 	}
 	protected static double random(){
 		Random r= new Random();

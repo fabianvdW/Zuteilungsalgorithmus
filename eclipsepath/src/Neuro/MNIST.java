@@ -230,8 +230,8 @@ public class MNIST{
 		/*
 		 * Bsp. für Dateiangabe, wird später noch irgendwie übergeben oder relativ angegeben
 		 */
-		imgFilename = "C:/Users/Fabian/Documents/GitHub/Zuteilungsalgorithmus/MNIST_TestData/train-images.idx3-ubyte";
-		labelFilename = "C:/Users/Fabian/Documents/GitHub/Zuteilungsalgorithmus/MNIST_TestData/train-labels.idx1-ubyte";
+		//imgFilename = "C:/Users/Fabian/Documents/GitHub/Zuteilungsalgorithmus/MNIST_TestData/train-images.idx3-ubyte";
+		//labelFilename = "C:/Users/Fabian/Documents/GitHub/Zuteilungsalgorithmus/MNIST_TestData/train-labels.idx1-ubyte";
 		
 		//fck this try catch blocks
 		try{

@@ -272,4 +272,61 @@ public class Network{
 		x+=biases.get(i-1)[k];
 		return Maths.sigmoid(x);
 	}
+	protected void stochastic_gradient_descent(MNISTdata[] train_data,int epochs,int batch_size,int learnrate, MNISTdata[] test_data){
+		for(int i=0;i<epochs;i++){
+			this.shuffleTrainData(train_data);
+			ArrayList<MNISTdata[]> batches= new ArrayList<MNISTdata[]>();
+			for(int k=0;k<train_data.length/batch_size;k++){
+				MNISTdata[] minibatch=new MNISTdata[batch_size];
+				for(int j=0;j<batch_size;j++){
+					minibatch[j]=train_data[k*batch_size+ j];
+				}
+				batches.add(minibatch);
+			}
+			for(MNISTdata[] batch: batches){
+				updateBatch(batch);
+			}
+			System.out.println("Epoch "+i +" beendet!  " +evaluateData(test_data)+"/"+test_data.length);
+		}
+	}
+	protected void updateBatch(MNISTdata[] batch){
+		
+	}
+	protected int evaluateData(MNISTdata[] test_data){
+		int count=0;
+		for(int i=0;i<test_data.length;i++){
+			if(getOutputInt(test_data[i])==test_data[i].solution){
+				count++;
+			}
+		}
+		return count;
+	}
+	protected int getOutputInt(MNISTdata data){
+		double[] outputs= getOutput(data.img);
+		double max=-1;
+		int pos=-1;
+		for(int i=0;i<outputs.length;i++){
+			if(outputs[i]>max){
+				max=outputs[i];
+				pos=i;
+			}
+		}
+		return pos;
+	}
+	private MNISTdata[] shuffleTrainData(MNISTdata[] train_data){
+		ArrayList<MNISTdata> arraydata= new ArrayList<MNISTdata>();
+		for(int i=0;i<train_data.length;i++){
+			arraydata.add(train_data[i]);
+		}
+		ArrayList<MNISTdata> shufflearraydata= new ArrayList<MNISTdata>();
+		while(arraydata.size()>0){
+			int rand= (int)(Math.random()* arraydata.size());
+			shufflearraydata.add(arraydata.get(rand));
+			arraydata.remove(rand);
+		}
+		for(int i=0;i<shufflearraydata.size();i++){
+			train_data[i]=shufflearraydata.get(i);
+		}
+		return train_data;
+	}
 }
