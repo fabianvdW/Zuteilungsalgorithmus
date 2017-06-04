@@ -230,13 +230,13 @@ public class MNIST{
 		/*
 		 * Bsp. für Dateiangabe, wird später noch irgendwie übergeben oder relativ angegeben
 		 */
-		imgFilename = "C:/Users/Fabian/Documents/GitHub/Zuteilungsalgorithmus/MNIST_TestData/train-images.idx3-ubyte";
-		labelFilename = "C:/Users/Fabian/Documents/GitHub/Zuteilungsalgorithmus/MNIST_TestData/train-labels.idx1-ubyte";
+		imgFilename = System.getProperty("user.home") + "/documents/GitHub/Zuteilungsalgorithmus/MNIST_TestData/train-images.idx3-ubyte";
+		labelFilename = System.getProperty("user.home") + "/documents/GitHub/Zuteilungsalgorithmus/MNIST_TestData/train-labels.idx1-ubyte";
 		
 		//fck this try catch blocks
 		try{
-			DataInputStream labels = new DataInputStream(new FileInputStream(labelFilename));
 			DataInputStream images = new DataInputStream(new FileInputStream(imgFilename));
+			DataInputStream labels = new DataInputStream(new FileInputStream(labelFilename));
 			
 			// check magic numbers -> make sure right files...
 			int magicN = labels.readInt();

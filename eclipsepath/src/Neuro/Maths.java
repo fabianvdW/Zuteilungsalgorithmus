@@ -201,7 +201,7 @@
    limitations under the License.
 */
 package Neuro;
-import Neuro.Network;
+
 public class Maths{
 	protected static double learnRate = 0.1;
 	// mit h und der learnRate muss noch etwas herum experimentiert werden, dazu wird aber das komplette neuro-netz benötigt...
@@ -212,7 +212,7 @@ public class Maths{
 	// für test-zwecke
 	public static void main(String[] args){
 		
-		/*MNIST test = new MNIST("", "");
+		MNIST test = new MNIST("", "");
 		int n;
 		double number;
 		// Test MNIST data-loader
@@ -232,7 +232,6 @@ public class Maths{
 				}
 			}
 		}
-		*/
 		// Test gradient
 		/*double[] aktuellerWert = new double[]{3, 1};
 		int duration = 100;
@@ -246,9 +245,9 @@ public class Maths{
 			aktuellerWert = gradientDescent(aktuellerWert);
 		}
 		*/
-		//TEST NEtwork
+		//TEST Network
 		int[] layers={784,30,10};
-		Network n= new Network(layers);
+		Network net = new Network(layers);
 		/*
 		System.out.println("Biases:");
 		for(int i=0;i<n.biases.size();i++){
@@ -269,11 +268,11 @@ public class Maths{
 		}
 		*/
 		System.out.println("Outputs: ");
-		double[] input= new double[n.startLayers[0]];
+		double[] input= new double[net.startLayers[0]];
 		for(int i=0;i<input.length;i++){
 			input[i]=Math.random();
 		}
-		double[] outputs= n.getOutput(input);
+		double[] outputs= net.getOutput(input);
 		for(int i=0;i<outputs.length;i++){
 			System.out.print(outputs[i]+"    ");
 		}
