@@ -201,7 +201,7 @@
    limitations under the License.
 */
 package Neuro;
-import Neuro.Network;
+import java.util.Random;
 public class Maths{
 	protected static double learnRate = 0.1;
 	// mit h und der learnRate muss noch etwas herum experimentiert werden, dazu wird aber das komplette neuro-netz benötigt...
@@ -279,7 +279,8 @@ public class Maths{
 		}
 	}
 	protected static double random(){
-		return ( Math.random()*((Math.random()*8)-4));
+		Random r= new Random();
+		return ( r.nextGaussian());
 	}
 	protected static double sigmoid(double z){
 		return 1/(1 + Math.pow(e, -z));
