@@ -374,41 +374,68 @@ public class Network{
 		WBSet nabla = new WBSet();
 		
 		double[] input;
-		double[] output;
+		double[] solution;
 		for(MNISTdata data: batch){
 			input = data.img;
-			output = new double[10];
+			solution = new double[10];
 			for(int i = 0; i < 9; i++){
-				output[i] = 0;
+				solution[i] = 0;
 				if(data.solution == i){
-					output[i] = 1;
+					solution[i] = 1;
 				}
 			}
-			backpropagation(input, output);
+			backpropagation(input, solution);
 		}
 	}
 	
 	/**
 	 * Verändert die weights und biases des netzwerks anhand von dem input und der Lösung
 	 * @param input
-	 * @param output
+	 * @param solution
 	 */
-	protected void backpropagation(double[] input, double[] output){
+	protected void backpropagation(double[] input, double[] solution){
 		WBSet nabla = new WBSet();
 		ArrayList<double[]> activations = new ArrayList<double[]>();
 		activations.add(input);
 		double z;
 		ArrayList<Double> zs = new ArrayList<Double>();
-		for(int i = 0; i < startLayers.length; i++){
+		for(int i = 0; i + 1 < startLayers.length; i++){
 			double[] newActivation = new double[biases.get(i).length];
-			for(int n = 0; n < startLayers[i]; n++){
-				z = Maths.dot(weights.get(i)[n], input) + biases.get(i)[n];
+			for(int n = 0; n < startLayers[i + 1]; n++){
+				z = 0;
+				for(int m = 0; m < startLayers[i]; m++){
+					z += weights.get(i)[m][n] * input[m] + biases.get(i)[n];
+				}
 				zs.add(z);
 				newActivation[n] = Maths.sigmoid(z);
 			}
 			activations.add(newActivation);
 			input = newActivation;
 		}
+		
+		// backwardfeed änderungen an bias und weight
+		for(int i = startLayers.length - 1; i > 0; i--){
+			// missing something like costDerivative() * \ sigmoidPrime(zs[zs.length - 1]);
+			// problem: costDerivative is from last Layer and zs[-1] is the output of the last neuron of the last layer...
+			double[] delta = costDerivative(activations.get(activations.size() - 1), solution);
+			for(int n = 0; n < delta.length; n++){
+				nabla.b.set(i, delta);
+			}
+		}
+	}
+	
+	/**
+	 * Das ist mal nicht wirklich eine Ableitung... berechnet die Differenz zwischen errechnetem und tatsächlichem Ergebnis
+	 * @param output
+	 * @param solution
+	 * @return
+	 */
+	protected double[] costDerivative(double[] output, double[] solution){
+		double[] result = new double[output.length];
+		for(int i = 0; i < output.length; i++){
+			result[i] = output[i] - solution[i];
+		}
+		return result;
 	}
 	
 	/**
