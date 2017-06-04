@@ -207,125 +207,177 @@ import java.util.ArrayList;
 public class Network{
 	protected int[] startLayers;
 	protected ArrayList<double[]> biases;
-	protected ArrayList<double[][]>weights;
+	protected ArrayList<double[][]> weights;
+	
+	/**
+	 * Bsp.:
+	 * Layers[20, 3, 4] => 20 Input-layer Neuronen; 1 hidden layer mit 3 Neuronen und Output-layer mit 4 Neuronen
+	 * Layers[30, 15, 10, 90] => 30 Input-layer Neuronen; 1. hidden layer mit 15 Neuronen; 2. hidden layer mit 10 Neuronen und Output-layer mit 90 Neuronen
+	 * @param layers
+	 */
 	public Network(int[] layers){
 		startLayers = layers;
-		biases= new ArrayList<double[]>();
-		for(int i=1;i<startLayers.length;i++){
-			double[] biasrow= new double[startLayers[i]];
-			for(int k=0;k<biasrow.length;k++){
-				biasrow[k]=Maths.random();
+		biases = new ArrayList<double[]>();
+		for(int i = 1; i < startLayers.length; i++){
+			double[] biasrow = new double[startLayers[i]];
+			for(int k = 0; k < biasrow.length; k++){
+				biasrow[k] = Maths.random();
 			}
 			biases.add(biasrow);
 		}
-		weights= new ArrayList<double[][]>();
-		for(int i=0;i+1<layers.length;i++){
-			double[][] weightsrow= new double[layers[i]][layers[i+1]];
-			for(int k=0;k<weightsrow.length;k++){
-				for(int j=0;j<weightsrow[k].length;j++){
-					weightsrow[k][j]=Maths.random();
+		weights = new ArrayList<double[][]>();
+		for(int i = 0; i + 1 < layers.length; i++){
+			double[][] weightsrow = new double[layers[i]][layers[i + 1]];
+			for(int k = 0; k < weightsrow.length; k++){
+				for(int j = 0; j < weightsrow[k].length; j++){
+					weightsrow[k][j] = Maths.random();
 				}
 			}
 			weights.add(weightsrow);
 		}
 	}
+	
+	/**
+	 * berechnet den output (matrix)
+	 * @param inputs
+	 * @return
+	 */
 	protected double[] getOutput(double[] inputs){
-		if(inputs.length!=startLayers[0]){
+		if(inputs.length != startLayers[0]){
 			System.out.println("Ungültige Inputs! Returnt Null");
 			return null;
 		}
+		
 		//Leere Output Liste mit 0.0 als Outputs und der input liste als ersten output wird erzeugt
-		ArrayList<double[]> outputs= new ArrayList<double[]>();
+		ArrayList<double[]> outputs = new ArrayList<double[]>();
 		outputs.add(inputs);
-		for(int i=1;i<startLayers.length;i++){
-			double[] layerk= new double[startLayers[i]];
-			for(int k=0;k<startLayers[i];k++){
-				layerk[k]=0;
+		for(int i = 1; i < startLayers.length; i++){
+			double[] layerk = new double[startLayers[i]];
+			for(int k = 0; k < startLayers[i]; k++){
+				layerk[k] = 0;
 			}
 			outputs.add(layerk);
 		}
+		
 		//Output Liste wird vervollständigt, die letzte Spalte ist nun der wirkliche Output
-		for(int i=1;i<outputs.size();i++){
-			double[] rowk= outputs.get(i);
-			for(int k=0;k<outputs.get(i).length;k++){
-				rowk[k]=output(outputs,i,k);
+		for(int i = 1; i < outputs.size(); i++){
+			double[] rowk = outputs.get(i);
+			for(int k = 0; k < outputs.get(i).length; k++){
+				rowk[k] = output(outputs, i, k);
 			}
 			outputs.remove(i);
 			outputs.add(i, rowk);
 		}
+		
 		//DEBUG
 		/*
-		for(int i=0;i<outputs.size();i++){
-			for(int k=0;k<outputs.get(i).length;k++){
-				System.out.print(outputs.get(i)[k]+"   ");
+		for(int i = 0; i < outputs.size(); i++){
+			for(int k = 0; k < outputs.get(i).length; k++){
+				System.out.print(outputs.get(i)[k] + "   ");
 			}
 			System.out.println("\n\n");
 		}
 		System.out.println("Fertig");*/
-		return outputs.get(outputs.size()-1);
+		return outputs.get(outputs.size() - 1);
 	}
-	protected double output(ArrayList<double[]> outputs,int i,int k){
-		double x=0;
-		for(int m=0;m<outputs.get(i-1).length;m++){
-			x+=outputs.get(i-1)[m]* weights.get(i-1)[m][k];
+	
+	/**
+	 * berechnet den output eines einzelnen neurons (knoten)
+	 * @param outputs
+	 * @param i
+	 * @param k
+	 * @return
+	 */
+	protected double output(ArrayList<double[]> outputs, int i, int k){
+		double x = 0;
+		for(int m = 0; m < outputs.get(i - 1).length; m++){
+			x += outputs.get(i - 1)[m] * weights.get(i - 1)[m][k];
 		}
-		x+=biases.get(i-1)[k];
+		x += biases.get(i - 1)[k];
 		return Maths.sigmoid(x);
 	}
-	protected void stochastic_gradient_descent(MNISTdata[] train_data,int epochs,int batch_size,int learnrate, MNISTdata[] test_data){
-		for(int i=0;i<epochs;i++){
+	
+	/**
+	 * 
+	 * @param train_data
+	 * @param epochs
+	 * @param batch_size
+	 * @param learnrate
+	 * @param test_data
+	 */
+	protected void stochastic_gradient_descent(MNISTdata[] train_data, int epochs, int batch_size, int learnrate, MNISTdata[] test_data){
+		for(int i = 0; i < epochs; i++){
 			this.shuffleTrainData(train_data);
-			ArrayList<MNISTdata[]> batches= new ArrayList<MNISTdata[]>();
-			for(int k=0;k<train_data.length/batch_size;k++){
-				MNISTdata[] minibatch=new MNISTdata[batch_size];
-				for(int j=0;j<batch_size;j++){
-					minibatch[j]=train_data[k*batch_size+ j];
+			ArrayList<MNISTdata[]> batches = new ArrayList<MNISTdata[]>();
+			for(int k = 0; k < train_data.length / batch_size; k++){
+				MNISTdata[] minibatch = new MNISTdata[batch_size];
+				for(int j = 0; j < batch_size; j++){
+					minibatch[j] = train_data[k * batch_size + j];
 				}
 				batches.add(minibatch);
 			}
 			for(MNISTdata[] batch: batches){
 				updateBatch(batch);
 			}
-			System.out.println("Epoch "+i +" beendet!  " +evaluateData(test_data)+"/"+test_data.length);
+			System.out.println("Epoch " + i + " beendet!  " + evaluateData(test_data) + "/" + test_data.length);
 		}
 	}
+	
 	protected void updateBatch(MNISTdata[] batch){
 		
 	}
+	
+	/**
+	 * zählt wie viele der bilder richtig erkannt wurden
+	 * @param test_data
+	 * @return
+	 */
 	protected int evaluateData(MNISTdata[] test_data){
-		int count=0;
-		for(int i=0;i<test_data.length;i++){
-			if(getOutputInt(test_data[i])==test_data[i].solution){
+		int count = 0;
+		for(int i = 0; i < test_data.length; i++){
+			if(getOutputInt(test_data[i]) == test_data[i].solution){
 				count++;
 			}
 		}
 		return count;
 	}
+	
+	/**
+	 * gibt den output des netzwerks anhand eines datensets als int aus (Wert der am größten ist)
+	 * @param data
+	 * @return
+	 */
 	protected int getOutputInt(MNISTdata data){
-		double[] outputs= getOutput(data.img);
-		double max=-1;
-		int pos=-1;
-		for(int i=0;i<outputs.length;i++){
-			if(outputs[i]>max){
-				max=outputs[i];
-				pos=i;
+		double[] outputs = getOutput(data.img);
+		double max = -1;
+		int pos = -1;
+		for(int i = 0; i < outputs.length; i++){
+			if(outputs[i] > max){
+				max = outputs[i];
+				pos = i;
 			}
 		}
 		return pos;
 	}
+	
+	/**
+	 * shuffled die Testdaten von MNIST
+	 * @param train_data
+	 * @return
+	 */
 	private MNISTdata[] shuffleTrainData(MNISTdata[] train_data){
-		ArrayList<MNISTdata> arraydata= new ArrayList<MNISTdata>();
-		for(int i=0;i<train_data.length;i++){
+		ArrayList<MNISTdata> arraydata = new ArrayList<MNISTdata>();
+		for(int i = 0; i < train_data.length; i++){
 			arraydata.add(train_data[i]);
 		}
-		ArrayList<MNISTdata> shufflearraydata= new ArrayList<MNISTdata>();
-		while(arraydata.size()>0){
-			int rand= (int)(Math.random()* arraydata.size());
+		ArrayList<MNISTdata> shufflearraydata = new ArrayList<MNISTdata>();
+		while(arraydata.size() > 0){
+			int rand = (int)(Math.random() * arraydata.size());
 			shufflearraydata.add(arraydata.get(rand));
 			arraydata.remove(rand);
 		}
-		for(int i=0;i<shufflearraydata.size();i++){
-			train_data[i]=shufflearraydata.get(i);
+		for(int i = 0; i < shufflearraydata.size(); i++){
+			train_data[i] = shufflearraydata.get(i);
 		}
 		return train_data;
 	}

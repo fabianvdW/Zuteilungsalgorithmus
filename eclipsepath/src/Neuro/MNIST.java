@@ -224,14 +224,11 @@ public class MNIST{
 	 * @param imgFilename
 	 */
 	protected MNIST(String labelFilename, String imgFilename){
-		/*
-		 * Bsp. für Dateiangabe, wird später noch irgendwie übergeben oder relativ angegeben
-		 */
-
 		//imgFilename = System.getProperty("user.home") + "/documents/GitHub/Zuteilungsalgorithmus/MNIST_TestData/train-images.idx3-ubyte";
 		//labelFilename = System.getProperty("user.home") + "/documents/GitHub/Zuteilungsalgorithmus/MNIST_TestData/train-labels.idx1-ubyte";
 		imgFilename = System.getProperty("user.home") + imgFilename;
 		labelFilename = System.getProperty("user.home") + labelFilename;
+		
 		//fck this try catch blocks
 		try{
 			DataInputStream images = new DataInputStream(new FileInputStream(imgFilename));
@@ -256,7 +253,7 @@ public class MNIST{
 			nImgs = images.readInt();
 			nRows = images.readInt();
 			nCols = images.readInt();
-			if(nLabels!=nImgs){
+			if(nLabels != nImgs){
 				labels.close();
 				images.close();
 				throw new Error("Anzahl der Einträge bei der Bilddatei(" + nImgs + ") und der Labeldatei(" + nLabels + ") sind unterschiedlich");

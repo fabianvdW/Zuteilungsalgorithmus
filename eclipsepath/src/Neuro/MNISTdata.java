@@ -202,6 +202,12 @@
 */
 package Neuro;
 
+/**
+ * Klasse zur Datenhandhabung eines Bildes von Schwarzwerten zwischen 0-1 in double[] und deren Lösung
+ * Werte innerhalb der Klasse sollen final sein!!!
+ * @author Leo Jung
+ *
+ */
 public class MNISTdata{
 	// val: 0(white) - 1(black)
 	protected final double[] img;

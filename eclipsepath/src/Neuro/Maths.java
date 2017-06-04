@@ -201,6 +201,7 @@
    limitations under the License.
 */
 package Neuro;
+
 import java.util.Random;
 
 public class Maths{
@@ -214,7 +215,7 @@ public class Maths{
 	public static void main(String[] args){
 		
 		MNIST train = new MNIST("/Documents/GitHub/Zuteilungsalgorithmus/MNIST_TestData/train-labels.idx1-ubyte", "/Documents/GitHub/Zuteilungsalgorithmus/MNIST_TestData/train-images.idx3-ubyte");
-		MNIST test= new MNIST("/Documents/GitHub/Zuteilungsalgorithmus/MNIST_TestData/t10k-labels.idx1-ubyte","/Documents/GitHub/Zuteilungsalgorithmus/MNIST_TestData/t10k-images.idx3-ubyte");
+		MNIST test= new MNIST("/Documents/GitHub/Zuteilungsalgorithmus/MNIST_TestData/t10k-labels.idx1-ubyte", "/Documents/GitHub/Zuteilungsalgorithmus/MNIST_TestData/t10k-images.idx3-ubyte");
 		/*
 		 * int n;
 		// Test MNIST data-loader
@@ -288,12 +289,12 @@ public class Maths{
 			}
 		}
 		*/
-		n.stochastic_gradient_descent(train.data,30,10,3,test.data);
+		n.stochastic_gradient_descent(train.data, 30, 10, 3, test.data);
 	}
 	
 	protected static double random(){
 		Random r= new Random();
-		return ( r.nextGaussian());
+		return(r.nextGaussian());
 	}
 	
 	protected static double sigmoid(double z){
