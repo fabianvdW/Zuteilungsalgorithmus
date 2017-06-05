@@ -286,7 +286,7 @@ public class Network{
 	}
 	
 	/**
-	 * VerÃ¤ndert die weights und biases des netzwerks (zu hoffentlich besseren Ergebnissen)
+	 * Verändert die weights und biases des netzwerks (zu hoffentlich besseren Ergebnissen)
 	 * @param batch
 	 * @param learnrate
 	 */
@@ -303,7 +303,7 @@ public class Network{
 				}
 			}
 			berechneOutput(input);
-			double error = getError(solution);
+			double[] error = getError(solution);
 			//berechneDeltaW
 			//Average das auf size von Batch
 		}
@@ -311,10 +311,10 @@ public class Network{
 	}
 	
 
-	protected double getError(double[] solution){
-		double error = 0;
+	protected double[] getError(double[] solution){
+		double[] error = new double[neurons.get(neurons.size()-1).length];
 		for(int i = 0; i < neurons.get(neurons.size() - 1).length; i++){
-			error += Math.pow(solution[i] - neurons.get(neurons.size() - 1)[i].output, 2);
+			error[i]= Math.pow(solution[i] - neurons.get(neurons.size() - 1)[i].output, 2);
 		}
 		return error;
 	}
@@ -333,7 +333,7 @@ public class Network{
 	}
 	
 	/**
-	 * zÃ¤hlt wie viele der bilder richtig erkannt wurden
+	 * zählt wie viele der bilder richtig erkannt wurden
 	 * @param test_data
 	 * @return
 	 */
@@ -348,7 +348,7 @@ public class Network{
 	}
 	
 	/**
-	 * gibt den output des netzwerks anhand eines datensets als int aus (Wert der am grÃ¶ÃŸten ist)
+	 * gibt den output des netzwerks anhand eines datensets als int aus (Wert der am größten ist)
 	 * @param data
 	 * @return
 	 */
