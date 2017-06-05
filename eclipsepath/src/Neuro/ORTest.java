@@ -13,6 +13,6 @@ public class ORTest {
 		train_data[3]=new MNISTdata(train_4a,1);
 		int[] layers={2,10,1};
 		Network n = new Network(layers);
-		n.stochastic_gradient_descent(train_data, 1000, 4, 1, train_data);
+		n.stochastic_gradient_descent(train_data, 100, 4, 0.1, train_data);
 	}
 }

@@ -352,7 +352,8 @@ public class Network{
 	 * @return
 	 */
 	protected ArrayList<double[][]> berechneDeltaW(double learnRate, double error){
-		System.out.println("Error: " +error);
+		System.out.println("\n\nError: " +error);
+		System.out.println("Output:" + neurons.get(neurons.size()-1)[0].output);
 		ArrayList<double[][]> deltaW = new ArrayList<double[][]>();
 		// Korrektur ab dem vorletzten Layer
 		for(int i = startLayers.length - 2; i >= 0; i--){
