@@ -352,8 +352,18 @@ public class Network{
 	 */
 	protected ArrayList<double[][]> berechneDeltaW(double learnRate, double error){
 		ArrayList<double[][]> deltaW = new ArrayList<double[][]>();
+		// Korrektur ab dem vorletzten Layer
+		for(int i = startLayers.length - 2; i > 0; i--){
+			double[][] dLayer = new double[startLayers[i]][startLayers[i + 1]];
+			for(int n = 0; n < startLayers[i]; n++){
+				for(int m = 0; m < startLayers[i + 1]; m++){
+					dLayer[n][m] = neurons.get(i)[n].weights[m] - learnRate * error * neurons.get(i)[n].output * Maths.sigmoidPrime(neurons.get(i + 1)[m].netH);
+				}
+			}
+			deltaW.add(dLayer);
+		}
 		//weight(old) + learning rate * output error * output(neurons i) * output(neurons i+1) * ( 1 - output(neurons i+1) )
-		return null;
+		return deltaW;
 	}
 	
 	/**
