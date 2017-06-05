@@ -203,7 +203,6 @@
 package Neuro;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Network{
 	
@@ -330,7 +329,7 @@ public class Network{
 				for(int k = 0; k < startLayers[i]; k++){
 					for(int j = 0; j < startLayers[i + 1]; j++){
 						deltaW.get(i)[k][j] += bDW.get(i)[k][j] / batch.length;
-						//deltaW.get(i)[k][j] += Math.random() / batch.length;
+						//deltaW.get(i)[k][j] += Maths.random() / batch.length;
 					}
 				}
 			}
