@@ -269,17 +269,19 @@ public class Network{
 	protected void stochastic_gradient_descent(MNISTdata[] train_data, int epochs, int batch_size, double learnrate, MNISTdata[] test_data){
 		System.out.println("Epoch 0 beendet!  " + evaluateData(test_data) + "/" + test_data.length);
 		for(int i = 0; i < epochs; i++){
-			//this.shuffleTrainData(train_data);
+			this.shuffleTrainData(train_data);
 			ArrayList<MNISTdata[]> batches = new ArrayList<MNISTdata[]>();
 			for(int k = 0; k < train_data.length / batch_size; k++){
 				MNISTdata[] minibatch = new MNISTdata[batch_size];
 				for(int j = 0; j < batch_size; j++){
 					minibatch[j] = train_data[k * batch_size + j];
 				}
+				
 				batches.add(minibatch);
 			}
 			for(MNISTdata[] batch: batches){
 				updateBatch(batch, learnrate);
+				System.out.println("Batch done \n\n");
 			}
 			System.out.println("Epoch " + (i + 1) + " beendet!  " + evaluateData(test_data) + "/" + test_data.length);
 		}
@@ -320,7 +322,7 @@ public class Network{
 			}
 			berechneOutput(input);
 			double error = getError(solution);
-			ArrayList<double[][]> bDW = berechneDeltaW(learnrate, error);
+			ArrayList<double[][]> bDW = berechneDeltaW(data,learnrate, error);
 			//berechne DeltaW
 			//deltaW = deltaW + berechnetesDeltaW / batch.length
 			//sollte hierbei nicht auch noch der Fehler miteinberechnet werde,?
@@ -352,11 +354,13 @@ public class Network{
 	 * Funktion zum errechnen der benötigten Abweichungen um einen Lerneffekt zu erzielen
 	 * @return
 	 */
-	protected ArrayList<double[][]> berechneDeltaW(double learnRate, double error){
+	protected ArrayList<double[][]> berechneDeltaW(MNISTdata data,double learnRate, double error){
 		System.out.println("\n\nError: " +error);
 		for(int i=0 ;i< neurons.get(neurons.size()-1).length;i++){
 			System.out.println("Output:"+i +"  "+ neurons.get(neurons.size()-1)[i].output);
 		}
+		System.out.println("Insgesamter Output: "+ getOutputInt(data));
+		System.out.println("Desired O: " +data.solution);
 		ArrayList<double[][]> deltaW = new ArrayList<double[][]>();
 		// Korrektur ab dem vorletzten Layer
 		for(int i = startLayers.length - 2; i >= 0; i--){
@@ -381,7 +385,7 @@ public class Network{
 	protected double getError(double[] solution){
 		double error = 0;
 		for(int i = 0; i < neurons.get(neurons.size() - 1).length; i++){
-			error += (1.0 / neurons.get(neurons.size() - 1).length) * Math.pow(solution[i] - neurons.get(neurons.size() - 1)[i].output, 2);
+			error += (0.5) * Math.pow( neurons.get(neurons.size() - 1)[i].output-solution[i], 1);
 		}
 		return error;
 	}
@@ -395,19 +399,22 @@ public class Network{
 		//Bild erkennen
 		int count = 0;
 		
-		/*for(int i = 0; i < test_data.length; i++){
+		for(int i = 0; i < test_data.length; i++){
+			//System.out.println("output:  " + getOutputInt(test_data[i]));
+			//System.out.println("sol:  " + test_data[i].solution);
 			if(getOutputInt(test_data[i]) == test_data[i].solution){
 				count++;
 			}
-		}*/
+		}
 		
 		//OR
+		/*
 		for(int i = 0; i< test_data.length;i++){
 			double ergebnis= neurons.get(neurons.size()-1)[0].output;
 			if(test_data[i].solution-ergebnis<0.2){
 				count++;
 			}
-		}
+		}*/
 		return count;
 	}
 	

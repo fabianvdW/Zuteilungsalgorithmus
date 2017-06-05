@@ -291,7 +291,11 @@ public class Maths{
 			}
 		}
 		*/
-		n.stochastic_gradient_descent(train.data, 30, 10, 3, test.data);
+		MNISTdata[] train_data= new MNISTdata[1000];
+		for(int i=0; i<1000;i++){
+			train_data[i]= train.data[i];
+		}
+		n.stochastic_gradient_descent(train_data, 30, 10, 3, train_data);
 	}
 	
 	protected static double random(){
