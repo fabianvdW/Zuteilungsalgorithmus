@@ -267,6 +267,7 @@ public class Maths{
 			System.out.println("\n");
 		}
 		*/
+		/*
 		System.out.println("Weights:");
 		for(int i = 0; i < n.weights.size(); i++){
 			for(int k = 0; k < n.weights.get(i).length; k++){
@@ -277,6 +278,7 @@ public class Maths{
 			}
 			System.out.println("\n\n\n");
 		}
+		*/
 		/*
 		System.out.println("Outputs: ");
 		// input from MNISTdata-set

@@ -225,20 +225,18 @@ public class Network{
 		void zeros(){
 			b = new ArrayList<double[]>();
 			w = new ArrayList<double[][]>();
-			for(int i = 0; i < weights.size(); i++){
-				double[][] wLayer = new double[weights.get(i).length][];
-				for(int m = 0; m < weights.get(i).length; m++){
-					double[] wRow = new double[weights.get(i)[m].length];
-					for(int n = 0; n < weights.get(i)[m].length; n++){
-						wRow[n] = 0;
+			for(int i = 0; i + 1 < startLayers.length; i++){
+				double[][] weightsrow = new double[startLayers[i]][startLayers[i + 1]];
+				for(int k = 0; k < weightsrow.length; k++){
+					for(int j = 0; j < weightsrow[k].length; j++){
+						weightsrow[k][j] = 0;
 					}
-					wLayer[m] = wRow;
 				}
-				w.add(wLayer);
+				w.add(weightsrow);
 			}
-			for(int i = 0; i < biases.size(); i++){
-				double[] bLayer = new double[biases.get(i).length];
-				for(int m = 0; m < biases.get(i).length; m++){
+			for(int i = 0; i < startLayers.length; i++){
+				double[] bLayer = new double[startLayers[i]];
+				for(int m = 0; m < startLayers[i]; m++){
 					bLayer[m] = 0;
 				}
 				b.add(bLayer);
@@ -397,30 +395,53 @@ public class Network{
 		WBSet nabla = new WBSet();
 		ArrayList<double[]> activations = new ArrayList<double[]>();
 		activations.add(input);
-		double z;
-		ArrayList<Double> zs = new ArrayList<Double>();
+		ArrayList<double[]> zs = new ArrayList<double[]>();
 		for(int i = 0; i + 1 < startLayers.length; i++){
 			double[] newActivation = new double[biases.get(i).length];
+			double[] zRow = new double[startLayers[i + 1]];
 			for(int n = 0; n < startLayers[i + 1]; n++){
-				z = 0;
+				double z = 0;
 				for(int m = 0; m < startLayers[i]; m++){
 					z += weights.get(i)[m][n] * input[m] + biases.get(i)[n];
 				}
-				zs.add(z);
+				zRow[n] = z;
 				newActivation[n] = Maths.sigmoid(z);
 			}
+			zs.add(zRow);
 			activations.add(newActivation);
 			input = newActivation;
 		}
 		
 		// backwardfeed änderungen an bias und weight
+		// missing something like costDerivative() * \ sigmoidPrime(zs[zs.length - 1]);
+		// problem: costDerivative is from last Layer and zs[-1] is the output of the last neuron of the last layer...
+		double[] delta = costDerivative(activations.get(activations.size() - 1), solution);
+		/*
+		 * possible solution:
+		 * double[] delta = costDerivative(activations.get(activations.size() - 1), solution);
+		 * for(int i = 0; i < delta.length; i++){
+		 * 		delta[i] = delta[i] * sigmoidPrime(zs.get(zs.size() - 1)[i]);
+		 * }
+		 * 
+		 * double[] delta = costDerivative(activations.get(activations.size() - 1), solution);
+		 * for(int i = 0; i < delta.length; i++){
+		 * 		delta[i] = delta[i] / sigmoidPrime(zs.get(zs.size() - 1)[i]);
+		 * }
+		 * 
+		 * (does this make sense??? above)
+		 */
+		
 		for(int i = startLayers.length - 1; i > 0; i--){
-			// missing something like costDerivative() * \ sigmoidPrime(zs[zs.length - 1]);
-			// problem: costDerivative is from last Layer and zs[-1] is the output of the last neuron of the last layer...
-			double[] delta = costDerivative(activations.get(activations.size() - 1), solution);
+			delta = new double[startLayers[i]];
+			//System.out.println("delta.size: " + startLayers[i]);
 			for(int n = 0; n < delta.length; n++){
-				nabla.b.set(i, delta);
+				/* DEBUG
+				System.out.println("weigths.size bei index " + (i - 1) + " -> " + weights.get(i - 1)[n].length);
+				System.out.println("zs.size bei index " + (i - 1) + " -> " + zs.get(i - 1).length);
+				*/
+				delta[n] = Maths.dot(weights.get(i - 1)[n], delta) * Maths.sigmoidPrime(zs.get(i - 1)[n]);
 			}
+			nabla.b.set(i, delta);
 		}
 	}
 	
