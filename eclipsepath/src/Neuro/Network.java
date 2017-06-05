@@ -340,7 +340,7 @@ public class Network{
 		for(int i = 0; i + 1 < startLayers.length; i++){
 			for(int k = 0 ; k < startLayers[i]; k++){
 				for(int j = 0; j < startLayers[i + 1]; j++){
-					neurons.get(i)[k].weights[j] -= learnrate * deltaW.get(i)[k][j];
+					neurons.get(i)[k].weights[j] += 1 * deltaW.get(i)[k][j];
 				}
 			}
 		}
@@ -352,17 +352,18 @@ public class Network{
 	 * @return
 	 */
 	protected ArrayList<double[][]> berechneDeltaW(double learnRate, double error){
-		System.out.println("\n\nError: " +error);
-		for(int i=0 ;i< neurons.get(neurons.size()-1).length;i++){
-			System.out.println("Output:"+i +"  "+ neurons.get(neurons.size()-1)[i].output);
-		}
+		//System.out.println("\n\nError: " +error);
+		//for(int i=0 ;i< neurons.get(neurons.size()-1).length;i++){
+		//	System.out.println("Output:"+i +"  "+ neurons.get(neurons.size()-1)[i].output);
+		//}
 		ArrayList<double[][]> deltaW = new ArrayList<double[][]>();
 		// Korrektur ab dem vorletzten Layer
 		for(int i = startLayers.length - 2; i >= 0; i--){
 			double[][] dLayer = new double[startLayers[i]][startLayers[i + 1]];
 			for(int n = 0; n < startLayers[i]; n++){
 				for(int m = 0; m < startLayers[i + 1]; m++){
-					dLayer[n][m] = neurons.get(i)[n].weights[m] - learnRate * error * neurons.get(i)[n].output * Maths.sigmoidPrime(neurons.get(i + 1)[m].netH);
+					dLayer[n][m] =  learnRate * error * neurons.get(i)[n].output * Maths.sigmoidPrime(neurons.get(i + 1)[m].netH);
+					//System.out.println("DLayer:   "+dLayer[n][m]+"\n");
 				}
 			}
 			deltaW.add(0, dLayer);
@@ -379,7 +380,7 @@ public class Network{
 	protected double getError(double[] solution){
 		double error = 0;
 		for(int i = 0; i < neurons.get(neurons.size() - 1).length; i++){
-			error += (1.0 / neurons.get(neurons.size() - 1).length) * Math.pow(solution[i] - neurons.get(neurons.size() - 1)[i].output, 2);
+			error += (1.0 / neurons.get(neurons.size() - 1).length) * Math.pow(solution[i] - neurons.get(neurons.size() - 1)[i].output, 1);
 		}
 		return error;
 	}
