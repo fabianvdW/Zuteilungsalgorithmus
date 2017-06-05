@@ -352,10 +352,10 @@ public class Network{
 	 * @return
 	 */
 	protected ArrayList<double[][]> berechneDeltaW(double learnRate, double error){
-		//System.out.println("\n\nError: " +error);
-		//for(int i=0 ;i< neurons.get(neurons.size()-1).length;i++){
-		//	System.out.println("Output:"+i +"  "+ neurons.get(neurons.size()-1)[i].output);
-		//}
+		/*System.out.println("\n\nError: " +error);
+		for(int i=0 ;i< neurons.get(neurons.size()-1).length;i++){
+			System.out.println("Output:"+i +"  "+ neurons.get(neurons.size()-1)[i].output);
+		}*/
 		ArrayList<double[][]> deltaW = new ArrayList<double[][]>();
 		// Korrektur ab dem vorletzten Layer
 		for(int i = startLayers.length - 2; i >= 0; i--){
@@ -391,12 +391,22 @@ public class Network{
 	 * @return
 	 */
 	protected int evaluateData(MNISTdata[] test_data){
+		//Bild erkennen
 		int count = 0;
+		
 		for(int i = 0; i < test_data.length; i++){
 			if(getOutputInt(test_data[i]) == test_data[i].solution){
 				count++;
 			}
 		}
+		
+		//OR
+		/*for(int i = 0; i< test_data.length;i++){
+			int ergebnis= (int) Math.round(neurons.get(neurons.size()-1)[0].output);
+			if(ergebnis== test_data[i].solution){
+				count++;
+			}
+		}*/
 		return count;
 	}
 	
