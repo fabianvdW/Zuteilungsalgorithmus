@@ -319,7 +319,7 @@ public class Network{
 			}
 			berechneOutput(input);
 			double error = getError(solution);
-			ArrayList<double[][]> bDW = berechneDeltaW();
+			ArrayList<double[][]> bDW = berechneDeltaW(learnrate, error);
 			//berechne DeltaW
 			//deltaW = deltaW + berechnetesDeltaW / batch.length
 			//sollte hierbei nicht auch noch der Fehler miteinberechnet werde,?
@@ -350,7 +350,9 @@ public class Network{
 	 * Funktion zum errechnen der benötigten Abweichungen um einen Lerneffekt zu erzielen
 	 * @return
 	 */
-	protected ArrayList<double[][]> berechneDeltaW(){
+	protected ArrayList<double[][]> berechneDeltaW(double learnRate, double error){
+		ArrayList<double[][]> deltaW = new ArrayList<double[][]>();
+		//weight(old) + learning rate * output error * output(neurons i) * output(neurons i+1) * ( 1 - output(neurons i+1) )
 		return null;
 	}
 	
