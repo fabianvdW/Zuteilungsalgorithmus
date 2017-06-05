@@ -385,20 +385,6 @@ public class Network{
 	}
 	
 	/**
-	 * Das ist mal nicht wirklich eine Ableitung... berechnet die Differenz zwischen errechnetem und tatsÃ¤chlichem Ergebnis
-	 * @param output
-	 * @param solution
-	 * @return
-	 */
-	protected double[] costDerivative(double[] output, double[] solution){
-		double[] result = new double[output.length];
-		for(int i = 0; i < output.length; i++){
-			result[i] = output[i] - solution[i];
-		}
-		return result;
-	}
-	
-	/**
 	 * zählt wie viele der bilder richtig erkannt wurden
 	 * @param test_data
 	 * @return
