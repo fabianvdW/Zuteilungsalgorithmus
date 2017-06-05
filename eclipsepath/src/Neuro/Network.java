@@ -281,7 +281,7 @@ public class Network{
 			}
 			for(MNISTdata[] batch: batches){
 				updateBatch(batch, learnrate);
-				System.out.println("Batch done \n\n");
+				
 			}
 			System.out.println("Epoch " + (i + 1) + " beendet!  " + evaluateData(test_data) + "/" + test_data.length);
 		}
@@ -355,26 +355,8 @@ public class Network{
 	 * @return
 	 */
 	protected ArrayList<double[][]> berechneDeltaW(MNISTdata data,double learnRate, double error){
-		System.out.println("\n\nError: " +error);
-		for(int i=0 ;i< neurons.get(neurons.size()-1).length;i++){
-			System.out.println("Output:"+i +"  "+ neurons.get(neurons.size()-1)[i].output);
-		}
-		System.out.println("Insgesamter Output: "+ getOutputInt(data));
-		System.out.println("Desired O: " +data.solution);
-		ArrayList<double[][]> deltaW = new ArrayList<double[][]>();
-		// Korrektur ab dem vorletzten Layer
-		for(int i = startLayers.length - 2; i >= 0; i--){
-			double[][] dLayer = new double[startLayers[i]][startLayers[i + 1]];
-			for(int n = 0; n < startLayers[i]; n++){
-				for(int m = 0; m < startLayers[i + 1]; m++){
-					dLayer[n][m] =  learnRate * error * neurons.get(i)[n].output * Maths.sigmoidPrime(neurons.get(i + 1)[m].netH);
-					//System.out.println("DLayer:   "+dLayer[n][m]+"\n");
-				}
-			}
-			deltaW.add(0, dLayer);
-		}
-		//weight(old) + learning rate * output error * output(neurons i) * output(neurons i+1) * ( 1 - output(neurons i+1) )
-		return deltaW;
+		
+		return null;
 	}
 	
 	/**
@@ -407,14 +389,6 @@ public class Network{
 			}
 		}
 		
-		//OR
-		/*
-		for(int i = 0; i< test_data.length;i++){
-			double ergebnis= neurons.get(neurons.size()-1)[0].output;
-			if(test_data[i].solution-ergebnis<0.2){
-				count++;
-			}
-		}*/
 		return count;
 	}
 	
