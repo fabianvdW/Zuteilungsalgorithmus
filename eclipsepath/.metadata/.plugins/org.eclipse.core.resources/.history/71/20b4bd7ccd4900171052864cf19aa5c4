@@ -1,0 +1,16 @@
+package Neuro;
+
+import java.util.Random;
+
+public class Neuron {
+	protected double weights[];
+	protected double bias;
+	public Neuron(int anzW){
+		weights= new double[anzW];
+		Random r= new Random();
+		bias= r.nextGaussian();
+		for(int i = 0; i < weights.length; i++){
+			weights[i]= r.nextGaussian();
+		}
+	}
+}

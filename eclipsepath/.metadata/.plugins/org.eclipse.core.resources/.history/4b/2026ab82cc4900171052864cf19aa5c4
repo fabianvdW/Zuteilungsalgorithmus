@@ -1,0 +1,8 @@
+package Neuro;
+
+public class Neuron {
+	protected double weights[];
+	public Neuron(int anzW){
+		weights= new
+	}
+}
