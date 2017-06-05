@@ -205,49 +205,11 @@ package Neuro;
 import java.util.ArrayList;
 
 public class Network{
-	/**
-	 * Datenklasse zum zwischenspeichern von Weigths und Biases
-	 */
-	class WBSet{
-		ArrayList<double[]> b;
-		ArrayList<double[][]> w;
-		
-		public WBSet(){
-			zeros();
-		}
-		
-		public WBSet(ArrayList<double[]> biases, ArrayList<double[][]> weights){
-			b = biases;
-			w = weights;
-		}
-		
-		// Equivalent to numpy.zeros (ref.: https://docs.scipy.org/doc/numpy/reference/generated/numpy.zeros.html)
-		void zeros(){
-			b = new ArrayList<double[]>();
-			w = new ArrayList<double[][]>();
-			for(int i = 0; i + 1 < startLayers.length; i++){
-				double[][] weightsrow = new double[startLayers[i]][startLayers[i + 1]];
-				for(int k = 0; k < weightsrow.length; k++){
-					for(int j = 0; j < weightsrow[k].length; j++){
-						weightsrow[k][j] = 0;
-					}
-				}
-				w.add(weightsrow);
-			}
-			for(int i = 1; i < startLayers.length; i++){
-				double[] bLayer = new double[startLayers[i]];
-				for(int m = 0; m < startLayers[i]; m++){
-					bLayer[m] = 0;
-				}
-				b.add(bLayer);
-			}
-		}
-	}
+	
 	
 	
 	protected int[] startLayers;
-	protected ArrayList<double[]> biases;
-	protected ArrayList<double[][]> weights;
+	ArrayList<Neuron[]> neurons ;
 	
 	/**
 	 * Bsp.:
@@ -257,24 +219,16 @@ public class Network{
 	 */
 	public Network(int[] layers){
 		startLayers = layers;
-		biases = new ArrayList<double[]>();
-		for(int i = 1; i < startLayers.length; i++){
-			double[] biasrow = new double[startLayers[i]];
-			for(int k = 0; k < biasrow.length; k++){
-				biasrow[k] = Maths.random();
+		neurons = new ArrayList<Neuron[]>();
+		for(int i = 0; i< layers.length; i++){
+			Neuron[] neuronLayer= new Neuron[layers[i]];
+			for( int k = 0; k<neuronLayer.length; k++){
+				Neuron n= new Neuron((i+1==startLayers.length)? 0: startLayers[i+1]);
+				neuronLayer[k]=n;
 			}
-			biases.add(biasrow);
+			neurons.add(neuronLayer);
 		}
-		weights = new ArrayList<double[][]>();
-		for(int i = 0; i + 1 < layers.length; i++){
-			double[][] weightsrow = new double[layers[i]][layers[i + 1]];
-			for(int k = 0; k < weightsrow.length; k++){
-				for(int j = 0; j < weightsrow[k].length; j++){
-					weightsrow[k][j] = Maths.random();
-				}
-			}
-			weights.add(weightsrow);
-		}
+		
 	}
 	
 	/**
@@ -282,60 +236,28 @@ public class Network{
 	 * @param inputs
 	 * @return
 	 */
-	protected double[] getOutput(double[] inputs){
+	protected void berechneOutput(double[] inputs){
 		if(inputs.length != startLayers[0]){
-			System.out.println("Ungültige Inputs! Returnt Null");
-			return null;
+			System.out.println("UngÃ¼ltige Inputs! Returnt Null");
+			return;
 		}
-		
-		//Leere Output Liste mit 0.0 als Outputs und der input liste als ersten output wird erzeugt
-		ArrayList<double[]> outputs = new ArrayList<double[]>();
-		outputs.add(inputs);
-		for(int i = 1; i < startLayers.length; i++){
-			double[] layerk = new double[startLayers[i]];
-			for(int k = 0; k < startLayers[i]; k++){
-				layerk[k] = 0;
+		for(int i = 0; i<neurons.get(0).length; i++){
+			neurons.get(0)[i].output=inputs[i];
+		}
+		for(int i = 1 ; i < neurons.size();i++){
+			for(int k = 0 ; k< neurons.get(i).length ; k++){
+				Neuron currN = neurons.get(i)[k];
+				currN.netH=0;
+				for(int j =0; j<neurons.get(i-1).length;j++){
+					Neuron corresN= neurons.get(i-1)[j];
+					currN.netH+= corresN.output* corresN.weights[k];
+				}
+				currN.output= Maths.sigmoid(currN.netH);
 			}
-			outputs.add(layerk);
 		}
-		
-		//Output Liste wird vervollständigt, die letzte Spalte ist nun der wirkliche Output
-		for(int i = 1; i < outputs.size(); i++){
-			double[] rowk = outputs.get(i);
-			for(int k = 0; k < outputs.get(i).length; k++){
-				rowk[k] = output(outputs, i, k);
-			}
-			outputs.remove(i);
-			outputs.add(i, rowk);
-		}
-		
-		//DEBUG
-		/*
-		for(int i = 0; i < outputs.size(); i++){
-			for(int k = 0; k < outputs.get(i).length; k++){
-				System.out.print(outputs.get(i)[k] + "   ");
-			}
-			System.out.println("\n\n");
-		}
-		System.out.println("Fertig");*/
-		return outputs.get(outputs.size() - 1);
 	}
 	
-	/**
-	 * berechnet den output eines einzelnen neurons (knoten)
-	 * @param outputs
-	 * @param i
-	 * @param k
-	 * @return
-	 */
-	protected double output(ArrayList<double[]> outputs, int i, int k){
-		double x = 0;
-		for(int m = 0; m < outputs.get(i - 1).length; m++){
-			x += outputs.get(i - 1)[m] * weights.get(i - 1)[m][k];
-		}
-		x += biases.get(i - 1)[k];
-		return Maths.sigmoid(x);
-	}
+
 	
 	/**
 	 * 
@@ -364,12 +286,12 @@ public class Network{
 	}
 	
 	/**
-	 * Verändert die weights und biases des netzwerks (zu hoffentlich besseren Ergebnissen)
+	 * VerÃ¤ndert die weights und biases des netzwerks (zu hoffentlich besseren Ergebnissen)
 	 * @param batch
 	 * @param learnrate
 	 */
 	protected void updateBatch(MNISTdata[] batch, double learnrate){
-		WBSet nabla = new WBSet();
+		
 		
 		for(MNISTdata data: batch){
 			double[] input = data.img;
@@ -380,90 +302,24 @@ public class Network{
 					solution[i] = 1;
 				}
 			}
-			
-			WBSet deltaNabla = backpropagation(input, solution);
-			// Update nabla from batch
-			for(int i = 1; i < startLayers.length - 1; i++){
-				for(int n = 0; n < startLayers[i + 1]; n++){
-					nabla.b.get(i)[n] = nabla.b.get(i)[n] + deltaNabla.b.get(i)[n];
-				}
-			}
+			berechneOutput(input);
+			double error=getError(solution);
+			//berechneDeltaW
+			//Average das auf size von Batch
 		}
-		
-		// update weigth and bias from net
-		for(int i = 0; i < startLayers.length - 1; i++){
-			/*
-			System.out.println("biases.size bei index " + (i) + " -> " + biases.get(i).length);
-			System.out.println("nabla.size bei index " + (i) + " -> " + nabla.b.get(i).length);
-			*/
-			for(int n = 0; n < startLayers[i + 1]; n++){
-				biases.get(i)[n] -= nabla.b.get(i)[n] * learnrate / batch.length;
-			}
-		}
+		//applyDeltaW
 	}
 	
-	/**
-	 * Verändert die weights und biases des netzwerks anhand von dem input und der Lösung
-	 * @param input
-	 * @param solution
-	 */
-	protected WBSet backpropagation(double[] input, double[] solution){
-		WBSet nabla = new WBSet();
-		ArrayList<double[]> activations = new ArrayList<double[]>();
-		activations.add(input);
-		ArrayList<double[]> zs = new ArrayList<double[]>();
-		for(int i = 0; i + 1 < startLayers.length; i++){
-			double[] newActivation = new double[biases.get(i).length];
-			double[] zRow = new double[startLayers[i + 1]];
-			for(int n = 0; n < startLayers[i + 1]; n++){
-				double z = 0;
-				for(int m = 0; m < startLayers[i]; m++){
-					z += weights.get(i)[m][n] * input[m] + biases.get(i)[n];
-				}
-				zRow[n] = z;
-				newActivation[n] = Maths.sigmoid(z);
-			}
-			zs.add(zRow);
-			activations.add(newActivation);
-			input = newActivation;
+
+	protected double getError(double[] solution){
+		double error = 0;
+		for(int i = 0; i< neurons.get(neurons.size()-1).length; i++){
+			error+= Math.pow(solution[i]-neurons.get(neurons.size()-1)[i].output, 2);
 		}
-		
-		// backwardfeed änderungen an bias und weight
-		// missing something like costDerivative() * \ sigmoidPrime(zs[zs.length - 1]);
-		// problem: costDerivative is from last Layer and zs[-1] is the output of the last neuron of the last layer...
-		double[] delta = costDerivative(activations.get(activations.size() - 1), solution);
-		/*
-		 * possible solution:
-		 * double[] delta = costDerivative(activations.get(activations.size() - 1), solution);
-		 * for(int i = 0; i < delta.length; i++){
-		 * 		delta[i] = delta[i] * sigmoidPrime(zs.get(zs.size() - 1)[i]);
-		 * }
-		 * 
-		 * double[] delta = costDerivative(activations.get(activations.size() - 1), solution);
-		 * for(int i = 0; i < delta.length; i++){
-		 * 		delta[i] = delta[i] / sigmoidPrime(zs.get(zs.size() - 1)[i]);
-		 * }
-		 * 
-		 * (does this make sense??? above)
-		 */
-		
-		for(int i = startLayers.length - 1; i > 0; i--){
-			delta = new double[startLayers[i]];
-			//System.out.println("delta.size: " + startLayers[i]);
-			for(int n = 0; n < delta.length; n++){
-				/*
-				System.out.println("weigths.size bei index " + (i - 1) + " -> " + weights.get(i - 1)[n].length);
-				System.out.println("zs.size bei index " + (i - 1) + " -> " + zs.get(i - 1).length);
-				*/
-				delta[n] = Maths.dot(weights.get(i - 1)[n], delta) * Maths.sigmoidPrime(zs.get(i - 1)[n]);
-			}
-			nabla.b.set(i - 1, delta);
-		}
-		return nabla;
+		return error;
 	}
-	
 	/**
-	 * Das ist mal nicht wirklich eine Ableitung... berechnet die Differenz zwischen errechnetem und tatsächlichem Ergebnis
+	 * Das ist mal nicht wirklich eine Ableitung... berechnet die Differenz zwischen errechnetem und tatsÃ¤chlichem Ergebnis
 	 * @param output
 	 * @param solution
 	 * @return
@@ -477,7 +333,7 @@ public class Network{
 	}
 	
 	/**
-	 * zählt wie viele der bilder richtig erkannt wurden
+	 * zÃ¤hlt wie viele der bilder richtig erkannt wurden
 	 * @param test_data
 	 * @return
 	 */
@@ -492,17 +348,17 @@ public class Network{
 	}
 	
 	/**
-	 * gibt den output des netzwerks anhand eines datensets als int aus (Wert der am größten ist)
+	 * gibt den output des netzwerks anhand eines datensets als int aus (Wert der am grÃ¶ÃŸten ist)
 	 * @param data
 	 * @return
 	 */
 	protected int getOutputInt(MNISTdata data){
-		double[] outputs = getOutput(data.img);
+		berechneOutput(data.img);
 		double max = -1;
 		int pos = -1;
-		for(int i = 0; i < outputs.length; i++){
-			if(outputs[i] > max){
-				max = outputs[i];
+		for(int i = 0; i < neurons.get(neurons.size()-1).length; i++){
+			if(neurons.get(neurons.size()-1)[i].output > max){
+				max = neurons.get(neurons.size()-1)[i].output;
 				pos = i;
 			}
 		}
