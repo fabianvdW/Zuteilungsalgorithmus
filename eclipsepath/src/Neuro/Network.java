@@ -305,9 +305,9 @@ public class Network{
 			berechneOutput(input);
 			double[] error = getError(solution);
 			//berechneDeltaW
-			//Average das auf size von Batch
+			//deltaW= deltaW + berechnetesDeltaw/batch.length
 		}
-		//applyDeltaW
+			//applyDeltaW
 	}
 	
 
