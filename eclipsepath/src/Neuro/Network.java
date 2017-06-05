@@ -252,6 +252,7 @@ public class Network{
 					Neuron corresN = neurons.get(i - 1)[j];
 					currN.netH += corresN.output * corresN.weights[k];
 				}
+				currN.netH += currN.bias;
 				currN.output = Maths.sigmoid(currN.netH);
 			}
 		}
