@@ -252,6 +252,7 @@ public class Network{
 					Neuron corresN = neurons.get(i - 1)[j];
 					currN.netH += corresN.output * corresN.weights[k];
 				}
+				currN.netH+=currN.bias;
 				currN.output = Maths.sigmoid(currN.netH);
 			}
 		}
@@ -268,7 +269,7 @@ public class Network{
 	protected void stochastic_gradient_descent(MNISTdata[] train_data, int epochs, int batch_size, double learnrate, MNISTdata[] test_data){
 		System.out.println("Epoch 0 beendet!  " + evaluateData(test_data) + "/" + test_data.length);
 		for(int i = 0; i < epochs; i++){
-			this.shuffleTrainData(train_data);
+			//this.shuffleTrainData(train_data);
 			ArrayList<MNISTdata[]> batches = new ArrayList<MNISTdata[]>();
 			for(int k = 0; k < train_data.length / batch_size; k++){
 				MNISTdata[] minibatch = new MNISTdata[batch_size];
@@ -352,10 +353,10 @@ public class Network{
 	 * @return
 	 */
 	protected ArrayList<double[][]> berechneDeltaW(double learnRate, double error){
-		/*System.out.println("\n\nError: " +error);
+		System.out.println("\n\nError: " +error);
 		for(int i=0 ;i< neurons.get(neurons.size()-1).length;i++){
 			System.out.println("Output:"+i +"  "+ neurons.get(neurons.size()-1)[i].output);
-		}*/
+		}
 		ArrayList<double[][]> deltaW = new ArrayList<double[][]>();
 		// Korrektur ab dem vorletzten Layer
 		for(int i = startLayers.length - 2; i >= 0; i--){
@@ -380,7 +381,7 @@ public class Network{
 	protected double getError(double[] solution){
 		double error = 0;
 		for(int i = 0; i < neurons.get(neurons.size() - 1).length; i++){
-			error += (1.0 / neurons.get(neurons.size() - 1).length) * Math.pow(solution[i] - neurons.get(neurons.size() - 1)[i].output, 1);
+			error += (1.0 / neurons.get(neurons.size() - 1).length) * Math.pow(solution[i] - neurons.get(neurons.size() - 1)[i].output, 2);
 		}
 		return error;
 	}
@@ -394,19 +395,19 @@ public class Network{
 		//Bild erkennen
 		int count = 0;
 		
-		for(int i = 0; i < test_data.length; i++){
+		/*for(int i = 0; i < test_data.length; i++){
 			if(getOutputInt(test_data[i]) == test_data[i].solution){
 				count++;
 			}
-		}
+		}*/
 		
 		//OR
-		/*for(int i = 0; i< test_data.length;i++){
-			int ergebnis= (int) Math.round(neurons.get(neurons.size()-1)[0].output);
-			if(ergebnis== test_data[i].solution){
+		for(int i = 0; i< test_data.length;i++){
+			double ergebnis= neurons.get(neurons.size()-1)[0].output;
+			if(test_data[i].solution-ergebnis<0.2){
 				count++;
 			}
-		}*/
+		}
 		return count;
 	}
 	

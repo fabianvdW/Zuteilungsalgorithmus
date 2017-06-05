@@ -11,8 +11,7 @@ public class ORTest {
 		train_data[1]=new MNISTdata(train_2a,1);
 		train_data[2]= new MNISTdata(train_3a,1);
 		train_data[3]=new MNISTdata(train_4a,1);
-		int[] layers={2,100,1};
+		int[] layers={2,1,1};
 		Network n = new Network(layers);
-		n.stochastic_gradient_descent(train_data, 100000, 4, 0.01, train_data);
 	}
 }
