@@ -355,7 +355,7 @@ public class Network{
 	 * @return
 	 */
 	protected ArrayList<double[][]> berechneDeltaW(MNISTdata data,double learnRate, double error){
-		
+		//http://machinelearningmastery.com/implement-backpropagation-algorithm-scratch-python/
 		return null;
 	}
 	
