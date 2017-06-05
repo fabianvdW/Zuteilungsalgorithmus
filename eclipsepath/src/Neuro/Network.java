@@ -203,6 +203,7 @@
 package Neuro;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Network{
 	
@@ -268,6 +269,7 @@ public class Network{
 	 * @param test_data
 	 */
 	protected void stochastic_gradient_descent(MNISTdata[] train_data, int epochs, int batch_size, double learnrate, MNISTdata[] test_data){
+		System.out.println("Epoch -1 "  + " beendet!  " + evaluateData(test_data) + "/" + test_data.length);
 		for(int i = 0; i < epochs; i++){
 			this.shuffleTrainData(train_data);
 			ArrayList<MNISTdata[]> batches = new ArrayList<MNISTdata[]>();
@@ -284,14 +286,28 @@ public class Network{
 			System.out.println("Epoch " + (i + 1) + " beendet!  " + evaluateData(test_data) + "/" + test_data.length);
 		}
 	}
-	
+	protected ArrayList<double[][]> getLeeresDeltaW(){
+		ArrayList<double[][] > deltaW= new ArrayList<double[][]>();
+		for(int i = 0; i+1< startLayers.length; i++){
+			double[][] w2D= new double[startLayers[i]][startLayers[i+1]];
+			for(int k = 0; k <startLayers[i]; k++){
+				double[] wsR= new double[startLayers[i+1]];
+				for(int j = 0; j<startLayers[i+1];j++){
+					wsR[j]=0;
+				}
+				w2D[k]=wsR;
+			}
+			deltaW.add(w2D);
+		}
+		return deltaW;
+	}
 	/**
 	 * Verändert die weights und biases des netzwerks (zu hoffentlich besseren Ergebnissen)
 	 * @param batch
 	 * @param learnrate
 	 */
 	protected void updateBatch(MNISTdata[] batch, double learnrate){
-		
+		ArrayList<double[][]> deltaW = getLeeresDeltaW();
 		
 		for(MNISTdata data: batch){
 			double[] input = data.img;
@@ -303,18 +319,38 @@ public class Network{
 				}
 			}
 			berechneOutput(input);
-			double[] error = getError(solution);
+			double error = getError(solution);
+			ArrayList<double[][]> bDW=berechneDeltaW();
 			//berechneDeltaW
 			//deltaW= deltaW + berechnetesDeltaw/batch.length
+			if(bDW==null)continue;
+			for(int i = 0; i+1<startLayers.length; i++){
+				for(int k = 0 ;k<startLayers[i];k++){
+					for(int j=0 ;j<startLayers[i+1];j++){
+						deltaW.get(i)[k][j]+=bDW.get(i)[k][j]/batch.length;
+						//deltaW.get(i)[k][j]+=Math.random()/batch.length;
+					}
+				}
+			}
 		}
-			//applyDeltaW
+		//applyDeltaW
+		for(int i = 0; i+1 < startLayers.length; i++){
+			for(int k = 0 ; k<startLayers[i];k++){
+				for(int j = 0; j<startLayers[i+1];j++){
+					neurons.get(i)[k].weights[j]-=learnrate*deltaW.get(i)[k][j];
+				}
+			}
+		}
+			
 	}
 	
-
-	protected double[] getError(double[] solution){
-		double[] error = new double[neurons.get(neurons.size()-1).length];
+	protected ArrayList<double[][]> berechneDeltaW(){
+		return null;
+	}
+	protected double getError(double[] solution){
+		double error =0;
 		for(int i = 0; i < neurons.get(neurons.size() - 1).length; i++){
-			error[i]= Math.pow(solution[i] - neurons.get(neurons.size() - 1)[i].output, 2);
+			error+= (1/neurons.get(neurons.size()-1).length)*Math.pow(solution[i] - neurons.get(neurons.size() - 1)[i].output, 2);
 		}
 		return error;
 	}
