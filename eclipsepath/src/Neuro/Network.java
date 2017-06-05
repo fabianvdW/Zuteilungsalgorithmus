@@ -220,11 +220,11 @@ public class Network{
 	public Network(int[] layers){
 		startLayers = layers;
 		neurons = new ArrayList<Neuron[]>();
-		for(int i = 0; i< layers.length; i++){
-			Neuron[] neuronLayer= new Neuron[layers[i]];
-			for( int k = 0; k<neuronLayer.length; k++){
-				Neuron n= new Neuron((i+1==startLayers.length)? 0: startLayers[i+1]);
-				neuronLayer[k]=n;
+		for(int i = 0; i < layers.length; i++){
+			Neuron[] neuronLayer = new Neuron[layers[i]];
+			for( int k = 0; k < neuronLayer.length; k++){
+				Neuron n= new Neuron((i + 1 == startLayers.length) ? 0 : startLayers[i + 1]);
+				neuronLayer[k] = n;
 			}
 			neurons.add(neuronLayer);
 		}
@@ -241,18 +241,18 @@ public class Network{
 			System.out.println("UngÃ¼ltige Inputs! Returnt Null");
 			return;
 		}
-		for(int i = 0; i<neurons.get(0).length; i++){
-			neurons.get(0)[i].output=inputs[i];
+		for(int i = 0; i < neurons.get(0).length; i++){
+			neurons.get(0)[i].output = inputs[i];
 		}
-		for(int i = 1 ; i < neurons.size();i++){
-			for(int k = 0 ; k< neurons.get(i).length ; k++){
+		for(int i = 1 ; i < neurons.size(); i++){
+			for(int k = 0 ; k < neurons.get(i).length ; k++){
 				Neuron currN = neurons.get(i)[k];
-				currN.netH=0;
-				for(int j =0; j<neurons.get(i-1).length;j++){
-					Neuron corresN= neurons.get(i-1)[j];
-					currN.netH+= corresN.output* corresN.weights[k];
+				currN.netH = 0;
+				for(int j = 0; j < neurons.get(i - 1).length; j++){
+					Neuron corresN = neurons.get(i - 1)[j];
+					currN.netH += corresN.output * corresN.weights[k];
 				}
-				currN.output= Maths.sigmoid(currN.netH);
+				currN.output = Maths.sigmoid(currN.netH);
 			}
 		}
 	}
@@ -281,7 +281,7 @@ public class Network{
 			for(MNISTdata[] batch: batches){
 				updateBatch(batch, learnrate);
 			}
-			System.out.println("Epoch " + i + " beendet!  " + evaluateData(test_data) + "/" + test_data.length);
+			System.out.println("Epoch " + (i + 1) + " beendet!  " + evaluateData(test_data) + "/" + test_data.length);
 		}
 	}
 	
@@ -303,7 +303,7 @@ public class Network{
 				}
 			}
 			berechneOutput(input);
-			double error=getError(solution);
+			double error = getError(solution);
 			//berechneDeltaW
 			//Average das auf size von Batch
 		}
@@ -313,8 +313,8 @@ public class Network{
 
 	protected double getError(double[] solution){
 		double error = 0;
-		for(int i = 0; i< neurons.get(neurons.size()-1).length; i++){
-			error+= Math.pow(solution[i]-neurons.get(neurons.size()-1)[i].output, 2);
+		for(int i = 0; i < neurons.get(neurons.size() - 1).length; i++){
+			error += Math.pow(solution[i] - neurons.get(neurons.size() - 1)[i].output, 2);
 		}
 		return error;
 	}
@@ -356,9 +356,9 @@ public class Network{
 		berechneOutput(data.img);
 		double max = -1;
 		int pos = -1;
-		for(int i = 0; i < neurons.get(neurons.size()-1).length; i++){
-			if(neurons.get(neurons.size()-1)[i].output > max){
-				max = neurons.get(neurons.size()-1)[i].output;
+		for(int i = 0; i < neurons.get(neurons.size() - 1).length; i++){
+			if(neurons.get(neurons.size() - 1)[i].output > max){
+				max = neurons.get(neurons.size() - 1)[i].output;
 				pos = i;
 			}
 		}
