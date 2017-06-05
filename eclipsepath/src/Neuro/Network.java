@@ -257,8 +257,6 @@ public class Network{
 		}
 	}
 	
-
-	
 	/**
 	 * 
 	 * @param train_data
@@ -268,7 +266,7 @@ public class Network{
 	 * @param test_data
 	 */
 	protected void stochastic_gradient_descent(MNISTdata[] train_data, int epochs, int batch_size, double learnrate, MNISTdata[] test_data){
-		System.out.println("Epoch 0 "  + " beendet!  " + evaluateData(test_data) + "/" + test_data.length);
+		System.out.println("Epoch 0 beendet!  " + evaluateData(test_data) + "/" + test_data.length);
 		for(int i = 0; i < epochs; i++){
 			this.shuffleTrainData(train_data);
 			ArrayList<MNISTdata[]> batches = new ArrayList<MNISTdata[]>();
@@ -285,6 +283,7 @@ public class Network{
 			System.out.println("Epoch " + (i + 1) + " beendet!  " + evaluateData(test_data) + "/" + test_data.length);
 		}
 	}
+	
 	protected ArrayList<double[][]> getLeeresDeltaW(){
 		ArrayList<double[][]> deltaW = new ArrayList<double[][]>();
 		for(int i = 0; i + 1 < startLayers.length; i++){
@@ -300,6 +299,7 @@ public class Network{
 		}
 		return deltaW;
 	}
+	
 	/**
 	 * Verändert die weights und biases des netzwerks (zu hoffentlich besseren Ergebnissen)
 	 * @param batch
