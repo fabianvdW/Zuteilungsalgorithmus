@@ -300,7 +300,7 @@ public class Maths{
 	}
 	
 	/**
-	 * Multiplikation of 2 Matrixes with 1 Dimension-depth
+	 * Multiplication of 2 Matrixes with 1 Dimension-depth to a sum
 	 * @param a
 	 * @param b
 	 * @return sum
@@ -315,6 +315,128 @@ public class Maths{
 			sum += a[i] * b[i];
 		}
 		return sum;
+	}
+	
+	/**
+	 * Multiplication of 2 Matrixes with 1 Dimension-depth to an array
+	 * @param a
+	 * @param b
+	 * @return array
+	 */
+	protected static double[] dotArray(double[] a, double[] b){
+		if(a.length != b.length){
+			System.out.println("a.length: " + a.length + "	b.length:" + b.length);
+			throw new IllegalArgumentException("Die Dimensionen sind nicht gleich");
+		}
+		for(int i = 0; i < a.length; i++){
+			a[i] = a[i] * b[i];
+		}
+		return a;
+	}
+	
+	/**
+	 * Division of 2 Matrixes with 1 Dimension-depth to a sum
+	 * @param a
+	 * @param b
+	 * @return sum
+	 */
+	protected static double divide(double[] a, double[] b){
+		if(a.length != b.length){
+			System.out.println("a.length: " + a.length + "	b.length:" + b.length);
+			throw new IllegalArgumentException("Die Dimensionen sind nicht gleich");
+		}
+		double sum = 0;
+		for(int i = 0; i < a.length; i++){
+			sum += a[i] / b[i];
+		}
+		return sum;
+	}
+	
+	/**
+	 * Division of 2 Matrixes with 1 Dimension-depth to an array
+	 * @param a
+	 * @param b
+	 * @return array
+	 */
+	protected static double[] divideArray(double[] a, double[] b){
+		if(a.length != b.length){
+			System.out.println("a.length: " + a.length + "	b.length:" + b.length);
+			throw new IllegalArgumentException("Die Dimensionen sind nicht gleich");
+		}
+		for(int i = 0; i < a.length; i++){
+			a[i] = a[i] / b[i];
+		}
+		return a;
+	}
+	
+	/**
+	 * Addition of 2 Matrixes with 1 Dimension-depth to a sum
+	 * @param a
+	 * @param b
+	 * @return array
+	 */
+	protected static double plus(double[] a, double[] b){
+		if(a.length != b.length){
+			System.out.println("a.length: " + a.length + "	b.length:" + b.length);
+			throw new IllegalArgumentException("Die Dimensionen sind nicht gleich");
+		}
+		double sum = 0;
+		for(int i = 0; i < a.length; i++){
+			sum += a[i] + b[i];
+		}
+		return sum;
+	}
+	
+	/**
+	 * Addition of 2 Matrixes with 1 Dimension-depth to an array
+	 * @param a
+	 * @param b
+	 * @return array
+	 */
+	protected static double[] plusArray(double[] a, double[] b){
+		if(a.length != b.length){
+			System.out.println("a.length: " + a.length + "	b.length:" + b.length);
+			throw new IllegalArgumentException("Die Dimensionen sind nicht gleich");
+		}
+		for(int i = 0; i < a.length; i++){
+			a[i] = a[i] + b[i];
+		}
+		return a;
+	}
+	
+	/**
+	 * Subtraction of 2 Matrixes with 1 Dimension-depth to a sum
+	 * @param a
+	 * @param b
+	 * @return array
+	 */
+	protected static double minus(double[] a, double[] b){
+		if(a.length != b.length){
+			System.out.println("a.length: " + a.length + "	b.length:" + b.length);
+			throw new IllegalArgumentException("Die Dimensionen sind nicht gleich");
+		}
+		double sum = 0;
+		for(int i = 0; i < a.length; i++){
+			sum += a[i] - b[i];
+		}
+		return sum;
+	}
+	
+	/**
+	 * Subtraction of 2 Matrixes with 1 Dimension-depth to an array
+	 * @param a
+	 * @param b
+	 * @return array
+	 */
+	protected static double[] minusArray(double[] a, double[] b){
+		if(a.length != b.length){
+			System.out.println("a.length: " + a.length + "	b.length:" + b.length);
+			throw new IllegalArgumentException("Die Dimensionen sind nicht gleich");
+		}
+		for(int i = 0; i < a.length; i++){
+			a[i] = a[i] - b[i];
+		}
+		return a;
 	}
 	
 	/**

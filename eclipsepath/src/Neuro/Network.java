@@ -234,7 +234,7 @@ public class Network{
 				}
 				w.add(weightsrow);
 			}
-			for(int i = 0; i < startLayers.length; i++){
+			for(int i = 1; i < startLayers.length; i++){
 				double[] bLayer = new double[startLayers[i]];
 				for(int m = 0; m < startLayers[i]; m++){
 					bLayer[m] = 0;
@@ -371,18 +371,34 @@ public class Network{
 	protected void updateBatch(MNISTdata[] batch, double learnrate){
 		WBSet nabla = new WBSet();
 		
-		double[] input;
-		double[] solution;
 		for(MNISTdata data: batch){
-			input = data.img;
-			solution = new double[10];
+			double[] input = data.img;
+			double[] solution = new double[10];
 			for(int i = 0; i < 9; i++){
 				solution[i] = 0;
 				if(data.solution == i){
 					solution[i] = 1;
 				}
 			}
-			backpropagation(input, solution);
+			
+			WBSet deltaNabla = backpropagation(input, solution);
+			// Update nabla from batch
+			for(int i = 1; i < startLayers.length - 1; i++){
+				for(int n = 0; n < startLayers[i + 1]; n++){
+					nabla.b.get(i)[n] = nabla.b.get(i)[n] + deltaNabla.b.get(i)[n];
+				}
+			}
+		}
+		
+		// update weigth and bias from net
+		for(int i = 0; i < startLayers.length - 1; i++){
+			/*
+			System.out.println("biases.size bei index " + (i) + " -> " + biases.get(i).length);
+			System.out.println("nabla.size bei index " + (i) + " -> " + nabla.b.get(i).length);
+			*/
+			for(int n = 0; n < startLayers[i + 1]; n++){
+				biases.get(i)[n] -= nabla.b.get(i)[n] * learnrate / batch.length;
+			}
 		}
 	}
 	
@@ -391,7 +407,7 @@ public class Network{
 	 * @param input
 	 * @param solution
 	 */
-	protected void backpropagation(double[] input, double[] solution){
+	protected WBSet backpropagation(double[] input, double[] solution){
 		WBSet nabla = new WBSet();
 		ArrayList<double[]> activations = new ArrayList<double[]>();
 		activations.add(input);
@@ -435,14 +451,15 @@ public class Network{
 			delta = new double[startLayers[i]];
 			//System.out.println("delta.size: " + startLayers[i]);
 			for(int n = 0; n < delta.length; n++){
-				/* DEBUG
+				/*
 				System.out.println("weigths.size bei index " + (i - 1) + " -> " + weights.get(i - 1)[n].length);
 				System.out.println("zs.size bei index " + (i - 1) + " -> " + zs.get(i - 1).length);
 				*/
 				delta[n] = Maths.dot(weights.get(i - 1)[n], delta) * Maths.sigmoidPrime(zs.get(i - 1)[n]);
 			}
-			nabla.b.set(i, delta);
+			nabla.b.set(i - 1, delta);
 		}
+		return nabla;
 	}
 	
 	/**
