@@ -239,7 +239,7 @@ public class Network{
 	 */
 	protected void berechneOutput(double[] inputs){
 		if(inputs.length != startLayers[0]){
-			System.out.println("UngÃ¼ltige Inputs! Returnt Null");
+			System.out.println("Ungültige Inputs! Returnt Null");
 			return;
 		}
 		for(int i = 0; i < neurons.get(0).length; i++){
@@ -269,7 +269,7 @@ public class Network{
 	 * @param test_data
 	 */
 	protected void stochastic_gradient_descent(MNISTdata[] train_data, int epochs, int batch_size, double learnrate, MNISTdata[] test_data){
-		System.out.println("Epoch -1 "  + " beendet!  " + evaluateData(test_data) + "/" + test_data.length);
+		System.out.println("Epoch 0 "  + " beendet!  " + evaluateData(test_data) + "/" + test_data.length);
 		for(int i = 0; i < epochs; i++){
 			this.shuffleTrainData(train_data);
 			ArrayList<MNISTdata[]> batches = new ArrayList<MNISTdata[]>();
@@ -287,15 +287,15 @@ public class Network{
 		}
 	}
 	protected ArrayList<double[][]> getLeeresDeltaW(){
-		ArrayList<double[][] > deltaW= new ArrayList<double[][]>();
-		for(int i = 0; i+1< startLayers.length; i++){
-			double[][] w2D= new double[startLayers[i]][startLayers[i+1]];
-			for(int k = 0; k <startLayers[i]; k++){
-				double[] wsR= new double[startLayers[i+1]];
-				for(int j = 0; j<startLayers[i+1];j++){
-					wsR[j]=0;
+		ArrayList<double[][]> deltaW = new ArrayList<double[][]>();
+		for(int i = 0; i + 1 < startLayers.length; i++){
+			double[][] w2D = new double[startLayers[i]][startLayers[i + 1]];
+			for(int k = 0; k < startLayers[i]; k++){
+				double[] wsR = new double[startLayers[i + 1]];
+				for(int j = 0; j<startLayers[i + 1]; j++){
+					wsR[j] = 0;
 				}
-				w2D[k]=wsR;
+				w2D[k] = wsR;
 			}
 			deltaW.add(w2D);
 		}
@@ -320,40 +320,54 @@ public class Network{
 			}
 			berechneOutput(input);
 			double error = getError(solution);
-			ArrayList<double[][]> bDW=berechneDeltaW();
-			//berechneDeltaW
-			//deltaW= deltaW + berechnetesDeltaw/batch.length
-			if(bDW==null)continue;
-			for(int i = 0; i+1<startLayers.length; i++){
-				for(int k = 0 ;k<startLayers[i];k++){
-					for(int j=0 ;j<startLayers[i+1];j++){
-						deltaW.get(i)[k][j]+=bDW.get(i)[k][j]/batch.length;
-						//deltaW.get(i)[k][j]+=Math.random()/batch.length;
+			ArrayList<double[][]> bDW = berechneDeltaW();
+			//berechne DeltaW
+			//deltaW = deltaW + berechnetesDeltaW / batch.length
+			//sollte hierbei nicht auch noch der Fehler miteinberechnet werde,?
+			//deltaW -= learnrate * error * berechnetesDeltaW
+			if(bDW == null)continue;
+			for(int i = 0; i + 1 < startLayers.length; i++){
+				for(int k = 0; k < startLayers[i]; k++){
+					for(int j = 0; j < startLayers[i + 1]; j++){
+						deltaW.get(i)[k][j] += bDW.get(i)[k][j] / batch.length;
+						//deltaW.get(i)[k][j] += Math.random() / batch.length;
 					}
 				}
 			}
 		}
-		//applyDeltaW
-		for(int i = 0; i+1 < startLayers.length; i++){
-			for(int k = 0 ; k<startLayers[i];k++){
-				for(int j = 0; j<startLayers[i+1];j++){
-					neurons.get(i)[k].weights[j]-=learnrate*deltaW.get(i)[k][j];
+		
+		//apply DeltaW
+		for(int i = 0; i + 1 < startLayers.length; i++){
+			for(int k = 0 ; k < startLayers[i]; k++){
+				for(int j = 0; j < startLayers[i + 1]; j++){
+					neurons.get(i)[k].weights[j] -= learnrate * deltaW.get(i)[k][j];
 				}
 			}
 		}
 			
 	}
 	
+	/**
+	 * Funktion zum errechnen der benötigten Abweichungen um einen Lerneffekt zu erzielen
+	 * @return
+	 */
 	protected ArrayList<double[][]> berechneDeltaW(){
 		return null;
 	}
+	
+	/**
+	 * Errechnet den Fehler nach einem Durchgang anhand der Lösung
+	 * @param solution
+	 * @return
+	 */
 	protected double getError(double[] solution){
-		double error =0;
+		double error = 0;
 		for(int i = 0; i < neurons.get(neurons.size() - 1).length; i++){
-			error+= (1/neurons.get(neurons.size()-1).length)*Math.pow(solution[i] - neurons.get(neurons.size() - 1)[i].output, 2);
+			error += (1 / neurons.get(neurons.size() - 1).length) * Math.pow(solution[i] - neurons.get(neurons.size() - 1)[i].output, 2);
 		}
 		return error;
 	}
+	
 	/**
 	 * Das ist mal nicht wirklich eine Ableitung... berechnet die Differenz zwischen errechnetem und tatsÃ¤chlichem Ergebnis
 	 * @param output
