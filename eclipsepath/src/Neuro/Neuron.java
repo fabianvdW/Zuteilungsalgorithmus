@@ -209,6 +209,7 @@ public class Neuron{
 	protected double bias;
 	protected double netH;
 	protected double output;
+	protected double delta;
 	
 	public Neuron(int anzW){
 		weights = new double[anzW];
