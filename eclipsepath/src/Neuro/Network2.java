@@ -18,7 +18,7 @@ public class Network2{
 	
 	private void log(String txt){
 		try{
-			log.write(txt + " \n");
+			log.write(txt + "\n");
 		}
 		catch(IOException e){
 			e.printStackTrace();
@@ -27,7 +27,7 @@ public class Network2{
 	
 	public Network2(int[] layers){
 		try{
-			log = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("logNeuro.txt"), "utf-8"));
+			log = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("logNeuro.log"), "utf-8"));
 		}
 		catch(UnsupportedEncodingException e){
 			e.printStackTrace();
@@ -61,8 +61,10 @@ public class Network2{
 	}
 	
 	protected void train(int epochs, MNISTdata[] data, double learnRate){
+		int best = -1;
 		for(int i = 0; i < epochs; i++){
 			double totalError = 0;
+			int counter = 0;
 			for(MNISTdata train: data){
 				output(train.img);
 				
@@ -83,8 +85,38 @@ public class Network2{
 				//here the magic is happening
 				backPropagate(solution);
 				updateWeigths(train.img, learnRate);
+				
+				//check if solution is rigth
+				int pos = -1;
+				double v = -1;
+				for(int n = 0; n < network.get(network.size() - 1).length; n++){
+					if(network.get(network.size() - 1)[n].output > v){
+						pos = n;
+					}
+				}
+				if(solution[pos]==1){
+					counter++;
+				}
+				
+				if(debug){
+					String tmp = " {";
+					for(double n: solution){
+						tmp += n + ", ";
+					}
+					log("Solution:" + tmp + "}");
+					tmp = " {";
+					for(Neuron n: network.get(network.size() - 1)){
+						tmp += n.output + ", ";
+					}
+					log("Output:" + tmp + "}");
+				}
 			}
-			log("Epoch " + (i + 1) + "/" + epochs + ";	Learn=" + learnRate + ";	Error=" + totalError);
+			if(counter > best){
+				best = counter;
+			}
+			
+			System.out.println("Epoch " + (i + 1) + "/" + epochs + ";	Learn=" + learnRate + ";	best=" + best + ";	OK=" + counter + "/" + data.length + ";	Error=" + totalError);
+			log("Epoch " + (i + 1) + "/" + epochs + ";	Learn=" + learnRate + ";	best=" + best + ";	OK=" + counter + "/" + data.length + ";	Error=" + totalError);
 		}
 	}
 	
@@ -107,13 +139,25 @@ public class Network2{
 		}
 		
 		// feedforward
-		for(int layer = 1; layer < network.size() - 1; layer++){
+		for(int layer = 1; layer < network.size(); layer++){
+			if(debug){
+				log("	" + layer + "-Layer");
+			}
 			for(int neuron = 0; neuron < network.get(layer).length; neuron++){
 				double activation = 0;
+				if(debug){
+					log("		" + neuron + "-Neuron");
+				}
 				for(int lastNeuron = 0; lastNeuron < network.get(layer - 1).length; lastNeuron++){
-					activation += network.get(layer - 1)[lastNeuron].weights[neuron] * network.get(layer - 1)[lastNeuron].netH;
+					activation += network.get(layer - 1)[lastNeuron].weights[neuron] * network.get(layer - 1)[lastNeuron].output;
+					if(debug){
+						log("			CALC: " + (layer - 1) + "-Layer " + lastNeuron + "-Neuron: w=" + network.get(layer - 1)[lastNeuron].weights[neuron] + " * output=" + network.get(layer - 1)[lastNeuron].output);
+					}
 				}
 				network.get(layer)[neuron].output = Maths.sigmoid(activation);
+				if(debug){
+					log("			activation=" + activation + " output=" + network.get(layer)[neuron].output);
+				}
 			}
 		}
 	}

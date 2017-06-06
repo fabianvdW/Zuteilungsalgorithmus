@@ -291,11 +291,11 @@ public class Maths{
 			}
 		}
 		*/
-		MNISTdata[] train_data= new MNISTdata[1];
-		for(int i=0; i < 1; i++){
+		MNISTdata[] train_data= new MNISTdata[10];
+		for(int i=0; i < 10; i++){
 			train_data[i]= train.data[i];
 		}
-		n.train(3, train_data, 1);
+		n.train(100, train_data, 0.01);
 		//n.stochastic_gradient_descent(train_data, 30, 10, 3, train_data);
 	}
 	
