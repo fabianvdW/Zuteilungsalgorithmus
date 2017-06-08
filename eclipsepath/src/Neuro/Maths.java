@@ -256,8 +256,8 @@ public class Maths{
 		*/
 		
 		//TEST Network
-		int[] layers={test.imgSize(), 30, 10};
-		Network2 n = new Network2(layers);
+		int[] layers={test.imgSize(), 10};
+		Network n = new Network(layers);
 		/*
 		System.out.println("Biases:");
 		for(int i = 0; i < n.biases.size(); i++){
@@ -291,12 +291,12 @@ public class Maths{
 			}
 		}
 		*/
-		MNISTdata[] train_data= new MNISTdata[10];
-		for(int i=0; i < 10; i++){
+		MNISTdata[] train_data= new MNISTdata[1000];
+		for(int i=0; i < 1000; i++){
 			train_data[i]= train.data[i];
 		}
-		n.train(100, train_data, 0.01);
-		//n.stochastic_gradient_descent(train_data, 30, 10, 3, train_data);
+		//n.train(100, train_data, 0.01);
+		n.stochastic_gradient_descent(train_data, 1000000, 10, 3, train_data);
 	}
 	
 	protected static double random(){

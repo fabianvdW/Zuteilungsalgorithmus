@@ -321,7 +321,7 @@ public class Network{
 				}
 			}
 			berechneOutput(input);
-			double error = getError(solution);
+			double[] error = getError(solution);
 			ArrayList<double[][]> bDW = berechneDeltaW(data,learnrate, error);
 			//berechne DeltaW
 			//deltaW = deltaW + berechnetesDeltaW / batch.length
@@ -354,9 +354,33 @@ public class Network{
 	 * Funktion zum errechnen der benötigten Abweichungen um einen Lerneffekt zu erzielen
 	 * @return
 	 */
-	protected ArrayList<double[][]> berechneDeltaW(MNISTdata data,double learnRate, double error){
+	protected ArrayList<double[][]> berechneDeltaW(MNISTdata data,double learnRate, double[] error){
 		//http://machinelearningmastery.com/implement-backpropagation-algorithm-scratch-python/
-		return null;
+		ArrayList<double[][]> deltaW = getLeeresDeltaW();
+		for(int i=neurons.size()-2;i>=0;i--){
+			if(i==neurons.size()-2){
+				for(int k = 0; k<neurons.get(neurons.size()-1).length;k++){
+					double err=error[k];
+					for(int m=0 ;m<neurons.get(neurons.size()-2).length;m++){
+						deltaW.get(i)[m][k]=err*learnRate*neurons.get(neurons.size()-2)[m].output;
+					}
+				}
+			}else{
+				for(int k=0; k<neurons.get(i).length;k++){
+					double err=0.0;
+					for(int m=0; m<neurons.get(i+1).length;m++){
+						err+=neurons.get(i)[k].weights[m]*deltaW.get(i+1)[m][0]/(learnRate*neurons.get(i+1)[m].output);
+					}
+					for(int m=0;m<neurons.get(i+1).length;m++){
+						//deltaW.get(i)[k][m]=err*learnRate*neurons.get(i)[m].output*transfer_derivative(neurons.get(i)[m].output);
+					}
+				}
+			}
+		}
+		return deltaW;
+	}
+	protected double transfer_derivative(double output){
+		return output*(1-output);
 	}
 	
 	/**
@@ -364,10 +388,11 @@ public class Network{
 	 * @param solution
 	 * @return
 	 */
-	protected double getError(double[] solution){
-		double error = 0;
+	protected double[] getError(double[] solution){
+		double[] error = new double[neurons.get(neurons.size()-1).length];
 		for(int i = 0; i < neurons.get(neurons.size() - 1).length; i++){
-			error += (0.5) * Math.pow( neurons.get(neurons.size() - 1)[i].output-solution[i], 1);
+			//error += (0.5) * Math.pow( neurons.get(neurons.size() - 1)[i].output-solution[i], 1);
+			error[i]= (solution[i]-neurons.get(neurons.size()-1)[i].output)* transfer_derivative(neurons.get(neurons.size()-1)[i].output);
 		}
 		return error;
 	}
@@ -380,15 +405,26 @@ public class Network{
 	protected int evaluateData(MNISTdata[] test_data){
 		//Bild erkennen
 		int count = 0;
-		
+		double meansquarederror=0.0;
 		for(int i = 0; i < test_data.length; i++){
 			//System.out.println("output:  " + getOutputInt(test_data[i]));
 			//System.out.println("sol:  " + test_data[i].solution);
-			if(getOutputInt(test_data[i]) == test_data[i].solution){
+			int output= getOutputInt(test_data[i]);
+			double[] solution = new double[10];
+			for(int k = 0; k < 9; k++){
+				solution[k] = 0;
+				if(test_data[i].solution == k){
+					solution[k] = 1;
+				}
+			}
+			for(int m=0 ;m<10;m++){
+				meansquarederror+=Math.pow(solution[m]-neurons.get(neurons.size()-1)[m].output,2);
+			}
+			if(output == test_data[i].solution){
 				count++;
 			}
 		}
-		
+		System.out.println("Error: " +meansquarederror);
 		return count;
 	}
 	
