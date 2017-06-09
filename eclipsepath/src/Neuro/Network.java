@@ -205,9 +205,6 @@ package Neuro;
 import java.util.ArrayList;
 
 public class Network{
-	
-	
-	
 	protected int[] startLayers;
 	ArrayList<Neuron[]> neurons ;
 	
@@ -244,15 +241,15 @@ public class Network{
 		for(int i = 0; i < neurons.get(0).length; i++){
 			neurons.get(0)[i].output = inputs[i];
 		}
-		for(int i = 1 ; i < neurons.size(); i++){
-			for(int k = 0 ; k < neurons.get(i).length ; k++){
+		for(int i = 1; i < neurons.size(); i++){
+			for(int k = 0; k < neurons.get(i).length; k++){
 				Neuron currN = neurons.get(i)[k];
 				currN.netH = 0;
 				for(int j = 0; j < neurons.get(i - 1).length; j++){
 					Neuron corresN = neurons.get(i - 1)[j];
 					currN.netH += corresN.output * corresN.weights[k];
 				}
-				currN.netH+=currN.bias;
+				currN.netH += currN.bias;
 				currN.output = Maths.sigmoid(currN.netH);
 			}
 		}
@@ -262,9 +259,9 @@ public class Network{
 	
 	protected void clearDeltaW(){
 		for(Neuron[] neuronlayer: neurons){
-			for(Neuron n : neuronlayer){
-				for(int i=0;i<n.deltaweights.length;i++){
-					n.deltaweights[i]=0;
+			for(Neuron n: neuronlayer){
+				for(int i = 0; i < n.deltaweights.length; i++){
+					n.deltaweights[i] = 0;
 				}
 			}
 		}
@@ -275,18 +272,18 @@ public class Network{
 	 * @param batch
 	 * @param learnrate
 	 */
-	protected void updateBatch(double[][] batch,double[][] labels, double learnrate){
+	protected void updateBatch(double[][] batch, double[][] labels, double learnrate){
 		
-		for(int m =0; m<batch.length;m++){
+		for(int m = 0; m < batch.length; m++){
 			double[] input = batch[m];
-			double[] solution =labels[m];
+			double[] solution = labels[m];
 			berechneOutput(input);
 			double[] error = getError(solution);
-			System.out.println("Error 0  " +error[0]);
-			System.out.println("Error 1  " +error[1]);
+			System.out.println("Error 0  " + error[0]);
+			System.out.println("Error 1  " + error[1]);
 			berechneDeltaW(learnrate, error, batch.length);
-			System.out.println("deltaw 1  "+ neurons.get(neurons.size()-2)[0].deltaweights[0]);
-			System.out.println("deltaw 2  "+ neurons.get(neurons.size()-2)[0].deltaweights[1]);
+			System.out.println("deltaw 1  " + neurons.get(neurons.size() - 2)[0].deltaweights[0]);
+			System.out.println("deltaw 2  " + neurons.get(neurons.size() - 2)[0].deltaweights[1]);
 			//berechne DeltaW
 			//deltaW = deltaW + berechnetesDeltaW / batch.length
 			//sollte hierbei nicht auch noch der Fehler miteinberechnet werde,?
@@ -297,11 +294,11 @@ public class Network{
 	
 		for(Neuron[] neuronlayer: neurons){
 			for(Neuron n: neuronlayer){
-				for(int i=0;i<n.weights.length;i++){
-					n.weights[i]+=n.deltaweights[i]*learnrate*n.output;
+				for(int i = 0; i < n.weights.length; i++){
+					n.weights[i] += n.deltaweights[i] * learnrate * n.output;
 				}
-				if(neuronlayer!=neurons.get(neurons.size()-1)){
-					n.bias+=n.deltaweights[0]*learnrate;
+				if(neuronlayer != neurons.get(neurons.size() - 1)){
+					n.bias += n.deltaweights[0] * learnrate;
 				}
 						
 			}
@@ -315,22 +312,22 @@ public class Network{
 	 */
 	protected void berechneDeltaW(double learnRate, double[] error, int batchlength){
 		//http://machinelearningmastery.com/implement-backpropagation-algorithm-scratch-python/
-		for(int i=neurons.size()-2;i>=0;i--){
-			if(i==neurons.size()-2){
-				for(int k = 0; k<neurons.get(neurons.size()-1).length;k++){
-					double err=error[k];
-					for(int m=0 ;m<neurons.get(neurons.size()-2).length;m++){
+		for(int i= neurons.size() - 2; i >= 0; i--){
+			if(i == neurons.size() - 2){
+				for(int k = 0; k < neurons.get(neurons.size() - 1).length; k++){
+					double err = error[k];
+					for(int m=0 ; m < neurons.get(neurons.size() - 2).length; m++){
 						//deltaW.get(i)[m][k]=err*learnRate*neurons.get(neurons.size()-2)[m].output;
-						neurons.get(neurons.size()-2)[m].deltaweights[k]+=err/batchlength;
+						neurons.get(neurons.size() - 2)[m].deltaweights[k] += err / batchlength;
 					}
 				}
 			}else{
-				for(int k=0; k<neurons.get(i).length;k++){
-					double err=0.0;
-					for(int m=0; m<neurons.get(i+1).length;m++){
+				for(int k = 0; k < neurons.get(i).length; k++){
+					double err = 0.0;
+					for(int m = 0; m < neurons.get(i + 1).length; m++){
 						//err+=neurons.get(i)[k].weights[m]*deltaW.get(i+1)[m][0]/(learnRate*neurons.get(i+1)[m].output);
 					}
-					for(int m=0;m<neurons.get(i+1).length;m++){
+					for(int m = 0; m < neurons.get(i + 1).length; m++){
 						//deltaW.get(i)[k][m]=err*learnRate*neurons.get(i)[m].output*transfer_derivative(neurons.get(i)[m].output);
 					}
 				}
@@ -338,7 +335,7 @@ public class Network{
 		}
 	}
 	protected double transfer_derivative(double output){
-		return output*(1-output);
+		return output * (1 - output);
 	}
 	
 	/**
@@ -350,7 +347,7 @@ public class Network{
 		double[] error = new double[neurons.get(neurons.size()-1).length];
 		for(int i = 0; i < neurons.get(neurons.size() - 1).length; i++){
 			//error += (0.5) * Math.pow( neurons.get(neurons.size() - 1)[i].output-solution[i], 1);
-			error[i]= (solution[i]-neurons.get(neurons.size()-1)[i].output)* transfer_derivative(neurons.get(neurons.size()-1)[i].output);
+			error[i] = (solution[i] - neurons.get(neurons.size() - 1)[i].output) * transfer_derivative(neurons.get(neurons.size() - 1)[i].output);
 		}
 		return error;
 	}

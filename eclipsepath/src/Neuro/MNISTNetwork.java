@@ -15,13 +15,13 @@ public class MNISTNetwork extends Network {
 	 * @param learnrate
 	 * @param test_data
 	 */
-	protected void stochastic_gradient_descent(MNISTdata[] train_data, int epochs, int batch_size, double learnrate, MNISTdata[] test_data){
+	protected void stochastic_gradient_descent(Data[] train_data, int epochs, int batch_size, double learnrate, Data[] test_data){
 		System.out.println("Epoch 0 beendet!  " + evaluateData(test_data) + "/" + test_data.length);
 		for(int i = 0; i < epochs; i++){
 			this.shuffleTrainData(train_data);
-			ArrayList<MNISTdata[]> batches = new ArrayList<MNISTdata[]>();
+			ArrayList<Data[]> batches = new ArrayList<Data[]>();
 			for(int k = 0; k < train_data.length / batch_size; k++){
-				MNISTdata[] minibatch = new MNISTdata[batch_size];
+				Data[] minibatch = new Data[batch_size];
 				for(int j = 0; j < batch_size; j++){
 					minibatch[j] = train_data[k * batch_size + j];
 				}
@@ -30,11 +30,11 @@ public class MNISTNetwork extends Network {
 			}
 			
 			for(int m= 0; m<batches.size();m++){
-				double[][] batchdata= new double[batch_size][train_data[0].img.length];
+				double[][] batchdata= new double[batch_size][train_data[0].data.length];
 				double[][] labeldata=new double[batch_size][10];
-				MNISTdata[] currBatch= batches.get(m);
+				Data[] currBatch= batches.get(m);
 				for(int b=0; b<currBatch.length;b++){
-					batchdata[b]=currBatch[b].img;
+					batchdata[b]=currBatch[b].data;
 					double[] label={0,0,0,0,0,0,0,0,0,0};
 					label[currBatch[b].solution]=1;
 					labeldata[b]=label;
@@ -51,7 +51,7 @@ public class MNISTNetwork extends Network {
 	 * @param test_data
 	 * @return
 	 */
-	protected int evaluateData(MNISTdata[] test_data){
+	protected int evaluateData(Data[] test_data){
 		//Bild erkennen
 		int count = 0;
 		double meansquarederror=0.0;
@@ -82,8 +82,8 @@ public class MNISTNetwork extends Network {
 	 * @param data
 	 * @return
 	 */
-	protected int getOutputInt(MNISTdata data){
-		berechneOutput(data.img);
+	protected int getOutputInt(Data data){
+		berechneOutput(data.data);
 		double max = -1;
 		int pos = -1;
 		for(int i = 0; i < neurons.get(neurons.size() - 1).length; i++){
@@ -100,12 +100,12 @@ public class MNISTNetwork extends Network {
 	 * @param train_data
 	 * @return
 	 */
-	private MNISTdata[] shuffleTrainData(MNISTdata[] train_data){
-		ArrayList<MNISTdata> arraydata = new ArrayList<MNISTdata>();
+	private Data[] shuffleTrainData(Data[] train_data){
+		ArrayList<Data> arraydata = new ArrayList<Data>();
 		for(int i = 0; i < train_data.length; i++){
 			arraydata.add(train_data[i]);
 		}
-		ArrayList<MNISTdata> shufflearraydata = new ArrayList<MNISTdata>();
+		ArrayList<Data> shufflearraydata = new ArrayList<Data>();
 		while(arraydata.size() > 0){
 			int rand = (int)(Math.random() * arraydata.size());
 			shufflearraydata.add(arraydata.get(rand));

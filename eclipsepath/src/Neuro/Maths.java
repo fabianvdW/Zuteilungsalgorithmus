@@ -291,7 +291,7 @@ public class Maths{
 			}
 		}
 		*/
-		MNISTdata[] train_data= new MNISTdata[1000];
+		Data[] train_data= new Data[1000];
 		for(int i=0; i < 1000; i++){
 			train_data[i]= train.data[i];
 		}

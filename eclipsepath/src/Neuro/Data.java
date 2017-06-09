@@ -203,19 +203,19 @@
 package Neuro;
 
 /**
- * Klasse zur Datenhandhabung eines Bildes von Schwarzwerten zwischen 0-1 in double[] und deren Lösung
+ * Klasse zur Datenhandhabung des Inputs  double[] und deren Lösung als int
  * Werte innerhalb der Klasse sollen final sein!!!
  * @author Leo Jung
  *
  */
-public class MNISTdata{
+public class Data{
 	// val: 0(white) - 1(black)
-	protected final double[] img;
+	protected final double[] data;
 	// solution
 	protected final int solution;
 	
-	protected MNISTdata(double[] imgData, int label){
-		solution = label;
-		img = imgData;
+	protected Data(double[] rawData, int result){
+		solution = result;
+		data = rawData;
 	}
 }

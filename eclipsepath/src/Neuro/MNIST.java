@@ -216,7 +216,7 @@ public class MNIST{
 	protected int nImgs;
 	protected int nRows;
 	protected int nCols;
-	protected MNISTdata[] data;
+	protected Data[] data;
 	
 	/**
 	 * programmiert auf basis der datei-struktur wie hier definiert: http://yann.lecun.com/exdb/mnist/
@@ -267,7 +267,7 @@ public class MNIST{
 			images.read(imgsData);
 			
 			// aufbereitung zu double[]-bild und int-label
-			data = new MNISTdata[nLabels];
+			data = new Data[nLabels];
 			int label;
 			int counter = 0;
 			double[] img;
@@ -277,7 +277,7 @@ public class MNIST{
 				for(int n = 0; n < imgVectorSize; n++){
 					img[n] = ((double)new Integer(imgsData[counter++])/255.0);
 				}
-				data[i] = new MNISTdata(img, label);
+				data[i] = new Data(img, label);
 			}
 			labels.close();
 			images.close();
@@ -289,7 +289,7 @@ public class MNIST{
 	/**
 	 * returns readed data as MNISTdata[]
 	 */
-	protected MNISTdata[] getData(){
+	protected Data[] getData(){
 		return data;
 	}
 	
