@@ -29,15 +29,15 @@ public class MNISTNetwork extends Network {
 				batches.add(minibatch);
 			}
 			
-			for(int m= 0; m<batches.size();m++){
-				double[][] batchdata= new double[batch_size][train_data[0].data.length];
-				double[][] labeldata=new double[batch_size][10];
-				Data[] currBatch= batches.get(m);
-				for(int b=0; b<currBatch.length;b++){
-					batchdata[b]=currBatch[b].data;
-					double[] label={0,0,0,0,0,0,0,0,0,0};
-					label[currBatch[b].solution]=1;
-					labeldata[b]=label;
+			for(int m = 0; m < batches.size(); m++){
+				double[][] batchdata = new double[batch_size][train_data[0].data.length];
+				double[][] labeldata = new double[batch_size][10];
+				Data[] currBatch = batches.get(m);
+				for(int b = 0; b < currBatch.length; b++){
+					batchdata[b] = currBatch[b].data;
+					double[] label = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+					label[currBatch[b].solution] = 1;
+					labeldata[b] = label;
 				}
 				updateBatch(batchdata, labeldata,learnrate);
 			}
@@ -54,26 +54,20 @@ public class MNISTNetwork extends Network {
 	protected int evaluateData(Data[] test_data){
 		//Bild erkennen
 		int count = 0;
-		double meansquarederror=0.0;
+		double meansquarederror = 0.0;
 		for(int i = 0; i < test_data.length; i++){
 			//System.out.println("output:  " + getOutputInt(test_data[i]));
 			//System.out.println("sol:  " + test_data[i].solution);
-			int output= getOutputInt(test_data[i]);
-			double[] solution = new double[10];
-			for(int k = 0; k < 9; k++){
-				solution[k] = 0;
-				if(test_data[i].solution == k){
-					solution[k] = 1;
-				}
-			}
-			for(int m=0 ;m<10;m++){
-				meansquarederror+=Math.pow(solution[m]-neurons.get(neurons.size()-1)[m].output,2);
+			int output = getOutputInt(test_data[i]);
+			double[] solution = vectorInt(test_data[i].solution);
+			for(int m = 0; m < 10; m++){
+				meansquarederror += Math.pow(solution[m] - neurons.get(neurons.size() - 1)[m].output, 2);
 			}
 			if(output == test_data[i].solution){
 				count++;
 			}
 		}
-		System.out.println("Error: " +meansquarederror);
+		System.out.println("Error: " + meansquarederror);
 		return count;
 	}
 	
@@ -115,5 +109,18 @@ public class MNISTNetwork extends Network {
 			train_data[i] = shufflearraydata.get(i);
 		}
 		return train_data;
+	}
+	
+	protected double[] vectorInt(int result){
+		if(result > 9 || result < 0){
+			throw new IllegalArgumentException("Given result is to high (max. 9) or low (min. 0): " + result);
+		}
+		double[] results = new double[10];
+		for(int i = 0; i < 10; i++){
+			if(i == result){
+				results[i] = 1;
+			}
+		}
+		return results;
 	}
 }

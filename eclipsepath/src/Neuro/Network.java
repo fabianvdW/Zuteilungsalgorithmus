@@ -325,15 +325,18 @@ public class Network{
 				for(int k = 0; k < neurons.get(i).length; k++){
 					double err = 0.0;
 					for(int m = 0; m < neurons.get(i + 1).length; m++){
-						//err+=neurons.get(i)[k].weights[m]*deltaW.get(i+1)[m][0]/(learnRate*neurons.get(i+1)[m].output);
+						//err += neurons.get(i)[k].weights[m] * deltaW.get(i+1)[m][0] / (learnRate * neurons.get(i + 1)[m].output);
+						//err += neurons.get(i)[k].weights[m] * neurons.get(i + 1)[k].deltaweights[m]; // <- Mein Vorschlag (Leo)
 					}
 					for(int m = 0; m < neurons.get(i + 1).length; m++){
-						//deltaW.get(i)[k][m]=err*learnRate*neurons.get(i)[m].output*transfer_derivative(neurons.get(i)[m].output);
+						//deltaW.get(i)[k][m] = err * learnRate * neurons.get(i)[m].output * transfer_derivative(neurons.get(i)[m].output);
+						//neurons.get(i)[k].deltaweights[m] = err * transfer_derivative(neurons.get(i)[m].output); // <- Mein Vorschlag (Leo)
 					}
 				}
 			}
 		}
 	}
+	
 	protected double transfer_derivative(double output){
 		return output * (1 - output);
 	}
@@ -351,6 +354,4 @@ public class Network{
 		}
 		return error;
 	}
-	
-
 }

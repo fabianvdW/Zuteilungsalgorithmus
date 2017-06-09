@@ -209,7 +209,7 @@ package Neuro;
  *
  */
 public class Data{
-	// val: 0(white) - 1(black)
+	// input-data
 	protected final double[] data;
 	// solution
 	protected final int solution;
