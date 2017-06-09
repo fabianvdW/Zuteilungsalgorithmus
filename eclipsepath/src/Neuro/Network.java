@@ -258,49 +258,16 @@ public class Network{
 		}
 	}
 	
-	/**
-	 * 
-	 * @param train_data
-	 * @param epochs
-	 * @param batch_size
-	 * @param learnrate
-	 * @param test_data
-	 */
-	protected void stochastic_gradient_descent(MNISTdata[] train_data, int epochs, int batch_size, double learnrate, MNISTdata[] test_data){
-		System.out.println("Epoch 0 beendet!  " + evaluateData(test_data) + "/" + test_data.length);
-		for(int i = 0; i < epochs; i++){
-			this.shuffleTrainData(train_data);
-			ArrayList<MNISTdata[]> batches = new ArrayList<MNISTdata[]>();
-			for(int k = 0; k < train_data.length / batch_size; k++){
-				MNISTdata[] minibatch = new MNISTdata[batch_size];
-				for(int j = 0; j < batch_size; j++){
-					minibatch[j] = train_data[k * batch_size + j];
-				}
-				
-				batches.add(minibatch);
-			}
-			for(MNISTdata[] batch: batches){
-				updateBatch(batch, learnrate);
-				
-			}
-			System.out.println("Epoch " + (i + 1) + " beendet!  " + evaluateData(test_data) + "/" + test_data.length);
-		}
-	}
+
 	
-	protected ArrayList<double[][]> getLeeresDeltaW(){
-		ArrayList<double[][]> deltaW = new ArrayList<double[][]>();
-		for(int i = 0; i + 1 < startLayers.length; i++){
-			double[][] w2D = new double[startLayers[i]][startLayers[i + 1]];
-			for(int k = 0; k < startLayers[i]; k++){
-				double[] wsR = new double[startLayers[i + 1]];
-				for(int j = 0; j<startLayers[i + 1]; j++){
-					wsR[j] = 0;
+	protected void clearDeltaW(){
+		for(Neuron[] neuronlayer: neurons){
+			for(Neuron n : neuronlayer){
+				for(int i=0;i<n.deltaweights.length;i++){
+					n.deltaweights[i]=0;
 				}
-				w2D[k] = wsR;
 			}
-			deltaW.add(w2D);
 		}
-		return deltaW;
 	}
 	
 	/**
@@ -308,68 +275,60 @@ public class Network{
 	 * @param batch
 	 * @param learnrate
 	 */
-	protected void updateBatch(MNISTdata[] batch, double learnrate){
-		ArrayList<double[][]> deltaW = getLeeresDeltaW();
+	protected void updateBatch(double[][] batch,double[][] labels, double learnrate){
 		
-		for(MNISTdata data: batch){
-			double[] input = data.img;
-			double[] solution = new double[10];
-			for(int i = 0; i < 9; i++){
-				solution[i] = 0;
-				if(data.solution == i){
-					solution[i] = 1;
-				}
-			}
+		for(int m =0; m<batch.length;m++){
+			double[] input = batch[m];
+			double[] solution =labels[m];
 			berechneOutput(input);
 			double[] error = getError(solution);
-			ArrayList<double[][]> bDW = berechneDeltaW(data,learnrate, error);
+			System.out.println("Error 0  " +error[0]);
+			System.out.println("Error 1  " +error[1]);
+			berechneDeltaW(learnrate, error, batch.length);
+			System.out.println("deltaw 1  "+ neurons.get(neurons.size()-2)[0].deltaweights[0]);
+			System.out.println("deltaw 2  "+ neurons.get(neurons.size()-2)[0].deltaweights[1]);
 			//berechne DeltaW
 			//deltaW = deltaW + berechnetesDeltaW / batch.length
 			//sollte hierbei nicht auch noch der Fehler miteinberechnet werde,?
 			//deltaW -= learnrate * error * berechnetesDeltaW
-			if(bDW == null)continue;
-			for(int i = 0; i + 1 < startLayers.length; i++){
-				for(int k = 0; k < startLayers[i]; k++){
-					for(int j = 0; j < startLayers[i + 1]; j++){
-						
-						deltaW.get(i)[k][j] += bDW.get(i)[k][j] / batch.length;
-						//deltaW.get(i)[k][j] += Maths.random() / batch.length;
-					}
-				}
-			}
+			
 		}
 		
-		//apply DeltaW
-		for(int i = 0; i + 1 < startLayers.length; i++){
-			for(int k = 0 ; k < startLayers[i]; k++){
-				for(int j = 0; j < startLayers[i + 1]; j++){
-					neurons.get(i)[k].weights[j] += 1 * deltaW.get(i)[k][j];
+	
+		for(Neuron[] neuronlayer: neurons){
+			for(Neuron n: neuronlayer){
+				for(int i=0;i<n.weights.length;i++){
+					n.weights[i]+=n.deltaweights[i]*learnrate*n.output;
 				}
+				if(neuronlayer!=neurons.get(neurons.size()-1)){
+					n.bias+=n.deltaweights[0]*learnrate;
+				}
+						
 			}
 		}
-			
+		clearDeltaW();	
 	}
 	
 	/**
 	 * Funktion zum errechnen der benötigten Abweichungen um einen Lerneffekt zu erzielen
 	 * @return
 	 */
-	protected ArrayList<double[][]> berechneDeltaW(MNISTdata data,double learnRate, double[] error){
+	protected void berechneDeltaW(double learnRate, double[] error, int batchlength){
 		//http://machinelearningmastery.com/implement-backpropagation-algorithm-scratch-python/
-		ArrayList<double[][]> deltaW = getLeeresDeltaW();
 		for(int i=neurons.size()-2;i>=0;i--){
 			if(i==neurons.size()-2){
 				for(int k = 0; k<neurons.get(neurons.size()-1).length;k++){
 					double err=error[k];
 					for(int m=0 ;m<neurons.get(neurons.size()-2).length;m++){
-						deltaW.get(i)[m][k]=err*learnRate*neurons.get(neurons.size()-2)[m].output;
+						//deltaW.get(i)[m][k]=err*learnRate*neurons.get(neurons.size()-2)[m].output;
+						neurons.get(neurons.size()-2)[m].deltaweights[k]+=err/batchlength;
 					}
 				}
 			}else{
 				for(int k=0; k<neurons.get(i).length;k++){
 					double err=0.0;
 					for(int m=0; m<neurons.get(i+1).length;m++){
-						err+=neurons.get(i)[k].weights[m]*deltaW.get(i+1)[m][0]/(learnRate*neurons.get(i+1)[m].output);
+						//err+=neurons.get(i)[k].weights[m]*deltaW.get(i+1)[m][0]/(learnRate*neurons.get(i+1)[m].output);
 					}
 					for(int m=0;m<neurons.get(i+1).length;m++){
 						//deltaW.get(i)[k][m]=err*learnRate*neurons.get(i)[m].output*transfer_derivative(neurons.get(i)[m].output);
@@ -377,7 +336,6 @@ public class Network{
 				}
 			}
 		}
-		return deltaW;
 	}
 	protected double transfer_derivative(double output){
 		return output*(1-output);
@@ -397,74 +355,5 @@ public class Network{
 		return error;
 	}
 	
-	/**
-	 * zählt wie viele der bilder richtig erkannt wurden
-	 * @param test_data
-	 * @return
-	 */
-	protected int evaluateData(MNISTdata[] test_data){
-		//Bild erkennen
-		int count = 0;
-		double meansquarederror=0.0;
-		for(int i = 0; i < test_data.length; i++){
-			//System.out.println("output:  " + getOutputInt(test_data[i]));
-			//System.out.println("sol:  " + test_data[i].solution);
-			int output= getOutputInt(test_data[i]);
-			double[] solution = new double[10];
-			for(int k = 0; k < 9; k++){
-				solution[k] = 0;
-				if(test_data[i].solution == k){
-					solution[k] = 1;
-				}
-			}
-			for(int m=0 ;m<10;m++){
-				meansquarederror+=Math.pow(solution[m]-neurons.get(neurons.size()-1)[m].output,2);
-			}
-			if(output == test_data[i].solution){
-				count++;
-			}
-		}
-		System.out.println("Error: " +meansquarederror);
-		return count;
-	}
-	
-	/**
-	 * gibt den output des netzwerks anhand eines datensets als int aus (Wert der am größten ist)
-	 * @param data
-	 * @return
-	 */
-	protected int getOutputInt(MNISTdata data){
-		berechneOutput(data.img);
-		double max = -1;
-		int pos = -1;
-		for(int i = 0; i < neurons.get(neurons.size() - 1).length; i++){
-			if(neurons.get(neurons.size() - 1)[i].output > max){
-				max = neurons.get(neurons.size() - 1)[i].output;
-				pos = i;
-			}
-		}
-		return pos;
-	}
-	
-	/**
-	 * shuffled die Testdaten von MNIST
-	 * @param train_data
-	 * @return
-	 */
-	private MNISTdata[] shuffleTrainData(MNISTdata[] train_data){
-		ArrayList<MNISTdata> arraydata = new ArrayList<MNISTdata>();
-		for(int i = 0; i < train_data.length; i++){
-			arraydata.add(train_data[i]);
-		}
-		ArrayList<MNISTdata> shufflearraydata = new ArrayList<MNISTdata>();
-		while(arraydata.size() > 0){
-			int rand = (int)(Math.random() * arraydata.size());
-			shufflearraydata.add(arraydata.get(rand));
-			arraydata.remove(rand);
-		}
-		for(int i = 0; i < shufflearraydata.size(); i++){
-			train_data[i] = shufflearraydata.get(i);
-		}
-		return train_data;
-	}
+
 }

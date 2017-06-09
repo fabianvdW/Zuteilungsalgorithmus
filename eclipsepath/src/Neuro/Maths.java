@@ -257,7 +257,7 @@ public class Maths{
 		
 		//TEST Network
 		int[] layers={test.imgSize(), 10};
-		Network n = new Network(layers);
+		MNISTNetwork n = new MNISTNetwork(layers);
 		/*
 		System.out.println("Biases:");
 		for(int i = 0; i < n.biases.size(); i++){
@@ -296,7 +296,14 @@ public class Maths{
 			train_data[i]= train.data[i];
 		}
 		//n.train(100, train_data, 0.01);
-		n.stochastic_gradient_descent(train_data, 1000000, 10, 3, train_data);
+		n.stochastic_gradient_descent(train_data, 0, 10, 3, train_data);
+		int[] layerz={2,2};
+		ORNetwork n1 = new ORNetwork(layerz);
+		double[][] traind={{0,0},{0,1},{0,0},{1,0},{0,0},{1,1}};
+		double[][] testdd={{0,0},{0,1},{1,0},{1,1}};
+		int[] label= {0,1,0,1,0,1};
+		int[] testlabel= {0,1,1,1};
+		n1.stochastic_gradient_descent(traind, label, 100, 1, 1, testdd,testlabel);
 	}
 	
 	protected static double random(){

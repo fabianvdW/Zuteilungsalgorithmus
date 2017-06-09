@@ -209,10 +209,11 @@ public class Neuron{
 	protected double bias;
 	protected double netH;
 	protected double output;
-	protected double delta;
+	protected double[] deltaweights;
 	
 	public Neuron(int anzW){
 		weights = new double[anzW];
+		deltaweights= new double[anzW];
 		Random r = new Random();
 		bias = r.nextGaussian();
 		for(int i = 0; i < weights.length; i++){
