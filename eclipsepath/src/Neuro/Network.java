@@ -292,13 +292,19 @@ public class Network{
 		}
 		
 	
-		for(Neuron[] neuronlayer: neurons){
-			for(Neuron n: neuronlayer){
-				for(int i = 0; i < n.weights.length; i++){
-					n.weights[i] += n.deltaweights[i] * learnrate * n.output;
+		for(int i=0;i<neurons.size();i++){
+			Neuron[] neuronlayer=neurons.get(i);
+			for(int k=0;k<neuronlayer.length;k++){
+				Neuron n= neuronlayer[k];
+				for(int m=0;m<n.weights.length;m++){
+					n.weights[m]+=n.deltaweights[m]*learnrate*n.output;
 				}
-				if(neuronlayer != neurons.get(neurons.size() - 1)){
-					n.bias += n.deltaweights[0] * learnrate;
+				if(neurons.get(0)[k].deltaweights.length>0){
+					n.bias+=neurons.get(0)[k].deltaweights[0]*learnrate;
+					
+				}else{
+					System.out.println("truhe2");
+
 				}
 						
 			}
