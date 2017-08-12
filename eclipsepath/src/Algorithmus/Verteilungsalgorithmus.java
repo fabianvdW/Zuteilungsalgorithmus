@@ -224,6 +224,7 @@ public class Verteilungsalgorithmus {
 	 * 
 	 */
 	public static void main(String[] args) {
+		System.out.println("Hi");
 		ag = new ArrayList<AG>();
 		personen = new ArrayList<Person>();
 		log = new ArrayList<String>();
