@@ -364,7 +364,16 @@ public class DBManager {
 			}
 		}
 		String[][] p = db.query("SELECT * FROM `Personen" + profile + "` WHERE `id`='" + id + "'");
-		
+		// Jahrgang
+				int jahrgang = 0;
+				for(int i = 0; i < p[1].length; i++){
+					if(p[0][i].equals("jahrgang")){
+						if(!p[1][i].equals("") && p[1][i] != null){
+							jahrgang = Integer.parseInt(p[1][i]);
+						}
+						break;
+					}
+				}
 		// get Rating
 		int pRating = -1;
 		for(int i = 0; i < p[1].length; i++){
@@ -404,7 +413,9 @@ public class DBManager {
 				}
 			}
 			if(!contains){
-				rating.add(new Rating(ag, -3));
+				if(ag.getJahrgang().contains(jahrgang)){
+					rating.add(new Rating(ag, -3));
+				}
 			}
 		}
 		
@@ -437,16 +448,7 @@ public class DBManager {
 			}
 		}
 		
-		// Jahrgang
-		int jahrgang = 0;
-		for(int i = 0; i < p[1].length; i++){
-			if(p[0][i].equals("jahrgang")){
-				if(!p[1][i].equals("") && p[1][i] != null){
-					jahrgang = Integer.parseInt(p[1][i]);
-				}
-				break;
-			}
-		}
+		
 		
 		// Klasse
 		String klasse = null;
