@@ -217,7 +217,7 @@ public class MNIST{
 	protected int nRows;
 	protected int nCols;
 	protected Data[] data;
-	
+
 	/**
 	 * programmiert auf basis der datei-struktur wie hier definiert: http://yann.lecun.com/exdb/mnist/
 	 * @param labelFilename
