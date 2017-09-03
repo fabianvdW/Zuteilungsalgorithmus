@@ -1,3 +1,7 @@
+# Project closed
+This project has reached it end and there is no effort of starting it again.
+The idee and code has been copied to https://github.com/fabianvdW/Zuteilungsalgorithmus2 and is now being further developed.
+
  								Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
